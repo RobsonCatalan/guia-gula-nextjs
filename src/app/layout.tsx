@@ -1,0 +1,38 @@
+import type { Metadata } from "next";
+import { Inter, Roboto } from "next/font/google";
+import "./globals.css";
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const roboto = Roboto({
+  variable: "--font-roboto",
+  weight: ["400", "500", "700"],
+  subsets: ["latin"],
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  title: "Gula.menu | Guia Gastronômico",
+  description: "O seu guia gastronômico para descobrir os melhores restaurantes",
+  viewport: "width=device-width, initial-scale=1.0",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="pt-BR">
+      <body
+        className={`${inter.variable} ${roboto.variable} antialiased bg-[#FFF8F0] text-[#4A4A4A]`}
+      >
+        {children}
+      </body>
+    </html>
+  );
+}

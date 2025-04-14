@@ -1,0 +1,51 @@
+# Regras de Desenvolvimento - Portal Gula.menu
+
+## IDE
+ - O Windsurf está sendo usado para desenvolvimento.
+
+## Instruções para os modelos de IA
+ - Lembre-se de que o Windsurf está sendo usado para desenvolvimento.
+ - Sempre verifique se os servidores MCP configurados podem ser úteis para o desenvolvimento e use-os.
+ - Não crie automaticamente nada que eu não pedi explicitamente. Se tiver sugestões de melhorias ou próximos passos apresente-as mas não implemente sem meu consentimento.
+
+## Framework e Estrutura
+- Use Next.js 14.x para o frontend e backend.
+- Use o App Router com renderização estática por padrão.
+- Use Server Components para conteúdos dinâmicos que requerem atualização por requisição.
+- Organize o projeto com pastas claras: `app/`, `components/`, `lib/` e `styles/`.
+
+## Layout e Estilização
+- Use Tailwind CSS como biblioteca principal para estilização.
+- Aplique uma paleta de cores com: Branco Cremoso (#FFF8F0) para fundos, Cinza Quente (#4A4A4A) para textos e bordas, Vermelho Tomate (#D32F2F) para destaques e CTAs, Laranja Mostarda (#F4A261) para ícones e elementos secundários.
+- Use a fonte `Inter` para textos gerais e `Roboto` para títulos, com tamanhos legíveis (mínimo 16px para corpo, 24px para cabeçalhos).
+- Garanta espaçamento consistente com margens e paddings baseados em múltiplos de 4px ou 8px.
+- Implemente layouts com CSS Grid ou Flexbox para organização fluida e responsiva.
+- Adicione transições suaves (ex.: `transition: all 0.3s ease`) em botões e elementos interativos.
+- Use sombras sutis (ex.: `box-shadow: 0 2px 8px rgba(0,0,0,0.1)`) para profundidade visual.
+- Arredonde bordas de cartões e botões (ex.: `border-radius: 8px`) para um estilo contemporâneo.
+- Otimize imagens com formatos modernos (ex.: WebP) e tamanhos responsivos via `srcset`.
+- Siga padrões de acessibilidade: contraste mínimo de 4.5:1 para textos e suporte a ARIA em componentes interativos.
+
+## SEO e Performance
+- Inclua meta tags, Open Graph e dados estruturados (JSON-LD) em todas as páginas.
+- Crie URLs amigáveis com palavras-chave (ex.: `/cidade/restaurante-nome`).
+- Otimize performance com lazy loading de imagens, minificação de CSS/JS e foco em Core Web Vitals (LCP, FID, CLS).
+- Crie landing pages para cada restaurante com informações completas (nome, endereço, horários, menu, avaliações).
+
+## Mobile-First
+- Desenvolva com abordagem mobile-first, garantindo usabilidade em telas pequenas.
+- Inclua a meta tag viewport: `<meta name="viewport" content="width=device-width, initial-scale=1.0">`.
+
+## Integração com Backend
+- Conecte ao Firestore para leitura de dados dos restaurantes, seguindo as credenciais fornecidas.
+- Sanitize e valide todos os dados do Firestore e APIs externas.
+
+## Boas Práticas
+- Use Git para versionamento, com commits claros e descritivos.
+- Siga convenções de nomenclatura do Next.js (ex.: `camelCase` para variáveis, `PascalCase` para componentes) e sempre use nomes em inglês.
+- Escreva código limpo, com comentários apenas quando necessário.
+- Implemente práticas de segurança, como validação de entradas e proteção contra injeções.
+
+## Testes
+- Use testes unitários com Jest para componentes e funções críticas.
+- Priorize testes que cubram fluxos principais (ex.: renderização de páginas, chamadas ao Firestore).

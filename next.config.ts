@@ -13,6 +13,11 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: '*.googleusercontent.com',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '/**',
       }
     ],
     // Formatos modernos para melhor performance
@@ -25,13 +30,6 @@ const nextConfig: NextConfig = {
   // Ativa compilação estritamente de acordo com as regras de ESLint
   eslint: {
     ignoreDuringBuilds: false,
-  },
-  // Habilita otimização agressiva no tamanho do bundle
-  swcMinify: true,
-  // Configuração de idioma por padrão (pt-BR para o site brasileiro)
-  i18n: {
-    locales: ['pt-BR'],
-    defaultLocale: 'pt-BR',
   },
   // Melhora otimização para SEO e performance
   poweredByHeader: false, // Remove o header 'X-Powered-By'
@@ -109,20 +107,57 @@ const nextConfig: NextConfig = {
     ];
   },
   
-  // Redirecionamentos para URLs canônicas (ajuda no SEO)
+  // Redirecionamentos para URLs canônicas de acordo com a estrutura definida
   async redirects() {
     return [
-      // Redirecionamento para garantir URLs canônicas
+      // Redirecionamento para página inicial
       {
         source: '/index',
         destination: '/',
         permanent: true,
       },
-      // Exemplo para URLs de restaurantes (podemos expandir quando for implementado)
+      // Redirecionamentos para URLs canônicas de restaurantes
       {
-        source: '/restaurant/:slug',
-        destination: '/:cidade/:slug',
+        source: '/:cidade/restaurante/:slug',
+        destination: '/:cidade/restaurante/:slug',
         permanent: true,
+      },
+      {
+        source: '/restaurantes',
+        destination: '/',
+        permanent: true,
+      },
+      // Redirecionamento de URLs com formato alternativo para restaurantes por cidade
+      {
+        source: '/restaurantes/:cidade',
+        destination: '/:cidade/restaurantes',
+        permanent: true,
+      },
+      // Redirecionamento para formato padrão de restaurantes por culinária
+      {
+        source: '/restaurantes/:cidade/:culinaria',
+        destination: '/:cidade/:culinaria/restaurantes',
+        permanent: true,
+      },
+      // Redirecionamentos para URLs alternativas (caso alguém tente acessar de outra forma)
+      {
+        source: '/:cidade/restaurantes/:nome',
+        destination: '/:cidade/restaurante/:nome',
+        permanent: true,
+      },
+      // Redirecionamento para formatos não-amigáveis (com maiúsculas ou espaços)
+      {
+        source: '/:cidade/restaurantes',
+        has: [
+          {
+            type: 'header',
+            key: 'x-forwarded-host',
+          },
+        ],
+        destination: '/:cidade/restaurantes',
+        permanent: true,
+        locale: false,
+        // Esta regra é aplicada antes da normalização, então URLs com maiúsculas serão convertidas
       },
     ];
   },

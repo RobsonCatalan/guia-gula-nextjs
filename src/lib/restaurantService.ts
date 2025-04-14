@@ -48,6 +48,7 @@ const sanitizeRestaurant = (data: DocumentData): Restaurant => {
     name: data.name || '',
     logo: data.logo || '',
     mainPhoto: data.mainPhoto || '',
+    city: data.fiscalInformation?.fiscalAddress?.city || '',
     // Os outros campos são opcionais para iniciar, vamos extrair apenas o que precisamos
     // e implementar os demais campos gradualmente conforme necessário
   };
@@ -144,7 +145,11 @@ export const getRestaurants = async (
       
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        restaurants.push(sanitizeRestaurant({ id: doc.id, name: data.name, logo: data.logo, mainPhoto: data.mainPhoto }));
+        // Passar o documento completo para sanitizeRestaurant
+        restaurants.push(sanitizeRestaurant({ 
+          id: doc.id, 
+          ...data 
+        }));
       });
     }
     
@@ -202,7 +207,7 @@ export const getRestaurantsByCity = async (
     if (lastVisible) {
       q = query(
         collection(db, 'places'), 
-        where('city', '==', city),
+        where('fiscalInformation.fiscalAddress.city', '==', city),
         orderBy('name'), 
         startAfter(lastVisible),
         limit(itemsPerPage)
@@ -210,7 +215,7 @@ export const getRestaurantsByCity = async (
     } else {
       q = query(
         collection(db, 'places'), 
-        where('city', '==', city),
+        where('fiscalInformation.fiscalAddress.city', '==', city),
         orderBy('name'), 
         limit(itemsPerPage)
       );
@@ -226,7 +231,11 @@ export const getRestaurantsByCity = async (
       
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        restaurants.push(sanitizeRestaurant({ id: doc.id, name: data.name, logo: data.logo, mainPhoto: data.mainPhoto }));
+        // Passar o documento completo para sanitizeRestaurant
+        restaurants.push(sanitizeRestaurant({ 
+          id: doc.id, 
+          ...data 
+        }));
       });
     }
     
@@ -285,7 +294,11 @@ export const getRestaurantsByCuisine = async (
       
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        restaurants.push(sanitizeRestaurant({ id: doc.id, name: data.name, logo: data.logo, mainPhoto: data.mainPhoto }));
+        // Passar o documento completo para sanitizeRestaurant
+        restaurants.push(sanitizeRestaurant({ 
+          id: doc.id, 
+          ...data 
+        }));
       });
     }
     

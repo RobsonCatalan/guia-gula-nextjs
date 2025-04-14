@@ -44,6 +44,7 @@
 ## Integração com Backend
 - Conecte ao Firestore para leitura de dados dos restaurantes, seguindo as credenciais fornecidas.
 - Sanitize e valide todos os dados do Firestore e APIs externas.
+- Nunca use dados simulados (mock data) sem autorização expressa.
 
 ## Boas Práticas
 - Use Git para versionamento, com commits claros e descritivos.

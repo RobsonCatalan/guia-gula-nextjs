@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Roboto } from "next/font/google";
 import "./globals.css";
 
@@ -18,7 +18,11 @@ const roboto = Roboto({
 export const metadata: Metadata = {
   title: "Gula.menu | Guia Gastronômico",
   description: "O seu guia gastronômico para descobrir os melhores restaurantes",
-  viewport: "width=device-width, initial-scale=1.0",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1.0,
 };
 
 export default function RootLayout({

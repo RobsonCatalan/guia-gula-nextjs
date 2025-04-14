@@ -6,6 +6,19 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Restaurant } from '@/lib/restaurantService';
 
+// Função para converter texto em formato slug para URL
+const createSlug = (text: string): string => {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+    .replace(/[^\w\s-]/g, '') // Remove caracteres especiais exceto espaços e hífens
+    .replace(/\s+/g, '-') // Substitui espaços por hífens
+    .replace(/-+/g, '-') // Remove hífens duplicados
+    .trim() // Remove espaços no início e fim
+    .replace(/^-+|-+$/g, ''); // Remove hífens no início e fim
+};
+
 interface RestaurantCardProps {
   restaurant: Restaurant;
 }
@@ -25,8 +38,8 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
 
   // URL para página do restaurante seguindo o formato /{cidade}/restaurante/{nome-restaurante}
   const restaurantUrl = city 
-    ? `/${city.toLowerCase().replace(/\s+/g, '-')}/restaurante/${name.toLowerCase().replace(/\s+/g, '-')}` 
-    : `/restaurante/${name.toLowerCase().replace(/\s+/g, '-')}`; // Fallback caso não tenha cidade
+    ? `/${createSlug(city)}/restaurante/${createSlug(name)}` 
+    : `/restaurante/${createSlug(name)}`; // Fallback caso não tenha cidade
 
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">

@@ -57,6 +57,7 @@ export default function ClientComponent({
     
     try {
       setLoading(true);
+      console.log(`Carregando mais restaurantes a partir do documento: ${lastDocId}`);
 
       // Recupera mais restaurantes a partir do último documento visível
       const { restaurants: newRestaurants, lastVisible: newLastVisible } = 
@@ -65,12 +66,28 @@ export default function ClientComponent({
       // Garantir que o array de novos restaurantes seja válido
       const validNewRestaurants = Array.isArray(newRestaurants) ? newRestaurants : [];
       
-      setRestaurants(prev => [...prev, ...validNewRestaurants]);
-      setLastDocId(newLastVisible?.id || null);
-      setHasMore(!!newLastVisible && validNewRestaurants.length > 0);
+      // Adicionar os novos restaurantes ao estado
+      if (validNewRestaurants.length > 0) {
+        console.log(`Adicionando ${validNewRestaurants.length} novos restaurantes`);
+        
+        setRestaurants(prev => [...prev, ...validNewRestaurants]);
+        
+        // Se temos um novo último documento visível, atualizamos o lastDocId
+        if (newLastVisible) {
+          setLastDocId(newLastVisible.id);
+          setHasMore(true);
+        } else {
+          // Se não temos um novo último documento visível, não há mais para carregar
+          setHasMore(false);
+        }
+      } else {
+        console.log('Não foram encontrados novos restaurantes');
+        setHasMore(false);
+      }
     } catch (err) {
       console.error('Erro ao carregar mais restaurantes:', err);
       setError('Não foi possível carregar mais restaurantes. Por favor, tente novamente mais tarde ou verifique sua conexão.');
+      setHasMore(false);
     } finally {
       setLoading(false);
     }

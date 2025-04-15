@@ -22,8 +22,17 @@ export default function ClientComponent({
     async function loadInitialRestaurants() {
       try {
         console.log(`Buscando restaurantes para: ${cidade}`);
+        
+        // Tentativa de buscar com timeout para evitar esperas muito longas
+        const timeoutPromise = new Promise<{restaurants: Restaurant[], lastVisible: any}>(
+          (_, reject) => setTimeout(() => reject(new Error('Timeout buscando restaurantes')), 15000)
+        );
+        
+        const fetchPromise = getRestaurantsByCity(cidade, null, 10);
+        
+        // Race entre o timeout e a busca normal
         const { restaurants: initialRestaurants, lastVisible } = 
-          await getRestaurantsByCity(cidade, null, 10);
+          await Promise.race([fetchPromise, timeoutPromise]);
         
         // Garantir que o array de restaurantes seja válido
         setRestaurants(Array.isArray(initialRestaurants) ? initialRestaurants : []);
@@ -32,7 +41,7 @@ export default function ClientComponent({
         console.log(`Encontrados ${initialRestaurants?.length || 0} restaurantes para ${cidade}`);
       } catch (err) {
         console.error('Erro ao carregar restaurantes:', err);
-        setError('Não foi possível carregar os restaurantes. Tente novamente mais tarde.');
+        setError('Não foi possível carregar os restaurantes. Por favor, tente novamente mais tarde ou verifique sua conexão.');
         // Garantir que temos um array vazio em caso de erro
         setRestaurants([]);
       } finally {
@@ -61,7 +70,7 @@ export default function ClientComponent({
       setHasMore(!!newLastVisible && validNewRestaurants.length > 0);
     } catch (err) {
       console.error('Erro ao carregar mais restaurantes:', err);
-      setError('Não foi possível carregar mais restaurantes. Tente novamente mais tarde.');
+      setError('Não foi possível carregar mais restaurantes. Por favor, tente novamente mais tarde ou verifique sua conexão.');
     } finally {
       setLoading(false);
     }
@@ -80,6 +89,7 @@ export default function ClientComponent({
       
       {loading && restaurantsArray.length === 0 ? (
         <div className="text-center py-8">
+          <div className="w-12 h-12 border-4 border-[#F4A261] border-t-[#D32F2F] rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-lg text-gray-600">Carregando restaurantes...</p>
         </div>
       ) : restaurantsArray.length > 0 ? (
@@ -89,9 +99,17 @@ export default function ClientComponent({
           ))}
         </div>
       ) : (
-        <div className="text-center py-8">
-          <p className="text-lg text-gray-600">
-            Não encontramos restaurantes em {cidade}.
+        <div className="text-center py-8 bg-[#FFF8F0] rounded-lg border border-[#4A4A4A]/10 p-6">
+          <div className="w-16 h-16 mx-auto mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-[#F4A261]">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <p className="text-xl font-medium text-[#4A4A4A] mb-2">
+            Não encontramos restaurantes em {cidade}
+          </p>
+          <p className="text-[#4A4A4A]/70">
+            Tente buscar por outras cidades ou volte mais tarde quando houver novos restaurantes cadastrados.
           </p>
         </div>
       )}

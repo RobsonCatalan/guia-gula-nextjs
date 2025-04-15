@@ -10,7 +10,7 @@ export interface Restaurant {
   city?: string;
   description?: string;
   cuisine?: string;
-  openingHours?: string | { day: string; hours: string }[];
+  openingHours?: string;
   imageUrl?: string;
   rating?: number;
   priceRange?: string;
@@ -20,9 +20,8 @@ export interface Restaurant {
   reviews?: Review[];
   logo?: string;
   mainPhoto?: string;
-  slug?: string;
-  citySlug?: string;
-  location?: { lat: number, lng: number };
+  photos?: string[];
+  isVerified?: boolean;
 }
 
 // Interface para o cardápio
@@ -32,7 +31,7 @@ export interface Menu {
   description: string;
   price: number;
   category: string;
-  imageUrl?: string;
+  image?: string;
 }
 
 // Interface para avaliações
@@ -49,78 +48,20 @@ const sanitizeRestaurant = (data: DocumentData): Restaurant => {
   return {
     id: data.id || '',
     name: data.name || '',
-    logo: data.logo || '',
-    mainPhoto: data.mainPhoto || '',
-    city: data.fiscalInformation?.fiscalAddress?.city || '',
+    address: data.fiscalInformation?.fiscalAddress?.formattedAddress || data.address || '',
+    city: data.fiscalInformation?.fiscalAddress?.city || data.city || '',
+    description: data.description || '',
+    cuisine: data.cuisineType || data.cuisine || '',
     openingHours: data.openingHours || 'Horário não disponível',
-    // Os outros campos são opcionais para iniciar, vamos extrair apenas o que precisamos
-    // e implementar os demais campos gradualmente conforme necessário
+    imageUrl: data.mainPhoto || data.imageUrl || '/images/placeholder-restaurant.jpg',
+    rating: data.rating || 0,
+    priceRange: data.priceRange || '$',
+    phone: data.contactInfo?.phoneNumber || data.phone || '',
+    website: data.contactInfo?.website || data.website || '',
+    logo: data.logo || null,
+    mainPhoto: data.mainPhoto || null
   };
 };
-
-// Dados mockados para uso quando o Firestore não estiver disponível ou houver problemas de permissão
-const mockRestaurants: Restaurant[] = [
-  {
-    id: 'mock-1',
-    name: '.Gula Steak House',
-    slug: 'gula-steak-house',
-    description: 'Restaurante especializado em carnes premium com ambiente sofisticado.',
-    address: 'Av. do Contorno, 6594 - Savassi',
-    city: 'Belo Horizonte',
-    citySlug: 'belo-horizonte',
-    phone: '(31) 3282-1366',
-    cuisine: 'Steakhouse',
-    rating: 4.8,
-    priceRange: '$$$$',
-    imageUrl: 'https://lh3.googleusercontent.com/places/ANJU3DuAwJ2-cRHlIWnDvkVoiN_5prJnQCRoWmQg3Kt7HnJQdCOcF9Ru7v-xXQTDSIeRWLFE1e_q8yP3VJXKBYyTHWNrjP35Z01ZlWQ=s1600-w400',
-    openingHours: [
-      { day: 'Segunda a Quinta', hours: '12h às 15h | 19h às 23h' },
-      { day: 'Sexta e Sábado', hours: '12h às 16h | 19h às 00h' },
-      { day: 'Domingo', hours: '12h às 17h' }
-    ],
-    location: { lat: -19.9338, lng: -43.9385 }
-  },
-  {
-    id: 'mock-2',
-    name: '3 Orelhas BH',
-    slug: '3-orelhas-bh',
-    description: 'Bar e restaurante com pratos tradicionais mineiros e cerveja artesanal.',
-    address: 'R. Leopoldina, 542 - Santo Antônio',
-    city: 'Belo Horizonte',
-    citySlug: 'belo-horizonte',
-    phone: '(31) 3789-8040',
-    cuisine: 'Brasileira',
-    rating: 4.5,
-    priceRange: '$$',
-    imageUrl: 'https://lh3.googleusercontent.com/places/ANJU3DsTd9zZo-2rOSXYvOL1QWnqtEyMj_2CqGNm-oqOX6FIl-O_NQFm_8waNYJ3-qBFdqgeTfZvkzkSOdShcQYofg8DqPx2I9gk5kg=s1600-w400',
-    openingHours: [
-      { day: 'Terça a Quinta', hours: '17h às 23h' },
-      { day: 'Sexta', hours: '17h às 00h' },
-      { day: 'Sábado', hours: '12h às 00h' },
-      { day: 'Domingo', hours: '12h às 19h' }
-    ],
-    location: { lat: -19.9424, lng: -43.9418 }
-  },
-  {
-    id: 'mock-3',
-    name: '3 Orelhas Bebidas',
-    slug: '3-orelhas-bebidas',
-    description: 'Loja de bebidas premium e cervejas artesanais.',
-    address: 'R. Rio de Janeiro, 1550 - Lourdes',
-    city: 'Belo Horizonte',
-    citySlug: 'belo-horizonte',
-    phone: '(31) 3234-5678',
-    cuisine: 'Empório',
-    rating: 4.7,
-    priceRange: '$$',
-    imageUrl: 'https://lh3.googleusercontent.com/places/ANJU3DsTd9zZo-2rOSXYvOL1QWnqtEyMj_2CqGNm-oqOX6FIl-O_NQFm_8waNYJ3-qBFdqgeTfZvkzkSOdShcQYofg8DqPx2I9gk5kg=s1600-w400',
-    openingHours: [
-      { day: 'Segunda a Sexta', hours: '9h às 19h' },
-      { day: 'Sábado', hours: '9h às 17h' }
-    ],
-    location: { lat: -19.9356, lng: -43.9428 }
-  }
-];
 
 // Verifica se estamos no ambiente de cliente e tem acesso ao Firestore
 const isClient = typeof window !== 'undefined';
@@ -130,11 +71,11 @@ export const getRestaurants = async (
   lastVisible?: QueryDocumentSnapshot<DocumentData>,
   itemsPerPage: number = 10
 ): Promise<{ restaurants: Restaurant[], lastVisible: QueryDocumentSnapshot<DocumentData> | null }> => {
-  // Se não estiver no cliente, retorna dados mockados
+  // Se não estiver no cliente, retorna array vazio (será preenchido pelo lado do cliente)
   if (!isClient) {
-    console.log('Usando dados mockados para restaurantes (ambiente servidor)');
+    console.log('Executando no ambiente servidor - não é possível acessar o Firestore');
     return { 
-      restaurants: mockRestaurants, 
+      restaurants: [], 
       lastVisible: null 
     };
   }
@@ -178,17 +119,16 @@ export const getRestaurants = async (
     return { restaurants, lastVisible: newLastVisible };
   } catch (error) {
     console.error('Erro ao buscar restaurantes:', error);
-    console.log('Usando dados mockados devido a erro de acesso ao Firestore');
-    return { restaurants: mockRestaurants, lastVisible: null };
+    // Retornamos um array vazio em vez de dados mockados
+    return { restaurants: [], lastVisible: null };
   }
 };
 
 // Obter um restaurante específico por ID
 export const getRestaurantById = async (id: string): Promise<Restaurant | null> => {
-  // Se não estiver no cliente, retorna dado mockado correspondente
+  // Se não estiver no cliente, retorna null (será preenchido pelo lado do cliente)
   if (!isClient) {
-    const mockRestaurant = mockRestaurants.find(r => r.id === id);
-    return mockRestaurant || null;
+    return null;
   }
 
   try {
@@ -196,16 +136,13 @@ export const getRestaurantById = async (id: string): Promise<Restaurant | null> 
     const docSnap = await getDoc(docRef);
     
     if (docSnap.exists()) {
-      const data = docSnap.data();
-      return { id: docSnap.id, name: data.name, logo: data.logo, mainPhoto: data.mainPhoto, openingHours: data.openingHours || 'Horário não disponível' };
+      return sanitizeRestaurant({ id: docSnap.id, ...docSnap.data() });
     }
     
     return null;
   } catch (error) {
     console.error('Erro ao buscar restaurante por ID:', error);
-    // Tenta encontrar no mock se houver erro
-    const mockRestaurant = mockRestaurants.find(r => r.id === id);
-    return mockRestaurant || null;
+    return null;
   }
 };
 
@@ -215,20 +152,26 @@ export const getRestaurantsByCity = async (
   lastVisible?: QueryDocumentSnapshot<DocumentData> | string | null,
   itemsPerPage: number = 10
 ): Promise<{ restaurants: Restaurant[], lastVisible: QueryDocumentSnapshot<DocumentData> | null }> => {
+  // Se não estiver no cliente, retorna array vazio (será preenchido pelo lado do cliente)
+  if (!isClient) {
+    return { restaurants: [], lastVisible: null };
+  }
+  
+  const matchingRestaurants: any[] = [];
+  
   console.log(`### INÍCIO DA BUSCA DE RESTAURANTES PARA CIDADE: "${city}" ###`);
   
   try {
-    // Vamos tentar uma abordagem completamente diferente - carregar todos os restaurantes
-    const simpleQuery = query(collection(db, 'places'));
+    // Tentar abordagem completa - carregar todos os restaurantes primeiro
+    const simpleQuery = query(collection(db, 'places'), limit(50)); // Limitando para 50 para evitar timeout
     const simpleSnapshot = await getDocs(simpleQuery);
     
     console.log(`Total de restaurantes encontrados: ${simpleSnapshot.size}`);
     
     // Mostrar todos os documentos e suas cidades
     const allRestaurants: {id: string, name: string, city: string}[] = [];
-    const matchingRestaurants: DocumentData[] = [];
     
-    simpleSnapshot.forEach(doc => {
+    simpleSnapshot.forEach((doc) => {
       const data = doc.data();
       const restaurantName = data.name || 'Sem nome';
       const cityValue = data.fiscalInformation?.fiscalAddress?.city || data.city || '';
@@ -266,25 +209,6 @@ export const getRestaurantsByCity = async (
       sanitizeRestaurant({id: data.id, ...data})
     );
     
-    // Se nenhum resultado encontrado, usar os dados simulados
-    if (restaurants.length === 0) {
-      console.log("Nenhum restaurante encontrado para a cidade no Firestore. Usando dados simulados para demonstração.");
-      
-      // Filtrar os mocks para corresponder à cidade atual (insensitive)
-      const cityLower = city.toLowerCase();
-      const filteredMocks = mockRestaurants.filter(r => {
-        const mockCity = r.city?.toLowerCase() || '';
-        return mockCity.includes(cityLower) || cityLower.includes(mockCity);
-      });
-      
-      console.log(`Usando ${filteredMocks.length} restaurantes simulados para ${city}`);
-      
-      return { 
-        restaurants: filteredMocks,
-        lastVisible: null 
-      };
-    }
-    
     console.log(`### FIM DA BUSCA: Encontrados ${restaurants.length} restaurantes para a cidade ${city} ###`);
     
     return { 
@@ -293,19 +217,8 @@ export const getRestaurantsByCity = async (
     };
   } catch (error) {
     console.error('Erro ao buscar restaurantes por cidade:', error);
-    console.log("Usando dados simulados devido a erro na busca.");
-    
-    // Filtrar os mocks para corresponder à cidade atual (insensitive)
-    const cityLower = city.toLowerCase();
-    const filteredMocks = mockRestaurants.filter(r => {
-      const mockCity = r.city?.toLowerCase() || '';
-      return mockCity.includes(cityLower) || cityLower.includes(mockCity);
-    });
-    
-    console.log(`Usando ${filteredMocks.length} restaurantes simulados para ${city} devido a erro`);
-    
     return { 
-      restaurants: filteredMocks, 
+      restaurants: [], // Retornamos array vazio em vez de dados mockados 
       lastVisible: null 
     };
   }
@@ -317,12 +230,9 @@ export const getRestaurantsByCuisine = async (
   lastVisible?: QueryDocumentSnapshot<DocumentData>,
   itemsPerPage: number = 10
 ): Promise<{ restaurants: Restaurant[], lastVisible: QueryDocumentSnapshot<DocumentData> | null }> => {
-  // Se não estiver no cliente, filtra os dados mockados
+  // Se não estiver no cliente, retorna array vazio (será preenchido pelo lado do cliente)
   if (!isClient) {
-    const filteredMocks = mockRestaurants.filter(r => 
-      r.cuisine?.toLowerCase() === cuisine.toLowerCase()
-    );
-    return { restaurants: filteredMocks, lastVisible: null };
+    return { restaurants: [], lastVisible: null };
   }
 
   try {
@@ -366,10 +276,7 @@ export const getRestaurantsByCuisine = async (
     return { restaurants, lastVisible: newLastVisible };
   } catch (error) {
     console.error('Erro ao buscar restaurantes por tipo de cozinha:', error);
-    // Retorna mocks filtrados por tipo de cozinha se houver erro
-    const filteredMocks = mockRestaurants.filter(r => 
-      r.cuisine?.toLowerCase() === cuisine.toLowerCase()
-    );
-    return { restaurants: filteredMocks, lastVisible: null };
+    // Retornamos array vazio em vez de dados mockados
+    return { restaurants: [], lastVisible: null };
   }
 };

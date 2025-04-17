@@ -102,9 +102,9 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
         )}
         
         <div className="flex justify-end mt-2">
-          <Link 
+          <Link
             href={restaurantUrl}
-            className="bg-[#D32F2F] text-white px-4 py-2 rounded-full hover:bg-red-700 transition-colors text-sm font-medium"
+            className="bg-[#D32F2F] !text-white px-4 py-2 rounded-full hover:bg-red-700 transition-colors text-sm font-medium"
           >
             Ver mais
           </Link>

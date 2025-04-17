@@ -48,9 +48,9 @@ export default function Home() {
       {/* Hero Section */}
       <section className="bg-[#FF5842] text-white py-16">
         <div className="max-w-7xl mx-auto text-center px-6">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 font-['Roboto']">
-            Descubra os melhores restaurantes
-          </h2>
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 font-['Roboto']">
+            Visite ou Peça dos Melhores Restaurantes
+          </h1>
           <p className="text-xl mb-8 max-w-3xl mx-auto">
             Encontre os melhores lugares para comer em sua cidade, veja avaliações e menus.
           </p>

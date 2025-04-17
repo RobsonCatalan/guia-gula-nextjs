@@ -159,124 +159,36 @@ export const getRestaurantsByCity = async (
   lastVisibleParam?: QueryDocumentSnapshot<DocumentData> | string | null,
   itemsPerPage: number = 10
 ): Promise<{ restaurants: Restaurant[], lastVisible: QueryDocumentSnapshot<DocumentData> | null }> => {
-  // Se não estiver no cliente, retorna array vazio (será preenchido pelo lado do cliente)
   if (!isClient) {
     return { restaurants: [], lastVisible: null };
   }
 
   try {
-    console.log(`Buscando restaurantes para cidade: ${city}`);
-    
-    // Se lastVisibleParam é uma string (ID do documento), precisamos obter o documento real
-    let lastDocumentId: string | null = null;
-    
-    if (lastVisibleParam && typeof lastVisibleParam === 'string') {
-      lastDocumentId = lastVisibleParam;
-      console.log(`Usando último documento ID: ${lastDocumentId}`);
-    } else if (lastVisibleParam && typeof lastVisibleParam === 'object') {
-      lastDocumentId = lastVisibleParam.id;
-      console.log(`Usando último documento do objeto: ${lastDocumentId}`);
-    }
-    
-    // Criando a consulta base - precisamos considerar variações do nome da cidade
-    const cityLower = city.toLowerCase();
-    
-    // Consultas para cada variação possível do nome da cidade
-    const cityVariations = [cityLower];
-    
-    // Adiciona variações para Belo Horizonte
-    if (cityLower === 'belo horizonte') {
-      cityVariations.push('bh', 'b.h.', 'belzonte');
-    }
-
-    // Vamos trazer uma lista maior de restaurantes para permitir paginação
-    // Limitado a 100 para evitar problemas de desempenho
-    const baseQuery = query(
+    // Fetch all restaurants and filter manually by city slug (handles accents)
+    const q = query(
       collection(db, 'places'),
-      orderBy('name'),
-      limit(100)
+      orderBy('name')
     );
-    
-    console.log(`Executando consulta base...`);
-    const querySnapshot = await getDocs(baseQuery);
-    console.log(`Total de documentos retornados: ${querySnapshot.size}`);
-    
-    // Lista para guardar os ids dos restaurantes encontrados
-    const allRestaurantIds: string[] = [];
-    const cityRestaurantIds: string[] = [];
-    
-    // Primeiro passo: identificar todos os restaurantes da cidade em questão
-    querySnapshot.forEach(doc => {
-      allRestaurantIds.push(doc.id);
-      
+    const querySnapshot = await getDocs(q);
+    const allRestaurants: Restaurant[] = [];
+    querySnapshot.forEach((doc) => {
       const data = doc.data();
-      const cityValue = data.fiscalInformation?.fiscalAddress?.city || data.city || '';
-      
-      if (cityValue && cityVariations.some(variant => 
-          cityValue.toLowerCase().includes(variant) || 
-          variant.includes(cityValue.toLowerCase()))) {
-        cityRestaurantIds.push(doc.id);
-      }
+      allRestaurants.push(sanitizeRestaurant({ id: doc.id, ...data }));
     });
-    
-    console.log(`Total de restaurantes: ${allRestaurantIds.length}`);
-    console.log(`Total de restaurantes em ${city}: ${cityRestaurantIds.length}`);
-    
-    // Determinar o índice do último documento visto
-    let startIdx = 0;
-    if (lastDocumentId) {
-      const lastIdx = cityRestaurantIds.indexOf(lastDocumentId);
-      if (lastIdx !== -1) {
-        startIdx = lastIdx + 1; // Começamos a partir do próximo
-        console.log(`Último documento encontrado na posição ${lastIdx}, começando da posição ${startIdx}`);
-      } else {
-        console.log(`Documento com ID ${lastDocumentId} não encontrado na lista.`);
-      }
-    }
-    
-    // Verificar se já mostramos todos os restaurantes
-    if (startIdx >= cityRestaurantIds.length) {
-      console.log(`Não há mais restaurantes para mostrar (${startIdx} >= ${cityRestaurantIds.length})`);
-      return {
-        restaurants: [],
-        lastVisible: null
-      };
-    }
-    
-    // Pegar o próximo lote de restaurantes
-    const nextBatchIds = cityRestaurantIds.slice(startIdx, startIdx + itemsPerPage);
-    console.log(`Obtendo próximo lote de ${nextBatchIds.length} restaurantes a partir da posição ${startIdx}`);
-    
-    // Processar os restaurantes do próximo lote
-    const nextBatchRestaurants: Restaurant[] = [];
-    let lastVisibleDoc: QueryDocumentSnapshot<DocumentData> | null = null;
-    
-    for (const id of nextBatchIds) {
-      // Procurar o documento no querySnapshot
-      const docSnapshot = querySnapshot.docs.find(doc => doc.id === id);
-      if (docSnapshot) {
-        const data = docSnapshot.data();
-        nextBatchRestaurants.push(sanitizeRestaurant({
-          id: docSnapshot.id,
-          ...data
-        }));
-        lastVisibleDoc = docSnapshot;
-      }
-    }
-    
-    console.log(`Retornando ${nextBatchRestaurants.length} restaurantes para ${city}`);
-    
-    // Calcular média de avaliações para este lote
-    const avgRatings = await getAverageRatings(nextBatchRestaurants.map(r => r.id));
-    const restaurantsWithAvg = nextBatchRestaurants.map(r => ({
-      ...r,
-      rating: avgRatings[r.id] ?? 0
-    }));
-    
-    return {
-      restaurants: restaurantsWithAvg,
-      lastVisible: lastVisibleDoc
-    };
+    // Normalize string to slug
+    const normalize = (str: string) =>
+      str.toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^\w\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    const targetSlug = normalize(city);
+    const filtered = allRestaurants.filter(r => normalize(r.city || '') === targetSlug);
+    // Calculate average ratings
+    const avgRatings = await getAverageRatings(filtered.map(r => r.id));
+    const restaurantsWithAvg = filtered.map(r => ({ ...r, rating: avgRatings[r.id] ?? 0 }));
+    return { restaurants: restaurantsWithAvg, lastVisible: null };
   } catch (error) {
     console.error('Erro ao buscar restaurantes por cidade:', error);
     return { 

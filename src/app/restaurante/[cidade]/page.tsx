@@ -24,6 +24,13 @@ export async function generateMetadata({
   };
 }
 
+export async function generateStaticParams() {
+  return [
+    { cidade: 'belo-horizonte' },
+    { cidade: 'sao-paulo' }
+  ];
+}
+
 export default async function RestaurantesPage({ 
   params 
 }: { 

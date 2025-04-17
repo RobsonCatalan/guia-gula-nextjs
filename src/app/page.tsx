@@ -28,7 +28,13 @@ export default function Home() {
       {/* Header */}
       <header className="bg-[#D32F2F] text-white p-6">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <h1 className="text-3xl font-bold font-['Roboto']">Gula.menu</h1>
+          <Image
+            src="/images/logo/logo.webp"
+            alt="Gula.menu"
+            width={150}
+            height={50}
+            priority
+          />
           <nav className="hidden md:flex space-x-6">
             <a href="/" className="hover:text-[#F4A261] transition-colors">Início</a>
             <a href="#" className="hover:text-[#F4A261] transition-colors">Cidades</a>

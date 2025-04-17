@@ -46,7 +46,7 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="bg-[#D32F2F] text-white py-16">
+      <section className="bg-[#FF5842] text-white py-16">
         <div className="max-w-7xl mx-auto text-center px-6">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 font-['Roboto']">
             Descubra os melhores restaurantes

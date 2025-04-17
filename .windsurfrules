@@ -16,7 +16,7 @@
 
 ## Layout e Estilização
 - Use Tailwind CSS como biblioteca principal para estilização.
-- Aplique uma paleta de cores com: Branco Cremoso (#FFF8F0) para fundos, Cinza Quente (#4A4A4A) para textos e bordas, Vermelho Tomate (#D32F2F) para destaques e CTAs, Laranja Mostarda (#F4A261) para ícones e elementos secundários.
+- Aplique uma paleta de cores com: Branco Cremoso (#FFF8F0) para fundos, Cinza Quente (#4A4A4A) para textos e bordas, Laranja (#FF5842) para destaques e CTAs, Laranja Mostarda (#F4A261) para ícones e elementos secundários.
 - Use a fonte `Inter` para textos gerais e `Roboto` para títulos, com tamanhos legíveis (mínimo 16px para corpo, 24px para cabeçalhos).
 - Garanta espaçamento consistente com margens e paddings baseados em múltiplos de 4px ou 8px.
 - Implemente layouts com CSS Grid ou Flexbox para organização fluida e responsiva.

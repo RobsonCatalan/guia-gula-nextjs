@@ -46,7 +46,7 @@ export default function CategorySection() {
   return (
     <section className="py-12 px-6 bg-[#FFF8F0]">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold font-['Roboto'] text-[#4A4A4A] mb-6">Categorias</h2>
+        <h2 className="text-3xl font-bold font-['Roboto'] text-[#4A4A4A] mb-6">Categorias de Restaurantes</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
           {categories.map((cat) => (
             <div
@@ -58,6 +58,7 @@ export default function CategorySection() {
                   src={`/images/categories/${cat === 'Pastelaria' ? 'pastel' : cat === 'Outros' ? 'outros' : slugify(cat)}.webp`}
                   alt={cat}
                   fill
+                  sizes="(min-width: 1024px) 16.66vw, (min-width: 768px) 25vw, (min-width: 640px) 33.33vw, 50vw"
                   className="object-cover"
                 />
               </div>

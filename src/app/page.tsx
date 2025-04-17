@@ -34,6 +34,7 @@ export default function Home() {
             width={150}
             height={50}
             priority
+            style={{ width: 'auto', height: 'auto' }}
           />
           <nav className="hidden md:flex space-x-6">
             <a href="/" className="hover:text-[#F4A261] transition-colors">Início</a>

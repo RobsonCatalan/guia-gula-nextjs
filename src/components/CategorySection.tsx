@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 
 const categories = [
   'Bar & Pub',
@@ -33,6 +34,14 @@ const categories = [
   'Outros'
 ];
 
+const slugify = (str: string) =>
+  str.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
 export default function CategorySection() {
   return (
     <section className="py-12 px-6 bg-[#FFF8F0]">
@@ -42,9 +51,17 @@ export default function CategorySection() {
           {categories.map((cat) => (
             <div
               key={cat}
-              className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-4 text-center"
+              className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-4"
             >
-              <span className="text-[#D32F2F] font-medium">{cat}</span>
+              <div className="relative w-full h-32 overflow-hidden rounded-t-lg mb-2">
+                <Image
+                  src={`/images/categories/${cat === 'Pastelaria' ? 'pastel' : cat === 'Outros' ? 'outros' : slugify(cat)}.webp`}
+                  alt={cat}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <span className="text-[#D32F2F] font-medium block text-center">{cat}</span>
             </div>
           ))}
         </div>

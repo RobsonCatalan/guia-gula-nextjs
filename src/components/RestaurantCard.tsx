@@ -37,10 +37,10 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
   const [mainPhotoError, setMainPhotoError] = useState(false);
   const [logoError, setLogoError] = useState(false);
 
-  // URL para página do restaurante seguindo o formato /{cidade}/restaurante/{nome-restaurante}
-  const restaurantUrl = city 
-    ? `/${createSlug(city)}/restaurante/${createSlug(name)}` 
-    : `/restaurante/${createSlug(name)}`; // Fallback caso não tenha cidade
+  // URL para página do restaurante seguindo o formato /restaurante/[cidade]/[nome-restaurante]
+  const restaurantUrl = city
+    ? `/restaurante/${createSlug(city)}/${createSlug(name)}`
+    : `/restaurante/${createSlug(name)}`;
 
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">

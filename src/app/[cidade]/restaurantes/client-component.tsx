@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Restaurant, getRestaurantsByCity } from '@/lib/restaurantService';
 import RestaurantCard from '@/components/RestaurantCard';
+import Head from 'next/head';
 
 interface RestaurantClientProps {
   cidade: string;
@@ -16,6 +17,26 @@ export default function ClientComponent({
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState<boolean>(false);
+
+  // Preparar JSON-LD para SEO após carregamento de restaurantes
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: restaurants.map((r, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'Restaurant',
+        name: r.name,
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: r.rating,
+          bestRating: 5,
+          worstRating: 1
+        }
+      }
+    }))
+  };
 
   // Função inicial para carregar os restaurantes quando o componente montar
   useEffect(() => {
@@ -97,51 +118,61 @@ export default function ClientComponent({
   const restaurantsArray = restaurants || [];
 
   return (
-    <div>
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error}
-        </div>
+    <>
+      {restaurants.length > 0 && (
+        <Head>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
+        </Head>
       )}
-      
-      {loading && restaurantsArray.length === 0 ? (
-        <div className="text-center py-8">
-          <div className="w-12 h-12 border-4 border-[#F4A261] border-t-[#D32F2F] rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-lg text-gray-600">Carregando restaurantes...</p>
-        </div>
-      ) : restaurantsArray.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {restaurantsArray.map(restaurant => (
-            <RestaurantCard key={restaurant.id} restaurant={restaurant} />
-          ))}
-        </div>
-      ) : (
-        <div className="text-center py-8 bg-[#FFF8F0] rounded-lg border border-[#4A4A4A]/10 p-6">
-          <div className="w-16 h-16 mx-auto mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-[#F4A261]">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+      <div>
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {error}
           </div>
-          <p className="text-xl font-medium text-[#4A4A4A] mb-2">
-            Não encontramos restaurantes em {cidade}
-          </p>
-          <p className="text-[#4A4A4A]/70">
-            Tente buscar por outras cidades ou volte mais tarde quando houver novos restaurantes cadastrados.
-          </p>
-        </div>
-      )}
-      
-      {hasMore && (
-        <div className="flex justify-center mt-8">
-          <button
-            onClick={loadMoreRestaurants}
-            disabled={loading}
-            className="bg-[#D32F2F] text-white px-6 py-3 rounded-full hover:bg-red-700 transition-colors disabled:opacity-50"
-          >
-            {loading ? 'Carregando...' : 'Carregar mais'}
-          </button>
-        </div>
-      )}
-    </div>
+        )}
+        
+        {loading && restaurantsArray.length === 0 ? (
+          <div className="text-center py-8">
+            <div className="w-12 h-12 border-4 border-[#F4A261] border-t-[#D32F2F] rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-lg text-gray-600">Carregando restaurantes...</p>
+          </div>
+        ) : restaurantsArray.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {restaurantsArray.map(restaurant => (
+              <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8 bg-[#FFF8F0] rounded-lg border border-[#4A4A4A]/10 p-6">
+            <div className="w-16 h-16 mx-auto mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-[#F4A261]">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <p className="text-xl font-medium text-[#4A4A4A] mb-2">
+              Não encontramos restaurantes em {cidade}
+            </p>
+            <p className="text-[#4A4A4A]/70">
+              Tente buscar por outras cidades ou volte mais tarde quando houver novos restaurantes cadastrados.
+            </p>
+          </div>
+        )}
+        
+        {hasMore && (
+          <div className="flex justify-center mt-8">
+            <button
+              onClick={loadMoreRestaurants}
+              disabled={loading}
+              className="bg-[#D32F2F] text-white px-6 py-3 rounded-full hover:bg-red-700 transition-colors disabled:opacity-50"
+            >
+              {loading ? 'Carregando...' : 'Carregar mais'}
+            </button>
+          </div>
+        )}
+      </div>
+    </>
   );
 }

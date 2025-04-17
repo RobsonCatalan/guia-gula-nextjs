@@ -20,6 +20,7 @@ const RestaurantList = dynamic(
 );
 
 import CityDetector from '@/components/CityDetector';
+import CategorySection from '@/components/CategorySection';
 
 export default function Home() {
   return (
@@ -59,7 +60,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-
+      <CategorySection />
       {/* Main Content */}
       <main className="py-12 px-6">
         <div className="max-w-7xl mx-auto">

@@ -19,6 +19,8 @@ const RestaurantList = dynamic(
   }
 );
 
+import CityDetector from '@/components/CityDetector';
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-[#FFF8F0]">
@@ -62,6 +64,7 @@ export default function Home() {
       <main className="py-12 px-6">
         <div className="max-w-7xl mx-auto">
           {/* Firestore Integration Demo */}
+          <CityDetector />
           <RestaurantList />
           
           <div className="mt-16 text-center">

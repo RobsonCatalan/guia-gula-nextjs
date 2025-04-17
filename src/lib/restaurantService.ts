@@ -116,7 +116,14 @@ export const getRestaurants = async (
       });
     }
     
-    return { restaurants, lastVisible: newLastVisible };
+    // Calcular média de avaliações para este lote
+    const avgRatings = await getAverageRatings(restaurants.map(r => r.id));
+    const restaurantsWithAvg = restaurants.map(r => ({
+      ...r,
+      rating: avgRatings[r.id] ?? 0
+    }));
+    
+    return { restaurants: restaurantsWithAvg, lastVisible: newLastVisible };
   } catch (error) {
     console.error('Erro ao buscar restaurantes:', error);
     // Retornamos um array vazio em vez de dados mockados
@@ -259,8 +266,15 @@ export const getRestaurantsByCity = async (
     
     console.log(`Retornando ${nextBatchRestaurants.length} restaurantes para ${city}`);
     
+    // Calcular média de avaliações para este lote
+    const avgRatings = await getAverageRatings(nextBatchRestaurants.map(r => r.id));
+    const restaurantsWithAvg = nextBatchRestaurants.map(r => ({
+      ...r,
+      rating: avgRatings[r.id] ?? 0
+    }));
+    
     return {
-      restaurants: nextBatchRestaurants,
+      restaurants: restaurantsWithAvg,
       lastVisible: lastVisibleDoc
     };
   } catch (error) {
@@ -327,4 +341,34 @@ export const getRestaurantsByCuisine = async (
     // Retornamos array vazio em vez de dados mockados
     return { restaurants: [], lastVisible: null };
   }
+};
+
+// Adicionar função para calcular média de avaliações de restaurantes
+export const getAverageRatings = async (restaurantIds: string[]): Promise<Record<string, number>> => {
+  if (!isClient) {
+    return {};
+  }
+  const ratingsMap: Record<string, { sum: number; count: number }> = {};
+  for (let i = 0; i < restaurantIds.length; i += 10) {
+    const chunk = restaurantIds.slice(i, i + 10);
+    const refs = chunk.map(id => doc(db, 'places', id));
+    const reviewsQuery = query(collection(db, 'placeReviews'), where('placeReference', 'in', refs));
+    const snapshot = await getDocs(reviewsQuery);
+    snapshot.forEach(reviewDoc => {
+      const data = reviewDoc.data();
+      const ratingValue = data.rating;
+      const ref: any = data.placeReference;
+      const refId = ref.id;
+      if (!ratingsMap[refId]) {
+        ratingsMap[refId] = { sum: 0, count: 0 };
+      }
+      ratingsMap[refId].sum += ratingValue;
+      ratingsMap[refId].count += 1;
+    });
+  }
+  const avgMap: Record<string, number> = {};
+  Object.entries(ratingsMap).forEach(([id, { sum, count }]) => {
+    avgMap[id] = parseFloat((sum / count).toFixed(1));
+  });
+  return avgMap;
 };

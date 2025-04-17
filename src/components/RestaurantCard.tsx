@@ -30,6 +30,7 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
     logo,
     mainPhoto,
     city,
+    rating,
   } = restaurant;
 
   // Estado para controlar erros de carregamento de imagem
@@ -78,6 +79,17 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
       
       <div className="p-4">
         <h3 className="text-xl font-bold text-[#4A4A4A] mb-1 truncate">{name}</h3>
+        
+        {restaurant.rating && restaurant.rating > 0 ? (
+          <div className="flex items-center mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-[#F4A261]" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.165 3.584a1 1 0 00.95.69h3.768c.969 0 1.371 1.24.588 1.81l-3.047 2.213a1 1 0 00-.364 1.118l1.165 3.584c.3.921-.755 1.688-1.538 1.118l-3.047-2.213a1 1 0 00-1.176 0l-3.047 2.213c-.783.57-1.838-.197-1.538-1.118l1.165-3.584a1 1 0 00-.364-1.118L2.575 9.011c-.783-.57-.38-1.81.588-1.81h3.768a1 1 0 00.95-.69l1.165-3.584z" />
+            </svg>
+            <span className="ml-1 text-sm text-[#4A4A4A]">{restaurant.rating.toFixed(1)}</span>
+          </div>
+        ) : (
+          <p className="text-sm text-[#4A4A4A] mb-2">Sem avaliações</p>
+        )}
         
         {city && (
           <div className="flex items-center text-sm text-gray-600 mb-2">

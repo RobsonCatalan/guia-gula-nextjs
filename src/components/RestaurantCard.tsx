@@ -75,6 +75,29 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
     ? `/restaurante/${createSlug(city)}/${createSlug(name)}`
     : `/restaurante/${createSlug(name)}`;
 
+  // Helper to render 5 stars with partial fill based on rating
+  const renderStars = (ratingValue: number) => {
+    const stars = [];
+    for (let i = 0; i < 5; i++) {
+      const fill = Math.max(0, Math.min(1, ratingValue - i));
+      stars.push(
+        <span key={i} className="relative inline-block w-4 h-4 mr-1">
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.165 3.584a1 1 0 00.95.69h3.768c.969 0 1.371 1.24.588 1.81l-3.047 2.213a1 1 0 00-.364 1.118l1.165 3.584c.3.921-.755 1.688-1.538 1.118l-3.047-2.213a1 1 0 00-1.176 0l-3.047 2.213c-.783.57-1.838-.197-1.538-1.118l1.165-3.584a1 1 0 00-.364-1.118L2.575 9.011c-.783-.57-.38-1.81.588-1.81h3.768a1 1 0 00.95-.69l1.165-3.584z" />
+          </svg>
+          {fill > 0 && (
+            <span className="absolute top-0 left-0 h-full overflow-hidden" style={{ width: `${fill * 100}%` }}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-[#F4A261]" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.165 3.584a1 1 0 00.95.69h3.768c.969 0 1.371 1.24.588 1.81l-3.047 2.213a1 1 0 00-.364 1.118l1.165 3.584c.3.921-.755 1.688-1.538 1.118l-3.047-2.213a1 1 0 00-1.176 0l-3.047 2.213c-.783.57-1.838-.197-1.538-1.118l1.165-3.584a1 1 0 00-.364-1.118L2.575 9.011c-.783-.57-.38-1.81.588-1.81h3.768a1 1 0 00.95-.69l1.165-3.584z" />
+              </svg>
+            </span>
+          )}
+        </span>
+      );
+    }
+    return stars;
+  };
+
   return (
     <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
       {/* Imagem principal do restaurante */}
@@ -113,12 +136,10 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
       <div className="p-4">
         <h3 className="text-xl font-bold text-[#4A4A4A] mb-1 truncate">{name}</h3>
         
-        {restaurant.rating && restaurant.rating > 0 ? (
+        {rating && rating > 0 ? (
           <div className="flex items-center mb-2">
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-[#F4A261]" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.165 3.584a1 1 0 00.95.69h3.768c.969 0 1.371 1.24.588 1.81l-3.047 2.213a1 1 0 00-.364 1.118l1.165 3.584c.3.921-.755 1.688-1.538 1.118l-3.047-2.213a1 1 0 00-1.176 0l-3.047 2.213c-.783.57-1.838-.197-1.538-1.118l1.165-3.584a1 1 0 00-.364-1.118L2.575 9.011c-.783-.57-.38-1.81.588-1.81h3.768a1 1 0 00.95-.69l1.165-3.584z" />
-            </svg>
-            <span className="ml-1 text-sm text-[#4A4A4A]">{restaurant.rating.toFixed(1)}</span>
+            {renderStars(rating)}
+            <span className="ml-1 text-sm text-[#4A4A4A]">{rating.toFixed(1)}</span>
           </div>
         ) : (
           <p className="text-sm text-[#4A4A4A] mb-2">Sem avaliações</p>

@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from 'react';
 
-export default function CityDetector() {
+interface CityDetectorProps {
+  onCityDetected?: (city: string) => void;
+}
+
+export default function CityDetector({ onCityDetected }: CityDetectorProps) {
   const [city, setCity] = useState<string>('');
 
   useEffect(() => {
@@ -11,7 +15,10 @@ export default function CityDetector() {
         const response = await fetch('https://ipapi.co/json/');
         if (response.ok) {
           const data = await response.json();
-          if (data.city) setCity(data.city);
+          if (data.city) {
+            setCity(data.city);
+            onCityDetected?.(data.city);
+          }
         }
       } catch (error) {
         console.error('IP geolocation error:', error);
@@ -30,6 +37,7 @@ export default function CityDetector() {
               const json = await res.json();
               if (json.city) {
                 setCity(json.city);
+                onCityDetected?.(json.city);
                 return;
               }
             }
@@ -47,6 +55,12 @@ export default function CityDetector() {
       fetchByIP();
     }
   }, []);
+
+  useEffect(() => {
+    if (city && onCityDetected) {
+      onCityDetected(city);
+    }
+  }, [city, onCityDetected]);
 
   if (!city) return null;
 

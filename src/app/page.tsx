@@ -25,11 +25,31 @@ import CityDetector from '@/components/CityDetector';
 import CategorySection from '@/components/CategorySection';
 
 export default function Home() {
+  // Selected city and detection flag
   const [selectedCity, setSelectedCity] = useState<string>('sao-paulo');
+  const [hasDetected, setHasDetected] = useState<boolean>(false);
   const cityOptions = [
     { value: 'sao-paulo', label: 'São Paulo' },
     { value: 'belo-horizonte', label: 'Belo Horizonte' }
   ];
+
+  // Normalize string to slug (remove accents, spaces → hyphens)
+  const normalize = (str: string) =>
+    str.toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^\w\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-+|-+$/g, '');
+
+  // Handle callback: override selectedCity and mark detected
+  const handleCityDetected = (cityName: string) => {
+    const slug = normalize(cityName);
+    setSelectedCity(cityOptions.some(opt => opt.value === slug) ? slug : 'sao-paulo');
+    setHasDetected(true);
+  };
+
   return (
     <div className="min-h-screen bg-[#FFF8F0]">
       {/* Header */}
@@ -74,21 +94,24 @@ export default function Home() {
           </div>
         </div>
       </section>
-      {/* City Selection */}
-      <div className="max-w-7xl mx-auto px-6 mt-8 flex items-center space-x-4">
-        <label htmlFor="city-select" className="text-[#4A4A4A] font-medium">Selecione a cidade:</label>
-        <select
-          id="city-select"
-          value={selectedCity}
-          onChange={(e) => setSelectedCity(e.target.value)}
-          className="px-4 py-2 border border-[#4A4A4A] rounded-lg bg-white text-[#4A4A4A] focus:outline-none"
-        >
-          {cityOptions.map(opt => (
-            <option key={opt.value} value={opt.value}>{opt.label}</option>
-          ))}
-        </select>
-      </div>
-      <CityDetector />
+      {/* City Detection and Selection */}
+      {hasDetected ? (
+        <div className="max-w-7xl mx-auto px-6 mt-8 flex items-center space-x-4">
+          <label htmlFor="city-select" className="text-[#4A4A4A] font-medium">Selecione a cidade:</label>
+          <select
+            id="city-select"
+            value={selectedCity}
+            onChange={(e) => setSelectedCity(e.target.value)}
+            className="px-4 py-2 border border-[#4A4A4A] rounded-lg bg-white text-[#4A4A4A] focus:outline-none"
+          >
+            {cityOptions.map(opt => (
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
+          </select>
+        </div>
+      ) : (
+        <CityDetector onCityDetected={handleCityDetected} />
+      )}
       <CategorySection />
       {/* Main Content */}
       <main className="py-12 px-6">

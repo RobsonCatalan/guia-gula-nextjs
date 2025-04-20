@@ -12,28 +12,17 @@ export interface RestaurantListProps {
 
 export default function RestaurantList({ city }: RestaurantListProps) {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
-  const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot<DocumentData> | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [hasMore, setHasMore] = useState<boolean>(true);
 
-  const loadRestaurants = async (reset: boolean = false) => {
-    if (typeof window === 'undefined') return; // only client
+  const loadRestaurants = async () => {
+    if (typeof window === 'undefined') return;
     setLoading(true);
     try {
-      const lastDoc = reset ? undefined : lastVisible;
       const res = city
-        ? await getRestaurantsByCity(city, lastDoc || undefined, 6)
-        : await getRestaurants(lastDoc || undefined, 6);
-      const { restaurants: newRestaurants, lastVisible: newLastVisible } = res;
-
-      if (reset) {
-        setRestaurants(newRestaurants);
-      } else {
-        setRestaurants(prev => [...prev, ...newRestaurants]);
-      }
-      setLastVisible(newLastVisible);
-      setHasMore(!!newLastVisible && newRestaurants.length > 0);
+        ? await getRestaurantsByCity(city)
+        : await getRestaurants();
+      setRestaurants(res.restaurants);
       setError(null);
     } catch (err) {
       console.error('Erro ao carregar restaurantes:', err);
@@ -44,17 +33,8 @@ export default function RestaurantList({ city }: RestaurantListProps) {
   };
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setLastVisible(null);
-      loadRestaurants(true);
-    }
+    loadRestaurants();
   }, [city]);
-
-  const handleLoadMore = () => {
-    if (!loading && hasMore) {
-      loadRestaurants();
-    }
-  };
 
   // Preparar JSON-LD para SEO
   const jsonLd = {
@@ -110,17 +90,6 @@ export default function RestaurantList({ city }: RestaurantListProps) {
         {loading && (
           <div className="flex justify-center my-8">
             <div className="w-10 h-10 border-4 border-[#F4A261] border-t-[#D32F2F] rounded-full animate-spin"></div>
-          </div>
-        )}
-        
-        {hasMore && !loading && (
-          <div className="flex justify-center mt-8">
-            <button 
-              onClick={handleLoadMore}
-              className="bg-[#D32F2F] text-white px-6 py-2 rounded-full hover:bg-red-700 transition-colors"
-            >
-              Carregar mais
-            </button>
           </div>
         )}
       </div>

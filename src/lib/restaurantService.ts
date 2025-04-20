@@ -70,63 +70,34 @@ const isClient = typeof window !== 'undefined';
 export const getRestaurants = async (
   lastVisible?: QueryDocumentSnapshot<DocumentData>,
   itemsPerPage: number = 10
-): Promise<{ restaurants: Restaurant[], lastVisible: QueryDocumentSnapshot<DocumentData> | null }> => {
-  // Se não estiver no cliente, retorna array vazio (será preenchido pelo lado do cliente)
+): Promise<{ restaurants: Restaurant[]; lastVisible: QueryDocumentSnapshot<DocumentData> | null }> => {
   if (!isClient) {
     console.log('Executando no ambiente servidor - não é possível acessar o Firestore');
-    return { 
-      restaurants: [], 
-      lastVisible: null 
-    };
+    return { restaurants: [], lastVisible: null };
   }
-
   try {
-    let q;
-    
-    if (lastVisible) {
-      q = query(
-        collection(db, 'places'), 
-        orderBy('name'), 
-        startAfter(lastVisible),
-        limit(itemsPerPage)
-      );
-    } else {
-      q = query(
-        collection(db, 'places'), 
-        orderBy('name'), 
-        limit(itemsPerPage)
-      );
-    }
-    
-    const querySnapshot = await getDocs(q);
-    
-    const restaurants: Restaurant[] = [];
-    let newLastVisible: QueryDocumentSnapshot<DocumentData> | null = null;
-    
-    if (!querySnapshot.empty) {
-      newLastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-      
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        // Passar o documento completo para sanitizeRestaurant
-        restaurants.push(sanitizeRestaurant({ 
-          id: doc.id, 
-          ...data 
-        }));
-      });
-    }
-    
-    // Calcular média de avaliações para este lote
+    // Buscar todos os restaurantes localmente
+    const snapshot = await getDocs(query(collection(db, 'places'), orderBy('name')));
+    // Filtrar somente visíveis
+    const visibleDocs = snapshot.docs.filter(doc => doc.data().guideConfig?.isVisible);
+    // Ordenar por nome
+    visibleDocs.sort((a, b) => (a.data().name || '').localeCompare(b.data().name || ''));
+    // Paginação: determinar índice de início
+    const startIndex = lastVisible
+      ? visibleDocs.findIndex(d => d.id === lastVisible.id) + 1
+      : 0;
+    // Extrair documentos da página atual
+    const pageDocs = visibleDocs.slice(startIndex, startIndex + itemsPerPage);
+    // Sanitizar restaurantes
+    const restaurants = pageDocs.map(d => sanitizeRestaurant({ id: d.id, ...d.data() }));
+    // Novo cursor para paginação
+    const newLastVisible = pageDocs.length ? pageDocs[pageDocs.length - 1] : null;
+    // Calcular média de avaliações
     const avgRatings = await getAverageRatings(restaurants.map(r => r.id));
-    const restaurantsWithAvg = restaurants.map(r => ({
-      ...r,
-      rating: avgRatings[r.id] ?? 0
-    }));
-    
+    const restaurantsWithAvg = restaurants.map(r => ({ ...r, rating: avgRatings[r.id] ?? 0 }));
     return { restaurants: restaurantsWithAvg, lastVisible: newLastVisible };
   } catch (error) {
     console.error('Erro ao buscar restaurantes:', error);
-    // Retornamos um array vazio em vez de dados mockados
     return { restaurants: [], lastVisible: null };
   }
 };
@@ -173,7 +144,9 @@ export const getRestaurantsByCity = async (
     const allRestaurants: Restaurant[] = [];
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      allRestaurants.push(sanitizeRestaurant({ id: doc.id, ...data }));
+      if (data.guideConfig?.isVisible) {
+        allRestaurants.push(sanitizeRestaurant({ id: doc.id, ...data }));
+      }
     });
     // Normalize string to slug
     const normalize = (str: string) =>
@@ -210,44 +183,26 @@ export const getRestaurantsByCuisine = async (
   }
 
   try {
-    let q;
-    
-    if (lastVisible) {
-      q = query(
-        collection(db, 'places'), 
-        where('cuisine', '==', cuisine),
-        orderBy('name'), 
-        startAfter(lastVisible),
-        limit(itemsPerPage)
-      );
-    } else {
-      q = query(
-        collection(db, 'places'), 
-        where('cuisine', '==', cuisine),
-        orderBy('name'), 
-        limit(itemsPerPage)
-      );
-    }
-    
-    const querySnapshot = await getDocs(q);
-    
-    const restaurants: Restaurant[] = [];
-    let newLastVisible: QueryDocumentSnapshot<DocumentData> | null = null;
-    
-    if (!querySnapshot.empty) {
-      newLastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-      
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        // Passar o documento completo para sanitizeRestaurant
-        restaurants.push(sanitizeRestaurant({ 
-          id: doc.id, 
-          ...data 
-        }));
-      });
-    }
-    
-    return { restaurants, lastVisible: newLastVisible };
+    // Buscar todos os restaurantes localmente
+    const snapshot = await getDocs(query(collection(db, 'places'), orderBy('name')));
+    // Filtrar somente visíveis
+    const visibleDocs = snapshot.docs.filter(doc => doc.data().guideConfig?.isVisible);
+    // Ordenar por nome
+    visibleDocs.sort((a, b) => (a.data().name || '').localeCompare(b.data().name || ''));
+    // Paginação: determinar índice de início
+    const startIndex = lastVisible
+      ? visibleDocs.findIndex(d => d.id === lastVisible.id) + 1
+      : 0;
+    // Extrair documentos da página atual
+    const pageDocs = visibleDocs.slice(startIndex, startIndex + itemsPerPage);
+    // Sanitizar restaurantes
+    const restaurants = pageDocs.map(d => sanitizeRestaurant({ id: d.id, ...d.data() }));
+    // Novo cursor para paginação
+    const newLastVisible = pageDocs.length ? pageDocs[pageDocs.length - 1] : null;
+    // Calcular média de avaliações
+    const avgRatings = await getAverageRatings(restaurants.map(r => r.id));
+    const restaurantsWithAvg = restaurants.map(r => ({ ...r, rating: avgRatings[r.id] ?? 0 }));
+    return { restaurants: restaurantsWithAvg, lastVisible: newLastVisible };
   } catch (error) {
     console.error('Erro ao buscar restaurantes por tipo de cozinha:', error);
     // Retornamos array vazio em vez de dados mockados

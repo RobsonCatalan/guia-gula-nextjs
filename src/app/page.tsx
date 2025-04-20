@@ -69,6 +69,23 @@ export default function Home() {
             <a href="#" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Culinárias</a>
             <a href="#" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Sobre</a>
           </nav>
+          {hasDetected ? (
+            <div className="flex items-center space-x-4">
+              <label htmlFor="city-select" className="text-white font-medium">Ver restaurantes de:</label>
+              <select
+                id="city-select"
+                value={selectedCity}
+                onChange={(e) => setSelectedCity(e.target.value)}
+                className="px-4 py-2 border border-white rounded bg-white text-[#4A4A4A] focus:outline-none"
+              >
+                {cityOptions.map(opt => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
+            </div>
+          ) : (
+            <CityDetector onCityDetected={handleCityDetected} />
+          )}
           <button className="md:hidden text-2xl text-white">☰</button>
         </div>
       </header>
@@ -94,24 +111,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-      {/* City Detection and Selection */}
-      {hasDetected ? (
-        <div className="max-w-7xl mx-auto px-6 mt-8 flex items-center space-x-4">
-          <label htmlFor="city-select" className="text-[#4A4A4A] font-medium">Ver restaurantes de:</label>
-          <select
-            id="city-select"
-            value={selectedCity}
-            onChange={(e) => setSelectedCity(e.target.value)}
-            className="px-4 py-2 border border-[#4A4A4A] rounded-lg bg-white text-[#4A4A4A] focus:outline-none"
-          >
-            {cityOptions.map(opt => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
-          </select>
-        </div>
-      ) : (
-        <CityDetector onCityDetected={handleCityDetected} />
-      )}
       <CategorySection city={selectedCity} />
       {/* Main Content */}
       <main className="py-12 px-6">

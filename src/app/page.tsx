@@ -1,10 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import Image from "next/image";
 import dynamic from 'next/dynamic';
+import type { RestaurantListProps } from '@/components/RestaurantList';
 
 // Importação dinâmica com loading fallback para o componente que usa Firebase
-const RestaurantList = dynamic(
+const RestaurantList = dynamic<RestaurantListProps>(
   () => import('@/components/RestaurantList'),
   { 
     ssr: false,
@@ -23,6 +25,11 @@ import CityDetector from '@/components/CityDetector';
 import CategorySection from '@/components/CategorySection';
 
 export default function Home() {
+  const [selectedCity, setSelectedCity] = useState<string>('sao-paulo');
+  const cityOptions = [
+    { value: 'sao-paulo', label: 'São Paulo' },
+    { value: 'belo-horizonte', label: 'Belo Horizonte' }
+  ];
   return (
     <div className="min-h-screen bg-[#FFF8F0]">
       {/* Header */}
@@ -67,13 +74,27 @@ export default function Home() {
           </div>
         </div>
       </section>
+      {/* City Selection */}
+      <div className="max-w-7xl mx-auto px-6 mt-8 flex items-center space-x-4">
+        <label htmlFor="city-select" className="text-[#4A4A4A] font-medium">Selecione a cidade:</label>
+        <select
+          id="city-select"
+          value={selectedCity}
+          onChange={(e) => setSelectedCity(e.target.value)}
+          className="px-4 py-2 border border-[#4A4A4A] rounded-lg bg-white text-[#4A4A4A] focus:outline-none"
+        >
+          {cityOptions.map(opt => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+      </div>
       <CityDetector />
       <CategorySection />
       {/* Main Content */}
       <main className="py-12 px-6">
         <div className="max-w-7xl mx-auto">
           {/* Firestore Integration Demo */}
-          <RestaurantList />
+          <RestaurantList city={selectedCity} />
           
           <div className="mt-16 text-center">
             <h2 className="text-2xl font-bold text-[#4A4A4A] mb-4 font-['Roboto']">

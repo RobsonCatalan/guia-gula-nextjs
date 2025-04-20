@@ -1,12 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Restaurant, getRestaurants } from '@/lib/restaurantService';
+import { Restaurant, getRestaurants, getRestaurantsByCity } from '@/lib/restaurantService';
 import RestaurantCard from './RestaurantCard';
 import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
 import Head from 'next/head';
 
-export default function RestaurantList() {
+export interface RestaurantListProps {
+  city?: string;
+}
+
+export default function RestaurantList({ city }: RestaurantListProps) {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [lastVisible, setLastVisible] = useState<QueryDocumentSnapshot<DocumentData> | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -14,24 +18,20 @@ export default function RestaurantList() {
   const [hasMore, setHasMore] = useState<boolean>(true);
 
   const loadRestaurants = async (reset: boolean = false) => {
-    if (typeof window === 'undefined') return; // Garantir que só executa no cliente
-    
+    if (typeof window === 'undefined') return; // only client
+    setLoading(true);
     try {
-      setLoading(true);
-      
-      // Se for reset, começamos do início
       const lastDoc = reset ? undefined : lastVisible;
-      
-      // Garantir que lastDoc é undefined ou QueryDocumentSnapshot, nunca null
-      const { restaurants: newRestaurants, lastVisible: newLastVisible } = 
-        await getRestaurants(lastDoc || undefined, 6);
-      
+      const res = city
+        ? await getRestaurantsByCity(city, lastDoc || undefined, 6)
+        : await getRestaurants(lastDoc || undefined, 6);
+      const { restaurants: newRestaurants, lastVisible: newLastVisible } = res;
+
       if (reset) {
         setRestaurants(newRestaurants);
       } else {
         setRestaurants(prev => [...prev, ...newRestaurants]);
       }
-      
       setLastVisible(newLastVisible);
       setHasMore(!!newLastVisible && newRestaurants.length > 0);
       setError(null);
@@ -45,9 +45,10 @@ export default function RestaurantList() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      setLastVisible(null);
       loadRestaurants(true);
     }
-  }, []);
+  }, [city]);
 
   const handleLoadMore = () => {
     if (!loading && hasMore) {

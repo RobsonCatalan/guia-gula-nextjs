@@ -112,7 +112,7 @@ export default function Home() {
       ) : (
         <CityDetector onCityDetected={handleCityDetected} />
       )}
-      <CategorySection />
+      <CategorySection city={selectedCity} />
       {/* Main Content */}
       <main className="py-12 px-6">
         <div className="max-w-7xl mx-auto">

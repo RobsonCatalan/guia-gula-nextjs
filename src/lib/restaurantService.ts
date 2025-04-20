@@ -22,6 +22,7 @@ export interface Restaurant {
   mainPhoto?: string;
   photos?: string[];
   isVerified?: boolean;
+  categories?: string[];
 }
 
 // Interface para o cardápio
@@ -44,24 +45,24 @@ export interface Review {
 }
 
 // Função para sanitizar e validar dados de restaurante
-const sanitizeRestaurant = (data: DocumentData): Restaurant => {
-  return {
-    id: data.id || '',
-    name: data.name || '',
-    address: data.fiscalInformation?.fiscalAddress?.formattedAddress || data.address || '',
-    city: data.fiscalInformation?.fiscalAddress?.city || data.city || '',
-    description: data.description || '',
-    cuisine: data.cuisineType || data.cuisine || '',
-    openingHours: data.openingHours || 'Horário não disponível',
-    imageUrl: data.mainPhoto || data.imageUrl || '/images/placeholder-restaurant.jpg',
-    rating: data.rating || 0,
-    priceRange: data.priceRange || '$',
-    phone: data.contactInfo?.phoneNumber || data.phone || '',
-    website: data.contactInfo?.website || data.website || '',
-    logo: data.logo || null,
-    mainPhoto: data.mainPhoto || null
-  };
-};
+const sanitizeRestaurant = (data: DocumentData): Restaurant => ({
+  id: data.id || '',
+  name: data.name || '',
+  address: data.fiscalInformation?.fiscalAddress?.formattedAddress || data.address || '',
+  city: data.fiscalInformation?.fiscalAddress?.city || data.city || '',
+  description: data.description || '',
+  cuisine: data.cuisineType || data.cuisine || '',
+  openingHours: data.openingHours || 'Horário não disponível',
+  imageUrl: data.mainPhoto || data.imageUrl || '/images/placeholder-restaurant.jpg',
+  rating: data.rating || 0,
+  priceRange: data.priceRange || '$',
+  phone: data.contactInfo?.phoneNumber || data.phone || '',
+  website: data.contactInfo?.website || data.website || '',
+  logo: data.logo || null,
+  mainPhoto: data.mainPhoto || null,
+  // Map guideConfig categories (English codes) to array
+  categories: Array.isArray(data.guideConfig?.categories) ? data.guideConfig.categories : [],
+});
 
 // Verifica se estamos no ambiente de cliente e tem acesso ao Firestore
 const isClient = typeof window !== 'undefined';

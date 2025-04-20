@@ -23,6 +23,38 @@ interface RestaurantCardProps {
   restaurant: Restaurant;
 }
 
+// Map English category codes to Portuguese labels
+const categoryMap: Record<string, string> = {
+  barPub: 'Bar & Pub',
+  pizza: 'Pizzaria',
+  cafeBakeryDesserts: 'Café & Pães & Doces',
+  snacksBurgers: 'Lanches & Burgers',
+  barbecueGrill: 'Churrasco & Grelhados',
+  pastryShop: 'Pastelaria',
+  japanese: 'Japonês',
+  italian: 'Italiano',
+  mineiro: 'Mineiro',
+  arabic: 'Árabe',
+  selfServiceBuffet: 'Self-service & Buffet',
+  seafood: 'Frutos do Mar',
+  mexican: 'Mexicano',
+  wineBar: 'Wine Bar',
+  chinese: 'Chinês',
+  portuguese: 'Português',
+  veganVegetarian: 'Vegano & Vegetariano',
+  brazilian: 'Brasileiro',
+  french: 'Francês',
+  peruvian: 'Peruano',
+  spanish: 'Espanhol',
+  german: 'Alemão',
+  indian: 'Indiano',
+  international: 'Internacional',
+  healthyJuices: 'Saudável & Sucos',
+  beachKiosk: 'Quiosques & Barracas',
+  deliGourmet: 'Empório & Delicatessen',
+  other: 'Outros'
+};
+
 export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
   const {
     id,
@@ -31,6 +63,7 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
     mainPhoto,
     city,
     rating,
+    categories = []
   } = restaurant;
 
   // Estado para controlar erros de carregamento de imagem
@@ -98,6 +131,17 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
             <span>{city}</span>
+          </div>
+        )}
+        
+        {/* Categories tags */}
+        {categories.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-2">
+            {categories.map(code => (
+              <span key={code} className="bg-[#F4A261] text-white text-xs px-2 py-1 rounded">
+                {categoryMap[code] || code}
+              </span>
+            ))}
           </div>
         )}
         

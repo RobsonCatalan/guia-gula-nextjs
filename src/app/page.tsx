@@ -97,7 +97,7 @@ export default function Home() {
       {/* City Detection and Selection */}
       {hasDetected ? (
         <div className="max-w-7xl mx-auto px-6 mt-8 flex items-center space-x-4">
-          <label htmlFor="city-select" className="text-[#4A4A4A] font-medium">Selecione a cidade:</label>
+          <label htmlFor="city-select" className="text-[#4A4A4A] font-medium">Ver restaurantes de:</label>
           <select
             id="city-select"
             value={selectedCity}

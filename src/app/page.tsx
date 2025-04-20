@@ -4,6 +4,9 @@ import { useState } from 'react';
 import Image from "next/image";
 import dynamic from 'next/dynamic';
 import type { RestaurantListProps } from '@/components/RestaurantList';
+import CityDetector from '@/components/CityDetector';
+import CategorySection from '@/components/CategorySection';
+import Link from "next/link";
 
 // Importação dinâmica com loading fallback para o componente que usa Firebase
 const RestaurantList = dynamic<RestaurantListProps>(
@@ -20,9 +23,6 @@ const RestaurantList = dynamic<RestaurantListProps>(
     )
   }
 );
-
-import CityDetector from '@/components/CityDetector';
-import CategorySection from '@/components/CategorySection';
 
 export default function Home() {
   // Selected city and detection flag
@@ -118,7 +118,46 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           {/* Firestore Integration Demo */}
           <RestaurantList city={selectedCity} />
-          
+          {/* Explore outras Cidades */}
+          <section className="mt-16 px-6">
+            <h2 className="text-3xl font-bold text-[#4A4A4A] mb-6">Explore outras Cidades</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Belo Horizonte */}
+              <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
+                <Image
+                  src="/images/cities/belo-horizonte.webp"
+                  alt="Belo Horizonte"
+                  width={800}
+                  height={500}
+                  className="object-cover w-full h-48"
+                />
+                <div className="p-4">
+                  <h3 className="text-xl font-semibold text-[#4A4A4A] mb-2">Belo Horizonte</h3>
+                  <p className="text-[#4A4A4A] mb-4">Conhecida pelos tradicionais pratos mineiros e pelos diversos bares e botecos.</p>
+                  <div className="flex justify-end mt-2">
+                    <Link href="/restaurante/belo-horizonte" className="bg-[#D32F2F] !text-white px-4 py-2 rounded-full hover:bg-red-700 transition-colors text-sm font-medium">Ver mais</Link>
+                  </div>
+                </div>
+              </div>
+              {/* São Paulo */}
+              <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
+                <Image
+                  src="/images/cities/sao-paulo.webp"
+                  alt="São Paulo"
+                  width={800}
+                  height={500}
+                  className="object-cover w-full h-48"
+                />
+                <div className="p-4">
+                  <h3 className="text-xl font-semibold text-[#4A4A4A] mb-2">São Paulo</h3>
+                  <p className="text-[#4A4A4A] mb-4">Maior metrópole do Brasil, famosa pela rica diversidade de culinárias e restaurantes renomados.</p>
+                  <div className="flex justify-end mt-2">
+                    <Link href="/restaurante/sao-paulo" className="bg-[#D32F2F] !text-white px-4 py-2 rounded-full hover:bg-red-700 transition-colors text-sm font-medium">Ver mais</Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
           <div className="mt-16 text-center">
             <h2 className="text-2xl font-bold text-[#4A4A4A] mb-4 font-['Roboto']">
               Conheça o Gula.menu

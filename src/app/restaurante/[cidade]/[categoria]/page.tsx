@@ -135,7 +135,7 @@ export default function CategoryPage({ params }: { params: { cidade: string; cat
       <main className="max-w-7xl mx-auto px-6 py-12 bg-[#FFF8F0]">
         <CategoryClientComponent cidade={cidade} categoria={categoria} />
       </main>
-      <CategorySection city={cidade} title={`Explore outras Categorias em ${cidadeFormatada}`} />
+      <CategorySection city={cidade} title={`Explore outras Categorias de Restaurantes em ${cidadeFormatada}`} />
     </div>
   );
 }

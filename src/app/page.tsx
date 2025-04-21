@@ -71,7 +71,7 @@ export default function Home() {
           </nav>
           {hasDetected ? (
             <div className="flex items-center space-x-4">
-              <label htmlFor="city-select" className="text-white font-medium">Ver restaurantes de:</label>
+              <label htmlFor="city-select" className="text-white font-medium">Restaurantes de:</label>
               <select
                 id="city-select"
                 value={selectedCity}

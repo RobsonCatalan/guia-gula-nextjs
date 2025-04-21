@@ -24,6 +24,7 @@ const formatSlug = (slug: string) =>
 interface CategorySectionProps {
   city: string;
   title?: string;
+  currentCategory?: string;
 }
 
 const categoryMap: Record<string, string> = {
@@ -57,7 +58,7 @@ const categoryMap: Record<string, string> = {
   other: 'Outros'
 };
 
-export default function CategorySection({ city, title }: CategorySectionProps) {
+export default function CategorySection({ city, title, currentCategory }: CategorySectionProps) {
   const cityFormatted = formatSlug(city);
   const [cityCategories, setCityCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -82,6 +83,10 @@ export default function CategorySection({ city, title }: CategorySectionProps) {
 
   // Determina título completo da seção
   const heading = title ?? `Categorias de Restaurantes em ${cityFormatted}`;
+  // Filtra para não mostrar a categoria atual
+  const displayCategories = currentCategory
+    ? cityCategories.filter(cat => slugify(cat) !== currentCategory)
+    : cityCategories;
 
   return (
     <section className="py-12 px-6 bg-[#FFF8F0]">
@@ -95,7 +100,7 @@ export default function CategorySection({ city, title }: CategorySectionProps) {
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {cityCategories.map((cat) => {
+            {displayCategories.map((cat) => {
               const slug = slugify(cat);
               return (
                 <Link

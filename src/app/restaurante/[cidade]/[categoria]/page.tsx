@@ -154,7 +154,7 @@ export default async function CategoryPage(props: { params: any }) {
         </h2>
         <CategoryClientComponent cidade={cidade} categoria={categoria} />
       </main>
-      <CategorySection city={cidade} title={`Explore outras Categorias de Restaurantes em ${cidadeFormatada}`} />
+      <CategorySection city={cidade} title={`Explore outras Categorias de Restaurantes em ${cidadeFormatada}`} currentCategory={categoria} />
       {/* Footer */}
       <footer className="bg-[#FF5842] text-white py-8 px-6">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">

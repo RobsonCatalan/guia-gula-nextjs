@@ -30,6 +30,7 @@ export interface Restaurant {
   // Map guideConfig categories (English codes) to array
   categories?: string[];
   reviewCount?: number;
+  workingHours?: { weekday: number; startTime: number; endTime: number }[];
 }
 
 // Interface para o cardápio
@@ -81,6 +82,13 @@ const sanitizeRestaurant = (data: DocumentData): Restaurant => ({
     ? { latitude: data.guideConfig.address.coordinates.latitude, longitude: data.guideConfig.address.coordinates.longitude }
     : null,
   menu: Array.isArray(data.menu) ? data.menu : [],
+  workingHours: Array.isArray(data.guideConfig?.workingHours)
+    ? data.guideConfig.workingHours.map((wh: any) => ({
+        weekday: wh.weekday,
+        startTime: wh.startTime,
+        endTime: wh.endTime,
+      }))
+    : [],
 });
 
 // Verifica se estamos no ambiente de cliente e tem acesso ao Firestore

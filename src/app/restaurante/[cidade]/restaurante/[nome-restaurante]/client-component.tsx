@@ -24,6 +24,34 @@ const formatSlug = (slug: string): string =>
     .join(' ')
     .replace(/\bSao\b/g, 'São');
 
+// Mapeamento de weekday para nome em PT
+const weekdayNames: Record<number, string> = {
+  1: 'Segunda-feira',
+  2: 'Terça-feira',
+  3: 'Quarta-feira',
+  4: 'Quinta-feira',
+  5: 'Sexta-feira',
+  6: 'Sábado',
+  7: 'Domingo',
+};
+
+// Converte minutos após meia-noite para HH:MM
+const formatTime = (minutes: number): string => {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  const hh = h.toString().padStart(2, '0');
+  const mm = m.toString().padStart(2, '0');
+  return `${hh}:${mm}`;
+};
+
+// Junta itens com vírgula e ' e ' antes do último item
+const joinWithAnd = (items: string[]): string => {
+  if (items.length === 0) return '';
+  if (items.length === 1) return items[0];
+  if (items.length === 2) return `${items[0]} e ${items[1]}`;
+  return items.slice(0, -1).join(', ') + ' e ' + items[items.length - 1];
+};
+
 export default function RestaurantDetailClient() {
   const params = useParams();
   const cidade = params.cidade as string;
@@ -151,6 +179,27 @@ export default function RestaurantDetailClient() {
         )}
         {restaurant.phone && <p className="text-[#4A4A4A] mb-2"><strong>Telefone:</strong> {restaurant.phone}</p>}
         <p className="text-[#4A4A4A] mb-2"><strong>Avaliação:</strong> {restaurant.rating} ({restaurant.reviewCount} avaliações)</p>
+        {restaurant.workingHours && restaurant.workingHours.length > 0 && (
+          <div className="mt-6">
+            <h2 className="text-2xl font-bold text-[#4A4A4A] mb-2">Horários de Funcionamento</h2>
+            <ul className="list-disc list-inside">
+              {(() => {
+                const grouped: Record<number, {weekday: number; startTime: number; endTime: number}[]> = {};
+                restaurant.workingHours.forEach(wh => {
+                  if (!grouped[wh.weekday]) grouped[wh.weekday] = [];
+                  grouped[wh.weekday].push(wh);
+                });
+                return Object.entries(grouped)
+                  .sort(([a], [b]) => Number(a) - Number(b))
+                  .map(([day, hours], idx) => (
+                    <li key={idx} className="text-[#4A4A4A]">
+                      {weekdayNames[+day] || 'Dia inválido'}: {joinWithAnd(hours.map(h => `${formatTime(h.startTime)} - ${formatTime(h.endTime)}`))}
+                    </li>
+                  ));
+              })()}
+            </ul>
+          </div>
+        )}
         {restaurant.menu && restaurant.menu.length > 0 && (
           <div className="mt-8">
             <h2 className="text-2xl font-bold text-[#4A4A4A] mb-4">Menu</h2>

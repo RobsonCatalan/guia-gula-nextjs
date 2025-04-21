@@ -178,6 +178,19 @@ export default function RestaurantDetailClient() {
           </div>
         )}
         {restaurant.phone && <p className="text-[#4A4A4A] mb-2"><strong>Telefone:</strong> {restaurant.phone}</p>}
+        {restaurant.instagramLink && (
+          <p className="text-[#4A4A4A] mb-2">
+            <strong>Instagram:</strong>
+            <a
+              href={`https://www.instagram.com/${restaurant.instagramLink}/`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#FF5842] hover:underline"
+            >
+              Siga no Instagram
+            </a>
+          </p>
+        )}
         <p className="text-[#4A4A4A] mb-2"><strong>Avaliação:</strong> {restaurant.rating} ({restaurant.reviewCount} avaliações)</p>
         {restaurant.workingHours && restaurant.workingHours.length > 0 && (
           <div className="mt-6">

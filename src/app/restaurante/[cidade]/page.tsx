@@ -95,6 +95,9 @@ export default async function RestaurantesPage({
       </section>
       <CategorySection city={cidade} />
       <main className="max-w-7xl mx-auto px-6 py-12 bg-[#FFF8F0]">
+        <h2 className="text-2xl font-bold text-[#4A4A4A] mb-6">
+          Todos os Restaurantes em {cidadeFormatada}
+        </h2>
         <ClientComponent cidade={cidadeFormatada} />
       </main>
       {/* Footer */}

@@ -63,7 +63,8 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
     mainPhoto,
     city,
     rating,
-    categories = []
+    categories = [],
+    reviewCount = 0
   } = restaurant;
 
   // Estado para controlar erros de carregamento de imagem
@@ -139,7 +140,7 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
         {rating && rating > 0 ? (
           <div className="flex items-center mb-2">
             {renderStars(rating)}
-            <span className="ml-1 text-sm text-[#4A4A4A]">{rating.toFixed(1)}</span>
+            <span className="ml-1 text-sm text-[#4A4A4A]">{rating.toFixed(1)} ({reviewCount})</span>
           </div>
         ) : (
           <p className="text-sm text-[#4A4A4A] mb-2">Sem avaliações</p>

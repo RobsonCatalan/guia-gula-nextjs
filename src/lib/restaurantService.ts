@@ -23,6 +23,7 @@ export interface Restaurant {
   photos?: string[];
   isVerified?: boolean;
   categories?: string[];
+  reviewCount?: number;
 }
 
 // Interface para o cardápio
@@ -93,10 +94,14 @@ export const getRestaurants = async (
     const restaurants = pageDocs.map(d => sanitizeRestaurant({ id: d.id, ...d.data() }));
     // Novo cursor para paginação
     const newLastVisible = pageDocs.length ? pageDocs[pageDocs.length - 1] : null;
-    // Calcular média de avaliações
-    const avgRatings = await getAverageRatings(restaurants.map(r => r.id));
-    const restaurantsWithAvg = restaurants.map(r => ({ ...r, rating: avgRatings[r.id] ?? 0 }));
-    return { restaurants: restaurantsWithAvg, lastVisible: newLastVisible };
+    // Calcular média de avaliações e contagem de reviews
+    const ratingStats = await getAverageRatings(restaurants.map(r => r.id));
+    const restaurantsWithStats = restaurants.map(r => ({
+      ...r,
+      rating: ratingStats[r.id]?.avg ?? 0,
+      reviewCount: ratingStats[r.id]?.count ?? 0,
+    }));
+    return { restaurants: restaurantsWithStats, lastVisible: newLastVisible };
   } catch (error) {
     console.error('Erro ao buscar restaurantes:', error);
     return { restaurants: [], lastVisible: null };
@@ -159,10 +164,14 @@ export const getRestaurantsByCity = async (
         .replace(/^-+|-+$/g, '');
     const targetSlug = normalize(city);
     const filtered = allRestaurants.filter(r => normalize(r.city || '') === targetSlug);
-    // Calculate average ratings
-    const avgRatings = await getAverageRatings(filtered.map(r => r.id));
-    const restaurantsWithAvg = filtered.map(r => ({ ...r, rating: avgRatings[r.id] ?? 0 }));
-    return { restaurants: restaurantsWithAvg, lastVisible: null };
+    // Calcular média de avaliações e contagem de reviews
+    const ratingStats = await getAverageRatings(filtered.map(r => r.id));
+    const restaurantsWithStats = filtered.map(r => ({
+      ...r,
+      rating: ratingStats[r.id]?.avg ?? 0,
+      reviewCount: ratingStats[r.id]?.count ?? 0,
+    }));
+    return { restaurants: restaurantsWithStats, lastVisible: null };
   } catch (error) {
     console.error('Erro ao buscar restaurantes por cidade:', error);
     return { 
@@ -200,19 +209,22 @@ export const getRestaurantsByCuisine = async (
     const restaurants = pageDocs.map(d => sanitizeRestaurant({ id: d.id, ...d.data() }));
     // Novo cursor para paginação
     const newLastVisible = pageDocs.length ? pageDocs[pageDocs.length - 1] : null;
-    // Calcular média de avaliações
-    const avgRatings = await getAverageRatings(restaurants.map(r => r.id));
-    const restaurantsWithAvg = restaurants.map(r => ({ ...r, rating: avgRatings[r.id] ?? 0 }));
-    return { restaurants: restaurantsWithAvg, lastVisible: newLastVisible };
+    // Calcular média de avaliações e contagem de reviews
+    const ratingStats = await getAverageRatings(restaurants.map(r => r.id));
+    const restaurantsWithStats = restaurants.map(r => ({
+      ...r,
+      rating: ratingStats[r.id]?.avg ?? 0,
+      reviewCount: ratingStats[r.id]?.count ?? 0,
+    }));
+    return { restaurants: restaurantsWithStats, lastVisible: newLastVisible };
   } catch (error) {
     console.error('Erro ao buscar restaurantes por tipo de cozinha:', error);
-    // Retornamos array vazio em vez de dados mockados
     return { restaurants: [], lastVisible: null };
   }
 };
 
 // Adicionar função para calcular média de avaliações de restaurantes
-export const getAverageRatings = async (restaurantIds: string[]): Promise<Record<string, number>> => {
+export const getAverageRatings = async (restaurantIds: string[]): Promise<Record<string, { avg: number; count: number }>> => {
   if (!isClient) {
     return {};
   }
@@ -234,9 +246,9 @@ export const getAverageRatings = async (restaurantIds: string[]): Promise<Record
       ratingsMap[refId].count += 1;
     });
   }
-  const avgMap: Record<string, number> = {};
+  const statsMap: Record<string, { avg: number; count: number }> = {};
   Object.entries(ratingsMap).forEach(([id, { sum, count }]) => {
-    avgMap[id] = parseFloat((sum / count).toFixed(1));
+    statsMap[id] = { avg: parseFloat((sum / count).toFixed(1)), count };
   });
-  return avgMap;
+  return statsMap;
 };

@@ -13,6 +13,9 @@ const slugify = (str: string) =>
     .replace(/-+/g, '-')
     .replace(/^-+|-+$/g, '');
 
+// Formata slug de cidade para exibição
+const formatSlug = (slug: string) => slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
 interface CategorySectionProps {
   city: string;
 }
@@ -49,6 +52,7 @@ const categoryMap: Record<string, string> = {
 };
 
 export default function CategorySection({ city }: CategorySectionProps) {
+  const cityFormatted = formatSlug(city);
   const [cityCategories, setCityCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -73,7 +77,9 @@ export default function CategorySection({ city }: CategorySectionProps) {
   return (
     <section className="py-12 px-6 bg-[#FFF8F0]">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold font-['Roboto'] text-[#4A4A4A] mb-6">Categorias de Restaurantes</h2>
+        <h2 className="text-3xl font-bold font-['Roboto'] text-[#4A4A4A] mb-6">
+          Categorias de Restaurantes{cityFormatted ? ` em ${cityFormatted}` : ''}
+        </h2>
         {loading ? (
           <div className="flex justify-center my-8">
             <div className="w-8 h-8 border-4 border-[#F4A261] border-t-[#D32F2F] rounded-full animate-spin"></div>

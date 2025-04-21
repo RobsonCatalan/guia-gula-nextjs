@@ -11,6 +11,10 @@ export interface RestaurantListProps {
 }
 
 export default function RestaurantList({ city }: RestaurantListProps) {
+  // Formata slug de cidade para exibição
+  const formatSlug = (str: string) =>
+    str.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  const cityFormatted = city ? formatSlug(city) : '';
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -67,7 +71,9 @@ export default function RestaurantList({ city }: RestaurantListProps) {
         </Head>
       )}
       <div className="w-full max-w-7xl mx-auto">
-        <h2 className="text-2xl font-bold text-[#4A4A4A] mb-6">Restaurantes em Destaque</h2>
+        <h2 className="text-2xl font-bold text-[#4A4A4A] mb-6">
+          Restaurantes em Destaque{cityFormatted ? ` em ${cityFormatted}` : ''}
+        </h2>
         
         {error && (
           <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-6">

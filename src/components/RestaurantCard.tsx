@@ -71,9 +71,9 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
   const [mainPhotoError, setMainPhotoError] = useState(false);
   const [logoError, setLogoError] = useState(false);
 
-  // URL para página do restaurante seguindo o formato /restaurante/[cidade]/[nome-restaurante]
+  // URL para página do restaurante seguindo o formato /restaurante/[cidade]/restaurante/[nome-restaurante]
   const restaurantUrl = city
-    ? `/restaurante/${createSlug(city)}/${createSlug(name)}`
+    ? `/restaurante/${createSlug(city)}/restaurante/${createSlug(name)}`
     : `/restaurante/${createSlug(name)}`;
 
   // Helper to render 5 stars with partial fill based on rating

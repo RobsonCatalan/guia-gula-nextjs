@@ -32,7 +32,7 @@
   - Home: `/`
   - Restaurantes por cidade: `/restaurante/[cidade]`
   - Restaurantes por cidade e categoria: `/restaurante/[cidade]/[categoria]`
-  - Restaurante individual: `/restaurante/[cidade]/[nome-restaurante]`
+  - Restaurante individual: `/restaurante/[cidade]/restaurante/[nome-restaurante]`
 - Use nomes de cidades e culinárias em formato amigável (ex.: "sao-paulo", "italiana") com hífens e letras minúsculas.
 - Otimize performance com lazy loading de imagens, minificação de CSS/JS e foco em Core Web Vitals (LCP, FID, CLS).
 - Crie landing pages para cada restaurante com informações completas (nome, endereço, horários, menu, avaliações).

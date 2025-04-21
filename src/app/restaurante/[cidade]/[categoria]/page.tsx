@@ -115,6 +115,19 @@ export default function CategoryPage({ params }: { params: { cidade: string; cat
           <button className="md:hidden text-2xl text-white">☰</button>
         </div>
       </header>
+      <nav className="max-w-7xl mx-auto px-6 py-2 text-sm text-[#4A4A4A]" aria-label="breadcrumb">
+        <ol className="list-none flex">
+          <li>
+            <Link href="/" className="hover:underline">Início</Link>
+            <span className="mx-2">/</span>
+          </li>
+          <li>
+            <Link href={`/restaurante/${cidade}`} className="hover:underline">{cidadeFormatada}</Link>
+            <span className="mx-2">/</span>
+          </li>
+          <li className="font-medium">{categoriaLabel}</li>
+        </ol>
+      </nav>
 
       {/* Hero Section */}
       <section className="text-white py-16 bg-gradient-to-b from-[#FF7A68] to-[#FFF8F0]">

@@ -57,7 +57,7 @@ const sanitizeRestaurant = (data: DocumentData): Restaurant => ({
   id: data.id || '',
   name: data.name || '',
   address: data.fiscalInformation?.fiscalAddress?.formattedAddress || data.address || '',
-  city: data.fiscalInformation?.fiscalAddress?.city || data.city || '',
+  city: data.guideConfig?.address?.city || data.city || '',
   description: data.description || '',
   cuisine: data.cuisineType || data.cuisine || '',
   openingHours: data.openingHours || 'Horário não disponível',

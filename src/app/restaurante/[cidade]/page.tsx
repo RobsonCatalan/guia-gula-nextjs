@@ -1,6 +1,8 @@
 // src/app/[cidade]/restaurantes/page.tsx
 import { Metadata } from 'next';
 import ClientComponent from './client-component';
+import Image from 'next/image';
+import CategorySection from '@/components/CategorySection';
 
 export async function generateMetadata({ 
   params 
@@ -51,13 +53,26 @@ export default async function RestaurantesPage({
   // Em vez de buscar os dados no servidor (onde temos problemas de permissão),
   // vamos passar a cidade para o Cliente e deixar que ele busque os dados
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 text-[#4A4A4A]">
-        Restaurantes em {cidadeFormatada}
-      </h1>
-      
-      {/* O ClientComponent agora aceita apenas o parâmetro cidade */}
-      <ClientComponent cidade={cidadeFormatada} />
+    <div className="bg-[#FFF8F0]">
+      <section className="text-white py-16 bg-gradient-to-b from-[#FF7A68] to-[#FFF8F0]">
+        <div className="max-w-7xl mx-auto text-center px-6">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 font-['Roboto']">
+            Restaurantes em {cidadeFormatada}
+          </h1>
+          <Image
+            src={`/images/cities/${cidade}.webp`}
+            alt={`Imagem de ${cidadeFormatada}`}
+            width={800}
+            height={400}
+            className="object-cover w-full h-64 rounded-lg"
+            priority
+          />
+        </div>
+      </section>
+      <CategorySection city={cidade} />
+      <main className="max-w-7xl mx-auto px-6 py-12 bg-[#FFF8F0]">
+        <ClientComponent cidade={cidadeFormatada} />
+      </main>
     </div>
   );
 }

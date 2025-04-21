@@ -14,7 +14,12 @@ const slugify = (str: string) =>
     .replace(/^-+|-+$/g, '');
 
 // Formata slug de cidade para exibição
-const formatSlug = (slug: string) => slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+const formatSlug = (slug: string) =>
+  slug
+    .split('-')
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ')
+    .replace(/\bSao\b/g, 'São');
 
 interface CategorySectionProps {
   city: string;
@@ -75,13 +80,14 @@ export default function CategorySection({ city, title }: CategorySectionProps) {
     loadCats();
   }, [city]);
 
-  const headingPrefix = title || 'Categorias de Restaurantes';
+  // Determina título completo da seção
+  const heading = title ?? `Categorias de Restaurantes em ${cityFormatted}`;
 
   return (
     <section className="py-12 px-6 bg-[#FFF8F0]">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl font-bold font-['Roboto'] text-[#4A4A4A] mb-6">
-          {headingPrefix}{cityFormatted ? ` em ${cityFormatted}` : ''}
+          {heading}
         </h2>
         {loading ? (
           <div className="flex justify-center my-8">

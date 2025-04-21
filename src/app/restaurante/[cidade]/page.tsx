@@ -18,8 +18,9 @@ export async function generateMetadata({
   const cidadeFormatada = cidade
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-
+    .join(' ')
+    .replace(/\bSao\b/g, 'São');
+  
   return {
     title: `Restaurantes em ${cidadeFormatada} | Gula.menu`,
     description: `Descubra os melhores restaurantes em ${cidadeFormatada}. Encontre avaliações, menus e faça reservas.`,
@@ -47,7 +48,8 @@ export default async function RestaurantesPage({
   const cidadeFormatada = cidade
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
+    .join(' ')
+    .replace(/\bSao\b/g, 'São');
   
   console.log(`Cidade: ${cidadeFormatada}`);
   

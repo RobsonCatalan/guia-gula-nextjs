@@ -13,7 +13,7 @@ export interface RestaurantListProps {
 export default function RestaurantList({ city }: RestaurantListProps) {
   // Formata slug de cidade para exibição
   const formatSlug = (str: string) =>
-    str.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    str.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ').replace('Sao', 'São');
   const cityFormatted = city ? formatSlug(city) : '';
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState<boolean>(true);

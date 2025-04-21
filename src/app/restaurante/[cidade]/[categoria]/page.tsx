@@ -52,7 +52,8 @@ const formatSlug = (slug: string) =>
   slug
     .split('-')
     .map(w => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ');
+    .join(' ')
+    .replace(/\bSao\b/g, 'São');
 
 // Obtém label a partir do slug
 const getLabelFromSlug = (slug: string) => {

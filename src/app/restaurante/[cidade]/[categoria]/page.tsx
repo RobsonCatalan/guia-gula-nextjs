@@ -61,8 +61,9 @@ const getLabelFromSlug = (slug: string) => {
   return entry ? entry[1] : slug;
 };
 
-export async function generateMetadata({ params }: { params: { cidade: string; categoria: string } }): Promise<Metadata> {
-  const { cidade, categoria } = params;
+export async function generateMetadata(props: { params: any }): Promise<Metadata> {
+  const { params } = props;
+  const { cidade, categoria } = await params;
   const cidadeFormatada = formatSlug(cidade);
   const categoriaLabel = getLabelFromSlug(categoria);
   return {
@@ -84,8 +85,9 @@ export async function generateStaticParams() {
   return params;
 }
 
-export default function CategoryPage({ params }: { params: { cidade: string; categoria: string } }) {
-  const { cidade, categoria } = params;
+export default async function CategoryPage(props: { params: any }) {
+  const { params } = props;
+  const { cidade, categoria } = await params;
   const cidadeFormatada = formatSlug(cidade);
   const categoriaLabel = getLabelFromSlug(categoria);
   // Ajuste de slug para nomes de imagem (ex: pastelaria -> pastel)

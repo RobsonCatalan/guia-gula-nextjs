@@ -109,7 +109,12 @@ export default function RestaurantDetailClient() {
       <main className="max-w-7xl mx-auto px-6 py-12 bg-[#FFF8F0]">
         <h2 className="text-2xl font-bold text-[#4A4A4A] mb-4">Detalhes</h2>
         <p className="text-[#4A4A4A] mb-2">{restaurant.description}</p>
-        <p className="text-[#4A4A4A] mb-2"><strong>Endereço:</strong> {restaurant.address}</p>
+        <p className="text-[#4A4A4A] mb-2"><strong>Endereço Completo:</strong> {restaurant.address}</p>
+        <p className="text-[#4A4A4A] mb-2"><strong>Rua:</strong> {restaurant.addressStreet}, {restaurant.addressNumber}{restaurant.addressComplement && `, ${restaurant.addressComplement}`}</p>
+        <p className="text-[#4A4A4A] mb-2"><strong>Bairro:</strong> {restaurant.addressDistrict}</p>
+        <p className="text-[#4A4A4A] mb-2"><strong>Cidade:</strong> {restaurant.addressCity} - {restaurant.addressState}</p>
+        <p className="text-[#4A4A4A] mb-2"><strong>CEP:</strong> {restaurant.postalCode}</p>
+        <p className="text-[#4A4A4A] mb-2"><strong>Coordenadas:</strong> {restaurant.coordinates?.latitude}, {restaurant.coordinates?.longitude}</p>
         {restaurant.phone && <p className="text-[#4A4A4A] mb-2"><strong>Telefone:</strong> {restaurant.phone}</p>}
         <p className="text-[#4A4A4A] mb-2"><strong>Avaliação:</strong> {restaurant.rating} ({restaurant.reviewCount} avaliações)</p>
         {restaurant.menu && restaurant.menu.length > 0 && (
@@ -145,7 +150,7 @@ export default function RestaurantDetailClient() {
           </div>
         </div>
         <div className="max-w-7xl mx-auto mt-8 pt-6 border-t border-gray-600 text-center text-sm">
-          <span className="text-white">© {new Date().getFullYear()} Gula.menu - Todos os direitos reservados</span>
+          <span className="text-white"> Gula.menu - Todos os direitos reservados</span>
         </div>
       </footer>
     </div>

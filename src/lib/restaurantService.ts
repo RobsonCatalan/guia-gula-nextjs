@@ -6,6 +6,15 @@ import { db } from './firebase';
 export interface Restaurant {
   id: string;
   name: string;
+  addressStreet?: string;
+  addressNumber?: string;
+  addressComplement?: string;
+  addressDistrict?: string;
+  addressState?: string;
+  postalCode?: string;
+  coordinates?: { latitude: number; longitude: number } | null;
+  menu?: Menu[];
+  addressCity?: string;
   address?: string;
   city?: string;
   description?: string;
@@ -16,12 +25,9 @@ export interface Restaurant {
   priceRange?: string;
   phone?: string;
   website?: string;
-  menu?: Menu[];
-  reviews?: Review[];
   logo?: string;
   mainPhoto?: string;
-  photos?: string[];
-  isVerified?: boolean;
+  // Map guideConfig categories (English codes) to array
   categories?: string[];
   reviewCount?: number;
 }
@@ -63,6 +69,18 @@ const sanitizeRestaurant = (data: DocumentData): Restaurant => ({
   mainPhoto: data.mainPhoto || null,
   // Map guideConfig categories (English codes) to array
   categories: Array.isArray(data.guideConfig?.categories) ? data.guideConfig.categories : [],
+  // Endereço detalhado do guideConfig
+  addressStreet: data.guideConfig?.address?.street || '',
+  addressNumber: data.guideConfig?.address?.number || '',
+  addressComplement: data.guideConfig?.address?.complement || '',
+  addressDistrict: data.guideConfig?.address?.district || '',
+  addressState: data.guideConfig?.address?.state || '',
+  postalCode: data.guideConfig?.address?.postalCode || '',
+  addressCity: data.guideConfig?.address?.city || data.city || '',
+  coordinates: data.guideConfig?.address?.coordinates
+    ? { latitude: data.guideConfig.address.coordinates.latitude, longitude: data.guideConfig.address.coordinates.longitude }
+    : null,
+  menu: Array.isArray(data.menu) ? data.menu : [],
 });
 
 // Verifica se estamos no ambiente de cliente e tem acesso ao Firestore
@@ -136,10 +154,6 @@ export const getRestaurantsByCity = async (
   lastVisibleParam?: QueryDocumentSnapshot<DocumentData> | string | null,
   itemsPerPage: number = 10
 ): Promise<{ restaurants: Restaurant[], lastVisible: QueryDocumentSnapshot<DocumentData> | null }> => {
-  if (!isClient) {
-    return { restaurants: [], lastVisible: null };
-  }
-
   try {
     // Fetch all restaurants and filter manually by city slug (handles accents)
     const q = query(

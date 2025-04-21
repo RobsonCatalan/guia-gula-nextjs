@@ -28,7 +28,7 @@ export default function NotFound() {
 
       <main className="flex-grow py-16 px-6 text-center">
         <h1 className="text-4xl font-bold text-[#4A4A4A] mb-8">
-          Pagina não encontrada. Escolha uma didade para começar
+          Pagina não encontrada<br/>Escolha uma Cidade para começar
         </h1>
         <section className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8 max-w-7xl mx-auto">
           {/* Belo Horizonte */}
@@ -71,6 +71,37 @@ export default function NotFound() {
           </div>
         </section>
       </main>
+      {/* Footer */}
+      <footer className="bg-[#FF5842] text-white py-8 px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <h3 className="text-xl font-bold mb-4">Gula.menu</h3>
+            <p className="text-sm">
+              Seu guia gastronômico completo para encontrar os melhores 
+              restaurantes da sua cidade.
+            </p>
+          </div>
+          <div>
+            <h3 className="text-xl font-bold mb-4">Links Rápidos</h3>
+            <ul className="space-y-2">
+              <li><a href="/" className="!text-white hover:!text-[#FFF8F0]">Início</a></li>
+              <li><a href="#" className="!text-white hover:!text-[#FFF8F0]">Cidades</a></li>
+              <li><a href="#" className="!text-white hover:!text-[#FFF8F0]">Culinárias</a></li>
+              <li><a href="#" className="!text-white hover:!text-[#FFF8F0]">Sobre</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-xl font-bold mb-4">Contato</h3>
+            <p className="text-sm">
+              contato@gula.menu<br/>
+              São Paulo, SP - Brasil
+            </p>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto mt-8 pt-6 border-t border-gray-600 text-center text-sm">
+          <span className="text-white">&copy; {new Date().getFullYear()} Gula.menu - Todos os direitos reservados</span>
+        </div>
+      </footer>
     </div>
   );
 }

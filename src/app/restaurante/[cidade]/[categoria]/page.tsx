@@ -2,7 +2,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
-import CategoryClientComponent from './client-component';
+import CategoryClientComponent from '@/components/CategoryClientComponent';
 
 // Mapeamento de códigos de categoria para labels
 const categoryMap: Record<string, string> = {
@@ -86,6 +86,8 @@ export default function CategoryPage({ params }: { params: { cidade: string; cat
   const { cidade, categoria } = params;
   const cidadeFormatada = formatSlug(cidade);
   const categoriaLabel = getLabelFromSlug(categoria);
+  // Ajuste de slug para nomes de imagem (ex: pastelaria -> pastel)
+  const imageSlug = categoria === 'pastelaria' ? 'pastel' : categoria;
 
   return (
     <div className="bg-[#FFF8F0]">
@@ -119,7 +121,7 @@ export default function CategoryPage({ params }: { params: { cidade: string; cat
             {categoriaLabel} em {cidadeFormatada}
           </h1>
           <Image
-            src={`/images/categories/${categoria}.webp`}
+            src={`/images/categories/${imageSlug}.webp`}
             alt={`Imagem de ${categoriaLabel}`}
             width={800}
             height={400}

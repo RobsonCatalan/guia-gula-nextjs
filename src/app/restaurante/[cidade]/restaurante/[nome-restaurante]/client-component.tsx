@@ -115,6 +115,40 @@ export default function RestaurantDetailClient() {
         <p className="text-[#4A4A4A] mb-2"><strong>Cidade:</strong> {restaurant.addressCity} - {restaurant.addressState}</p>
         <p className="text-[#4A4A4A] mb-2"><strong>CEP:</strong> {restaurant.postalCode}</p>
         <p className="text-[#4A4A4A] mb-2"><strong>Coordenadas:</strong> {restaurant.coordinates?.latitude}, {restaurant.coordinates?.longitude}</p>
+        {restaurant.coordinates && (
+          <div className="flex space-x-4 mb-2">
+            <a
+              href={`https://www.google.com/maps/dir/?api=1&destination=${restaurant.coordinates.latitude},${restaurant.coordinates.longitude}&travelmode=driving`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center text-[#FF5842] hover:underline"
+            >
+              <Image
+                src="/images/logo/google-maps.png"
+                alt="Google Maps Logo"
+                width={24}
+                height={24}
+                unoptimized
+              />
+              <span className="ml-2">Venha com o Google Maps</span>
+            </a>
+            <a
+              href={`https://waze.com/ul?ll=${restaurant.coordinates.latitude},${restaurant.coordinates.longitude}&navigate=yes`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center text-[#FF5842] hover:underline"
+            >
+              <Image
+                src="/images/logo/waze.png"
+                alt="Waze Logo"
+                width={24}
+                height={24}
+                unoptimized
+              />
+              <span className="ml-2">Venha com o Waze</span>
+            </a>
+          </div>
+        )}
         {restaurant.phone && <p className="text-[#4A4A4A] mb-2"><strong>Telefone:</strong> {restaurant.phone}</p>}
         <p className="text-[#4A4A4A] mb-2"><strong>Avaliação:</strong> {restaurant.rating} ({restaurant.reviewCount} avaliações)</p>
         {restaurant.menu && restaurant.menu.length > 0 && (

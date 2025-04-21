@@ -2,7 +2,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
-import CategoryClientComponent from '@/components/CategoryClientComponent';
+import CategoryClientComponent from './client-component';
 import CategorySection from '@/components/CategorySection';
 
 // Mapeamento de códigos de categoria para labels

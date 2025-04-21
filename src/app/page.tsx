@@ -70,7 +70,7 @@ export default function Home() {
             <a href="#" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Sobre</a>
           </nav>
           {hasDetected ? (
-            <div className="flex items-center space-x-4">
+            <div className="flex items-baseline space-x-2">
               <label htmlFor="city-select" className="text-white font-medium">Restaurantes de:</label>
               <select
                 id="city-select"

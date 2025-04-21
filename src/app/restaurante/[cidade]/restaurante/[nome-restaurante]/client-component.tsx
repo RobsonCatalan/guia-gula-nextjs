@@ -185,9 +185,16 @@ export default function RestaurantDetailClient() {
               href={`https://www.instagram.com/${restaurant.instagramLink}/`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#FF5842] hover:underline"
+              className="flex items-center text-[#FF5842] hover:underline"
             >
-              Siga no Instagram
+              <Image
+                src="/images/logo/instagram.jpg"
+                alt="Instagram Logo"
+                width={24}
+                height={24}
+                unoptimized
+              />
+              <span className="ml-2">Siga no Instagram</span>
             </a>
           </p>
         )}

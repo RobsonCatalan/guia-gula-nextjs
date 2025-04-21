@@ -161,7 +161,7 @@ export default function RestaurantDetailClient() {
               <span className="ml-2">Venha com o Google Maps</span>
             </a>
             <a
-              href={`https://waze.com/ul?ll=${restaurant.coordinates.latitude},${restaurant.coordinates.longitude}&navigate=yes`}
+              href={`https://www.waze.com/ul?ll=${restaurant.coordinates.latitude},${restaurant.coordinates.longitude}&navigate=yes`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center text-[#FF5842] hover:underline"

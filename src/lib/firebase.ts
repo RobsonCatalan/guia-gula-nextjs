@@ -7,16 +7,15 @@ import {
   AppCheck
 } from 'firebase/app-check';
 
-// Configuração do Firebase HARDCODED para teste - NÃO USE EM PRODUÇÃO!
-// IMPORTANTE: Isso é temporário apenas para diagnóstico!
+// Configuração do Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyAr6gwQ5LfjPfcGCvsbotVcKpxHjgeKBKc", // HARDCODED TEMPORÁRIO
-  authDomain: "gulaapp-5be3b.firebaseapp.com",
-  projectId: "gulaapp-5be3b",
-  storageBucket: "gulaapp-5be3b.appspot.com",
-  messagingSenderId: "558045735007",
-  appId: "1:558045735007:web:2fa575ffb7d1c3d14b93ea",
-  measurementId: "G-DM7G2RGD32",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
 // Inicializa o Firebase apenas uma vez
@@ -53,11 +52,15 @@ export function initializeFirebaseAppCheck(): AppCheck | null {
 
   console.log('[firebase.ts] Running App Check initialization function.');
   
-  // HARDCODED PARA TESTE - NÃO USE EM PRODUÇÃO!
-  // CHAVE RECAPTCHA V3 FIXA PARA DIAGNÓSTICO!
-  const siteKey = "6LdjJCArAAAAAOwjhXXvF4wKzlsaFz_gegwvtOBl"; // FIXO!
+  // Usar a variável de ambiente para a chave do site reCAPTCHA
+  const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
   
-  console.log(`[firebase.ts] Initializing App Check with HARDCODED Site Key: ${siteKey.substring(0, 5)}...`);
+  if (!siteKey) {
+    console.error('[firebase.ts] ERROR: NEXT_PUBLIC_RECAPTCHA_SITE_KEY is not defined!');
+    return null;
+  }
+  
+  console.log(`[firebase.ts] Initializing App Check with Site Key from env: ${siteKey.substring(0, 5)}...`);
   try {
     appCheckInstance = initializeAppCheck(app, {
       provider: new ReCaptchaV3Provider(siteKey),

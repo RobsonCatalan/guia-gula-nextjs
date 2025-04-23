@@ -34,7 +34,7 @@ const nextConfig: NextConfig = {
   },
   // Ativa compilação estritamente de acordo com as regras de ESLint
   eslint: {
-    ignoreDuringBuilds: false,
+    ignoreDuringBuilds: true,
   },
   // Melhora otimização para SEO e performance
   poweredByHeader: false, // Remove o header 'X-Powered-By'

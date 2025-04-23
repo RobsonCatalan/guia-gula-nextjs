@@ -5,19 +5,13 @@ import Image from 'next/image';
 import CategorySection from '@/components/CategorySection';
 import Link from 'next/link';
 
-export async function generateMetadata({ 
-  params 
-}: { 
-  params: { cidade: string } 
-}): Promise<Metadata> {
-  // A solução correta: await o objeto params completo antes de acessar suas propriedades
-  const resolvedParams = await params;
-  const cidade = resolvedParams.cidade;
+export async function generateMetadata({ params }: { params: Promise<{ cidade: string }> }): Promise<Metadata> {
+  const { cidade } = await params;
   
   // Formata a cidade para exibição
   const cidadeFormatada = cidade
     .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ')
     .replace(/\bSao\b/g, 'São');
   
@@ -35,19 +29,13 @@ export async function generateStaticParams() {
   ];
 }
 
-export default async function RestaurantesPage({ 
-  params 
-}: { 
-  params: { cidade: string } 
-}) {
-  // A solução correta: await o objeto params completo antes de acessar suas propriedades
-  const resolvedParams = await params;
-  const cidade = resolvedParams.cidade;
+export default async function Page({ params }: { params: Promise<{ cidade: string }> }) {
+  const { cidade } = await params;
   
   // Formata a cidade para exibição
   const cidadeFormatada = cidade
     .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ')
     .replace(/\bSao\b/g, 'São');
   
@@ -70,10 +58,10 @@ export default async function RestaurantesPage({
             />
           </Link>
           <nav className="hidden md:flex space-x-6">
-            <a href="/" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Início</a>
-            <a href="#" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Cidades</a>
-            <a href="#" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Culinárias</a>
-            <a href="#" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Sobre</a>
+            <Link href="/" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Início</Link>
+            <Link href="#" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Cidades</Link>
+            <Link href="#" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Culinárias</Link>
+            <Link href="#" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Sobre</Link>
           </nav>
           <button className="md:hidden text-2xl text-white">☰</button>
         </div>
@@ -122,10 +110,10 @@ export default async function RestaurantesPage({
           <div>
             <h3 className="text-xl font-bold mb-4">Links Rápidos</h3>
             <ul className="space-y-2">
-              <li><a href="/" className="!text-white hover:!text-[#FFF8F0]">Início</a></li>
-              <li><a href="#" className="!text-white hover:!text-[#FFF8F0]">Cidades</a></li>
-              <li><a href="#" className="!text-white hover:!text-[#FFF8F0]">Culinárias</a></li>
-              <li><a href="#" className="!text-white hover:!text-[#FFF8F0]">Sobre</a></li>
+              <li><Link href="/" className="!text-white hover:!text-[#FFF8F0]">Início</Link></li>
+              <li><Link href="#" className="!text-white hover:!text-[#FFF8F0]">Cidades</Link></li>
+              <li><Link href="#" className="!text-white hover:!text-[#FFF8F0]">Culinárias</Link></li>
+              <li><Link href="#" className="!text-white hover:!text-[#FFF8F0]">Sobre</Link></li>
             </ul>
           </div>
           <div>

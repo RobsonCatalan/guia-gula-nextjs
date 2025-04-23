@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Roboto } from "next/font/google";
 import "./globals.css";
+import FirebaseAppCheckProvider from '@/components/FirebaseAppCheckProvider';
 
 const inter = Inter({
   variable: "--font-inter",
@@ -35,7 +36,9 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${roboto.variable} antialiased bg-[#FFF8F0] text-[#4A4A4A]`}
       >
-        {children}
+        <FirebaseAppCheckProvider>
+          {children}
+        </FirebaseAppCheckProvider>
       </body>
     </html>
   );

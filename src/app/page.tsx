@@ -64,10 +64,10 @@ export default function Home() {
             style={{ width: 'auto', height: 'auto' }}
           />
           <nav className="hidden md:flex space-x-6">
-            <a href="/" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Início</a>
-            <a href="#" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Cidades</a>
-            <a href="#" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Culinárias</a>
-            <a href="#" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Sobre</a>
+            <Link href="/" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Início</Link>
+            <Link href="#" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Cidades</Link>
+            <Link href="#" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Culinárias</Link>
+            <Link href="#" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Sobre</Link>
           </nav>
           {hasDetected ? (
             <div className="flex items-baseline space-x-2">
@@ -183,10 +183,10 @@ export default function Home() {
           <div>
             <h3 className="text-xl font-bold mb-4">Links Rápidos</h3>
             <ul className="space-y-2">
-              <li><a href="/" className="!text-white hover:!text-[#FFF8F0]">Início</a></li>
-              <li><a href="#" className="!text-white hover:!text-[#FFF8F0]">Cidades</a></li>
-              <li><a href="#" className="!text-white hover:!text-[#FFF8F0]">Culinárias</a></li>
-              <li><a href="#" className="!text-white hover:!text-[#FFF8F0]">Sobre</a></li>
+              <li><Link href="/" className="!text-white hover:!text-[#FFF8F0]">Início</Link></li>
+              <li><Link href="#" className="!text-white hover:!text-[#FFF8F0]">Cidades</Link></li>
+              <li><Link href="#" className="!text-white hover:!text-[#FFF8F0]">Culinárias</Link></li>
+              <li><Link href="#" className="!text-white hover:!text-[#FFF8F0]">Sobre</Link></li>
             </ul>
           </div>
           <div>

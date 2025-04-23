@@ -27,6 +27,7 @@ export interface Restaurant {
   website?: string;
   logo?: string;
   mainPhoto?: string;
+  instagramLink?: string;
   // Map guideConfig categories (English codes) to array
   categories?: string[];
   reviewCount?: number;
@@ -66,6 +67,7 @@ const sanitizeRestaurant = (data: DocumentData): Restaurant => ({
   priceRange: data.priceRange || '$',
   phone: data.contactInfo?.phoneNumber || data.phone || '',
   website: data.contactInfo?.website || data.website || '',
+  instagramLink: data.instagramLink || '',
   logo: data.logo || null,
   mainPhoto: data.mainPhoto || null,
   // Map guideConfig categories (English codes) to array

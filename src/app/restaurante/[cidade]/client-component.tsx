@@ -1,9 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { useAppCheckContext } from '@/components/FirebaseAppCheckProvider';
 import { Restaurant, getRestaurantsByCity } from '@/lib/restaurantService';
 import RestaurantCard from '@/components/RestaurantCard';
 import Head from 'next/head';
+import type { QueryDocumentSnapshot, DocumentData } from 'firebase/firestore';
 
 interface RestaurantClientProps {
   cidade: string;
@@ -13,6 +15,7 @@ export default function ClientComponent({
   cidade 
 }: RestaurantClientProps) {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+  const { isAppCheckReady } = useAppCheckContext();
   const [lastDocId, setLastDocId] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -41,11 +44,18 @@ export default function ClientComponent({
   // Função inicial para carregar os restaurantes quando o componente montar
   useEffect(() => {
     async function loadInitialRestaurants() {
+      if (!isAppCheckReady) {
+        console.log('[ClientComponent] App Check not ready yet, skipping initial fetch.');
+        setLoading(true);
+        return;
+      }
+      
+      setLoading(true);
       try {
         console.log(`Buscando restaurantes para: ${cidade}`);
         
         // Tentativa de buscar com timeout para evitar esperas muito longas
-        const timeoutPromise = new Promise<{restaurants: Restaurant[], lastVisible: any}>(
+        const timeoutPromise = new Promise<{ restaurants: Restaurant[]; lastVisible: QueryDocumentSnapshot<DocumentData> | null }>(
           (_, reject) => setTimeout(() => reject(new Error('Timeout buscando restaurantes')), 15000)
         );
         
@@ -71,10 +81,10 @@ export default function ClientComponent({
     }
 
     loadInitialRestaurants();
-  }, [cidade]);
+  }, [cidade, isAppCheckReady]);
 
   const loadMoreRestaurants = async () => {
-    if (loading || !hasMore) return;
+    if (loading || !hasMore || !isAppCheckReady) return;
     
     try {
       setLoading(true);
@@ -115,7 +125,7 @@ export default function ClientComponent({
   };
 
   // Garantir que renderizamos apenas quando temos um array válido
-  const restaurantsArray = restaurants || [];
+  const restaurantsArray = Array.isArray(restaurants) ? restaurants : [];
 
   return (
     <>
@@ -134,10 +144,12 @@ export default function ClientComponent({
           </div>
         )}
         
-        {loading && restaurantsArray.length === 0 ? (
+        {(!isAppCheckReady || (loading && restaurantsArray.length === 0)) ? (
           <div className="text-center py-8">
             <div className="w-12 h-12 border-4 border-[#F4A261] border-t-[#D32F2F] rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-lg text-gray-600">Carregando restaurantes...</p>
+            <p className="text-lg text-gray-600">
+              {!isAppCheckReady ? 'Inicializando segurança...' : 'Carregando restaurantes...'}
+            </p>
           </div>
         ) : restaurantsArray.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

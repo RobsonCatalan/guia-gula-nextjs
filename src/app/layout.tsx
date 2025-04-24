@@ -33,6 +33,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+      </head>
       <body
         className={`${inter.variable} ${roboto.variable} antialiased bg-[#FFF8F0] text-[#4A4A4A]`}
       >

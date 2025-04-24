@@ -21,10 +21,15 @@
       256,
       384
     ],
-    "path": "/_next/image",
-    "loader": "default",
-    "loaderFile": "",
-    "domains": [],
+    "path": "/_next/image/",
+    "loader": "custom",
+    "loaderFile": "C:\\Projetos\\Gula\\guia-gula\\image-loader.js",
+    "domains": [
+      "firebasestorage.googleapis.com",
+      "*.googleusercontent.com",
+      "images.unsplash.com",
+      "upload.wikimedia.org"
+    ],
     "disableStaticImages": false,
     "minimumCacheTTL": 60,
     "formats": [
@@ -56,7 +61,7 @@
         "pathname": "^(?:\\/(?!\\.{1,2}(?:\\/|$))(?:(?:(?!(?:^|\\/)\\.{1,2}(?:\\/|$)).)*?))$"
       }
     ],
-    "unoptimized": true,
+    "unoptimized": false,
     "sizes": [
       640,
       750,

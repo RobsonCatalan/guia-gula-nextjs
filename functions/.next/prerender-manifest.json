@@ -30,7 +30,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/": {
+    "/restaurante/belo-horizonte": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -43,8 +43,32 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/",
-      "dataRoute": "/index.rsc",
+      "srcRoute": "/restaurante/[cidade]",
+      "dataRoute": "/restaurante/belo-horizonte.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/restaurante/sao-paulo": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/restaurante/[cidade]",
+      "dataRoute": "/restaurante/sao-paulo.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -1398,7 +1422,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/restaurante/belo-horizonte": {
+    "/": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -1411,32 +1435,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/restaurante/[cidade]",
-      "dataRoute": "/restaurante/belo-horizonte.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/restaurante/sao-paulo": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "Next-Action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/restaurante/[cidade]",
-      "dataRoute": "/restaurante/sao-paulo.rsc",
+      "srcRoute": "/",
+      "dataRoute": "/index.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -1448,31 +1448,6 @@
     }
   },
   "dynamicRoutes": {
-    "/restaurante/[cidade]/[categoria]": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "Next-Action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "routeRegex": "^/restaurante/([^/]+?)/([^/]+?)(?:/)?$",
-      "dataRoute": "/restaurante/[cidade]/[categoria].rsc",
-      "fallback": null,
-      "dataRouteRegex": "^/restaurante/([^/]+?)/([^/]+?)\\.rsc$",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
     "/restaurante/[cidade]": {
       "experimentalBypassFor": [
         {
@@ -1497,12 +1472,37 @@
         "x-next-revalidated-tags",
         "x-next-revalidate-tag-token"
       ]
+    },
+    "/restaurante/[cidade]/[categoria]": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "routeRegex": "^/restaurante/([^/]+?)/([^/]+?)(?:/)?$",
+      "dataRoute": "/restaurante/[cidade]/[categoria].rsc",
+      "fallback": null,
+      "dataRouteRegex": "^/restaurante/([^/]+?)/([^/]+?)\\.rsc$",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
     }
   },
   "notFoundRoutes": [],
   "preview": {
-    "previewModeId": "ba966cb35735ef2735b614f1274bbb8e",
-    "previewModeSigningKey": "423b3af5210d9aa84d187295f448b8f35569894357186808cdca2922e50b4f2b",
-    "previewModeEncryptionKey": "74922ae36712c10e9c2e2e33d36f7f9ec4ff0dd6981d8863e77e71f06a754c90"
+    "previewModeId": "d0c825791a3d6331214e24ac4c333dfb",
+    "previewModeSigningKey": "170f85c318ebe44bc2d04084a043a0411b27746b5b49824fe872fe38753b9353",
+    "previewModeEncryptionKey": "29a0020816945baf2f494da8cc1d1e619e2128f558afc88270cc2e449d491bc5"
   }
 }

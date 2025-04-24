@@ -1,8 +1,9 @@
 {
+  "/api/resize/route": "/api/resize",
   "/favicon.ico/route": "/favicon.ico",
   "/_not-found/page": "/_not-found",
   "/page": "/",
   "/restaurante/[cidade]/restaurante/[nome-restaurante]/page": "/restaurante/[cidade]/restaurante/[nome-restaurante]",
-  "/restaurante/[cidade]/page": "/restaurante/[cidade]",
-  "/restaurante/[cidade]/[categoria]/page": "/restaurante/[cidade]/[categoria]"
+  "/restaurante/[cidade]/[categoria]/page": "/restaurante/[cidade]/[categoria]",
+  "/restaurante/[cidade]/page": "/restaurante/[cidade]"
 }

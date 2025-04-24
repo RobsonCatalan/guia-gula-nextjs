@@ -1,26 +1,33 @@
 {
   "pages": {
+    "/api/resize/route": [
+      "static/chunks/webpack-58ad2388d5457c83.js",
+      "static/chunks/4bd1b696-4395e28837e305c2.js",
+      "static/chunks/684-70e7ec50343c049e.js",
+      "static/chunks/main-app-d47b466d924037f6.js",
+      "static/chunks/app/api/resize/route-f095fa69a82050ff.js"
+    ],
     "/not-found": [
       "static/chunks/webpack-58ad2388d5457c83.js",
       "static/chunks/4bd1b696-4395e28837e305c2.js",
       "static/chunks/684-70e7ec50343c049e.js",
       "static/chunks/main-app-d47b466d924037f6.js",
-      "static/chunks/611-e4f626f25ea95583.js",
-      "static/chunks/app/not-found-c1d8dfd8981aa160.js"
+      "static/chunks/611-2af178f661239ef2.js",
+      "static/chunks/app/not-found-5bb3c989ed66db5c.js"
     ],
     "/_not-found/page": [
       "static/chunks/webpack-58ad2388d5457c83.js",
       "static/chunks/4bd1b696-4395e28837e305c2.js",
       "static/chunks/684-70e7ec50343c049e.js",
       "static/chunks/main-app-d47b466d924037f6.js",
-      "static/chunks/app/_not-found/page-b72775331b0d468e.js"
+      "static/chunks/app/_not-found/page-98f8dbe99afc7cf1.js"
     ],
     "/layout": [
       "static/chunks/webpack-58ad2388d5457c83.js",
       "static/chunks/4bd1b696-4395e28837e305c2.js",
       "static/chunks/684-70e7ec50343c049e.js",
       "static/chunks/main-app-d47b466d924037f6.js",
-      "static/css/f586944d15953bc9.css",
+      "static/css/7cc33eb9985e276b.css",
       "static/chunks/bc9e92e6-c51ca2ed61b67464.js",
       "static/chunks/349-4e7638499b682639.js",
       "static/chunks/app/layout-0628cbf96d2f4fb2.js"
@@ -32,9 +39,9 @@
       "static/chunks/main-app-d47b466d924037f6.js",
       "static/chunks/bc9e92e6-c51ca2ed61b67464.js",
       "static/chunks/349-4e7638499b682639.js",
-      "static/chunks/611-e4f626f25ea95583.js",
-      "static/chunks/565-a2d216c7b46a3a7b.js",
-      "static/chunks/app/page-92aa6716f181792e.js"
+      "static/chunks/611-2af178f661239ef2.js",
+      "static/chunks/42-f8ef74575a0bdf1c.js",
+      "static/chunks/app/page-eb3152f4be77495b.js"
     ],
     "/restaurante/[cidade]/restaurante/[nome-restaurante]/page": [
       "static/chunks/webpack-58ad2388d5457c83.js",
@@ -43,19 +50,9 @@
       "static/chunks/main-app-d47b466d924037f6.js",
       "static/chunks/bc9e92e6-c51ca2ed61b67464.js",
       "static/chunks/349-4e7638499b682639.js",
-      "static/chunks/611-e4f626f25ea95583.js",
-      "static/chunks/app/restaurante/[cidade]/restaurante/[nome-restaurante]/page-85742a1c82ea4ff3.js"
-    ],
-    "/restaurante/[cidade]/page": [
-      "static/chunks/webpack-58ad2388d5457c83.js",
-      "static/chunks/4bd1b696-4395e28837e305c2.js",
-      "static/chunks/684-70e7ec50343c049e.js",
-      "static/chunks/main-app-d47b466d924037f6.js",
-      "static/chunks/bc9e92e6-c51ca2ed61b67464.js",
-      "static/chunks/349-4e7638499b682639.js",
-      "static/chunks/611-e4f626f25ea95583.js",
-      "static/chunks/565-a2d216c7b46a3a7b.js",
-      "static/chunks/app/restaurante/[cidade]/page-44834b91a959a7ec.js"
+      "static/chunks/611-2af178f661239ef2.js",
+      "static/chunks/42-f8ef74575a0bdf1c.js",
+      "static/chunks/app/restaurante/[cidade]/restaurante/[nome-restaurante]/page-142f7e60f62b8a96.js"
     ],
     "/restaurante/[cidade]/[categoria]/page": [
       "static/chunks/webpack-58ad2388d5457c83.js",
@@ -64,9 +61,20 @@
       "static/chunks/main-app-d47b466d924037f6.js",
       "static/chunks/bc9e92e6-c51ca2ed61b67464.js",
       "static/chunks/349-4e7638499b682639.js",
-      "static/chunks/611-e4f626f25ea95583.js",
-      "static/chunks/565-a2d216c7b46a3a7b.js",
-      "static/chunks/app/restaurante/[cidade]/[categoria]/page-100b68ecc82af8ae.js"
+      "static/chunks/611-2af178f661239ef2.js",
+      "static/chunks/42-f8ef74575a0bdf1c.js",
+      "static/chunks/app/restaurante/[cidade]/[categoria]/page-67ab7cb127a70aba.js"
+    ],
+    "/restaurante/[cidade]/page": [
+      "static/chunks/webpack-58ad2388d5457c83.js",
+      "static/chunks/4bd1b696-4395e28837e305c2.js",
+      "static/chunks/684-70e7ec50343c049e.js",
+      "static/chunks/main-app-d47b466d924037f6.js",
+      "static/chunks/bc9e92e6-c51ca2ed61b67464.js",
+      "static/chunks/349-4e7638499b682639.js",
+      "static/chunks/611-2af178f661239ef2.js",
+      "static/chunks/42-f8ef74575a0bdf1c.js",
+      "static/chunks/app/restaurante/[cidade]/page-3b062818069ce75d.js"
     ]
   }
 }

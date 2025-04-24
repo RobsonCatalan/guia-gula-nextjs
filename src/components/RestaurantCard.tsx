@@ -167,6 +167,33 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
           </div>
         )}
         
+        {/* Delivery & Takeout icons */}
+        {restaurant.deliveryConfig?.enabled && (
+          <div className="flex items-center mb-2">
+            {/* Takeout icon */}
+            {!restaurant.deliveryConfig?.takeoutDisabled && (
+              <Image
+                src="/images/icons/takeout-gray.svg"
+                alt="Retirada disponível"
+                width={24}
+                height={24}
+                className="mr-2"
+                unoptimized
+              />
+            )}
+            {/* Delivery icon */}
+            {!restaurant.deliveryConfig?.deliveryDisabled && (
+              <Image
+                src="/images/icons/delivery-gray.svg"
+                alt="Delivery disponível"
+                width={24}
+                height={24}
+                unoptimized
+              />
+            )}
+          </div>
+        )}
+        
         <div className="flex justify-end mt-2">
           <Link
             href={restaurantUrl}

@@ -3,6 +3,9 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     // Configuração de domínios externos para imagens (adicione conforme necessário)
+    loader: 'custom',
+    loaderFile: 'image-loader.js',
+    domains: ['firebasestorage.googleapis.com', '*.googleusercontent.com', 'images.unsplash.com', 'upload.wikimedia.org'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -25,9 +28,6 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       }
     ],
-    // Configuração para resolver problema de imagens do Firebase Storage em produção
-    loader: 'default',
-    unoptimized: process.env.NODE_ENV === 'production', // Desabilita otimização em produção
     // Formatos modernos para melhor performance
     formats: ['image/avif', 'image/webp'],
     // Configuração do dispositivo para imagens responsivas

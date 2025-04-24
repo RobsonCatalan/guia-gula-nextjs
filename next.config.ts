@@ -25,6 +25,9 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       }
     ],
+    // Configuração para resolver problema de imagens do Firebase Storage em produção
+    loader: 'default',
+    unoptimized: process.env.NODE_ENV === 'production', // Desabilita otimização em produção
     // Formatos modernos para melhor performance
     formats: ['image/avif', 'image/webp'],
     // Configuração do dispositivo para imagens responsivas

@@ -30,7 +30,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/restaurante/belo-horizonte": {
+    "/": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -43,32 +43,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/restaurante/[cidade]",
-      "dataRoute": "/restaurante/belo-horizonte.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/restaurante/sao-paulo": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "Next-Action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/restaurante/[cidade]",
-      "dataRoute": "/restaurante/sao-paulo.rsc",
+      "srcRoute": "/",
+      "dataRoute": "/index.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -1422,7 +1398,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/": {
+    "/restaurante/belo-horizonte": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -1435,8 +1411,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/",
-      "dataRoute": "/index.rsc",
+      "srcRoute": "/restaurante/[cidade]",
+      "dataRoute": "/restaurante/belo-horizonte.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -1445,10 +1421,8 @@
         "x-next-revalidated-tags",
         "x-next-revalidate-tag-token"
       ]
-    }
-  },
-  "dynamicRoutes": {
-    "/restaurante/[cidade]": {
+    },
+    "/restaurante/sao-paulo": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -1460,10 +1434,9 @@
           "value": "multipart/form-data;.*"
         }
       ],
-      "routeRegex": "^/restaurante/([^/]+?)(?:/)?$",
-      "dataRoute": "/restaurante/[cidade].rsc",
-      "fallback": null,
-      "dataRouteRegex": "^/restaurante/([^/]+?)\\.rsc$",
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/restaurante/[cidade]",
+      "dataRoute": "/restaurante/sao-paulo.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -1472,7 +1445,9 @@
         "x-next-revalidated-tags",
         "x-next-revalidate-tag-token"
       ]
-    },
+    }
+  },
+  "dynamicRoutes": {
     "/restaurante/[cidade]/[categoria]": {
       "experimentalBypassFor": [
         {
@@ -1497,12 +1472,37 @@
         "x-next-revalidated-tags",
         "x-next-revalidate-tag-token"
       ]
+    },
+    "/restaurante/[cidade]": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "routeRegex": "^/restaurante/([^/]+?)(?:/)?$",
+      "dataRoute": "/restaurante/[cidade].rsc",
+      "fallback": null,
+      "dataRouteRegex": "^/restaurante/([^/]+?)\\.rsc$",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
     }
   },
   "notFoundRoutes": [],
   "preview": {
-    "previewModeId": "7d6b0b390ad89211a2555264b42b2ea1",
-    "previewModeSigningKey": "7efc78fe5a761677539a5ec21b1cfbf93b081ed303366fa8c5e428009074589f",
-    "previewModeEncryptionKey": "49764dea3f45091920745e18e4529da34607b4bb484efb11859be560f69791d0"
+    "previewModeId": "ba966cb35735ef2735b614f1274bbb8e",
+    "previewModeSigningKey": "423b3af5210d9aa84d187295f448b8f35569894357186808cdca2922e50b4f2b",
+    "previewModeEncryptionKey": "74922ae36712c10e9c2e2e33d36f7f9ec4ff0dd6981d8863e77e71f06a754c90"
   }
 }

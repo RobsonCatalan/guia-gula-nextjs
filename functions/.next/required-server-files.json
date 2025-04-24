@@ -81,7 +81,7 @@
           "pathname": "/**"
         }
       ],
-      "unoptimized": false
+      "unoptimized": true
     },
     "devIndicators": {
       "position": "bottom-left"

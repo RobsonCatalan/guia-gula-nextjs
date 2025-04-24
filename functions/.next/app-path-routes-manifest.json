@@ -3,6 +3,6 @@
   "/_not-found/page": "/_not-found",
   "/page": "/",
   "/restaurante/[cidade]/restaurante/[nome-restaurante]/page": "/restaurante/[cidade]/restaurante/[nome-restaurante]",
-  "/restaurante/[cidade]/[categoria]/page": "/restaurante/[cidade]/[categoria]",
-  "/restaurante/[cidade]/page": "/restaurante/[cidade]"
+  "/restaurante/[cidade]/page": "/restaurante/[cidade]",
+  "/restaurante/[cidade]/[categoria]/page": "/restaurante/[cidade]/[categoria]"
 }

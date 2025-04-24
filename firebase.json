@@ -4,7 +4,7 @@
     "predeploy": [
       "npm.cmd --prefix \"%RESOURCE_DIR%\\..\" run build",
       "powershell -Command \"Copy-Item './.next' 'functions/.next' -Recurse -Force\"",
-      "powershell -Command \"Copy-Item './public' 'functions/public' -Recurse -Force\""
+      "powershell -Command \"Copy-Item './public/*' 'functions/public' -Recurse -Force\""
     ]
   },
   "hosting": {

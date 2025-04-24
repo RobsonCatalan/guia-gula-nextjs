@@ -1,9 +1,10 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { Restaurant, getRestaurantsByCity } from '@/lib/restaurantService';
+import { Restaurant, getRestaurantsByCity, getRestaurantReviews, Review } from '@/lib/restaurantService';
 import Image from 'next/image';
 import Link from 'next/link';
+import ReviewsDrawer from '@/components/ReviewsDrawer';
 
 // Gera slug a partir do texto
 const slugify = (str: string): string =>
@@ -59,6 +60,8 @@ export default function RestaurantDetailClient() {
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [isReviewsDrawerOpen, setIsReviewsDrawerOpen] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -70,6 +73,12 @@ export default function RestaurantDetailClient() {
           setError('Restaurante não encontrado');
         } else {
           setRestaurant(found);
+          
+          // Buscar avaliações do restaurante
+          if (found.id) {
+            const reviewsData = await getRestaurantReviews(found.id);
+            setReviews(reviewsData);
+          }
         }
       } catch (err) {
         console.error('Erro ao carregar restaurante:', err);
@@ -81,12 +90,17 @@ export default function RestaurantDetailClient() {
     load();
   }, [cidade, slug]);
 
-  if (loading) {
-    return <div className="flex justify-center py-8"><div className="w-12 h-12 border-4 border-[#F4A261] border-t-[#D32F2F] rounded-full animate-spin"></div></div>;
-  }
-  if (error || !restaurant) {
-    return <div className="text-center py-8 text-red-500">{error}</div>;
-  }
+  const openReviewsDrawer = () => {
+    setIsReviewsDrawerOpen(true);
+    // Prevenir o scroll da página quando o drawer está aberto
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeReviewsDrawer = () => {
+    setIsReviewsDrawerOpen(false);
+    // Restaurar o scroll da página
+    document.body.style.overflow = 'auto';
+  };
 
   // Helper to render stars based on rating
   const renderStars = (ratingValue: number) => {
@@ -110,6 +124,13 @@ export default function RestaurantDetailClient() {
     }
     return stars;
   };
+
+  if (loading) {
+    return <div className="flex justify-center py-8"><div className="w-12 h-12 border-4 border-[#F4A261] border-t-[#D32F2F] rounded-full animate-spin"></div></div>;
+  }
+  if (error || !restaurant) {
+    return <div className="text-center py-8 text-red-500">{error}</div>;
+  }
 
   return (
     <div className="bg-[#FFF8F0]">
@@ -162,7 +183,12 @@ export default function RestaurantDetailClient() {
         {restaurant.rating && restaurant.rating > 0 ? (
           <div className="flex items-center mb-4">
             {renderStars(restaurant.rating)}
-            <span className="ml-1 text-sm text-[#4A4A4A]">{restaurant.rating.toFixed(1)} ({restaurant.reviewCount} avaliações)</span>
+            <button 
+              onClick={openReviewsDrawer}
+              className="ml-1 text-sm text-[#4A4A4A] hover:underline focus:outline-none"
+            >
+              {restaurant.rating.toFixed(1)} ({restaurant.reviewCount} avaliações)
+            </button>
           </div>
         ) : (
           <p className="text-sm text-[#4A4A4A] mb-4">Sem avaliações</p>
@@ -287,6 +313,15 @@ export default function RestaurantDetailClient() {
           <span className="text-white"> Gula.menu - Todos os direitos reservados</span>
         </div>
       </footer>
+      {/* Drawer de Avaliações */}
+      <ReviewsDrawer 
+        isOpen={isReviewsDrawerOpen} 
+        onClose={closeReviewsDrawer} 
+        reviews={reviews} 
+        rating={restaurant?.rating || 0} 
+        reviewCount={restaurant?.reviewCount || 0}
+        restaurantName={restaurant?.name || ''}
+      />
     </div>
   );
 }

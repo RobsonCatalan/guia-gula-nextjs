@@ -51,8 +51,13 @@ export interface Review {
   id: string;
   userName: string;
   rating: number;
-  comment: string;
-  date: Date;
+  comment?: string;
+  date: Date | string;
+  user?: string;
+  userReference?: any;
+  placeReference?: any;
+  order?: string;
+  orderReference?: any;
 }
 
 // Função para sanitizar e validar dados de restaurante
@@ -282,4 +287,61 @@ export const getAverageRatings = async (restaurantIds: string[]): Promise<Record
     statsMap[id] = { avg: parseFloat((sum / count).toFixed(1)), count };
   });
   return statsMap;
+};
+
+// Obter reviews de um restaurante específico
+export const getRestaurantReviews = async (restaurantId: string): Promise<Review[]> => {
+  if (!isClient) {
+    return [];
+  }
+  
+  try {
+    const placeRef = doc(db, 'places', restaurantId);
+    const reviewsQuery = query(
+      collection(db, 'placeReviews'), 
+      where('placeReference', '==', placeRef),
+      orderBy('date', 'desc')
+    );
+    
+    const snapshot = await getDocs(reviewsQuery);
+    const reviews: Review[] = [];
+    
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      reviews.push({
+        id: doc.id,
+        userName: data.userName || 'Usuário',
+        rating: data.rating || 0,
+        comment: data.comment || '',
+        date: data.date ? new Date(data.date.toDate()) : new Date(),
+        user: data.user || '',
+        order: data.order || '',
+      });
+    });
+    
+    return reviews;
+  } catch (error) {
+    console.error('Erro ao buscar reviews do restaurante:', error);
+    return [];
+  }
+};
+
+// Função para contar reviews por rating (estrelas)
+export const countReviewsByRating = (reviews: Review[]): Record<number, number> => {
+  const counts: Record<number, number> = {
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0
+  };
+  
+  reviews.forEach(review => {
+    const rating = Math.floor(review.rating);
+    if (rating >= 1 && rating <= 5) {
+      counts[rating]++;
+    }
+  });
+  
+  return counts;
 };

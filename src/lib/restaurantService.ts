@@ -32,7 +32,8 @@ export interface Restaurant {
   categories?: string[];
   reviewCount?: number;
   workingHours?: { weekday: number; startTime: number; endTime: number }[];
-  deliveryConfig?: { enabled: boolean; deliveryDisabled: boolean };
+  // Delivery configuration flags
+  deliveryConfig?: { enabled: boolean; deliveryDisabled: boolean; takeoutDisabled: boolean };
 }
 
 // Interface para o cardápio
@@ -95,6 +96,7 @@ const sanitizeRestaurant = (data: DocumentData): Restaurant => ({
   deliveryConfig: {
     enabled: data.deliveryConfig?.enabled ?? false,
     deliveryDisabled: data.deliveryConfig?.deliveryDisabled ?? false,
+    takeoutDisabled: data.deliveryConfig?.takeoutDisabled ?? false,
   },
 });
 

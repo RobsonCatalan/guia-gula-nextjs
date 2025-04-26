@@ -180,6 +180,7 @@ export default function RestaurantDetailClient() {
       </section>
       <main className="max-w-7xl mx-auto px-6 py-12 bg-[#FFF8F0]">
         <h2 className="text-2xl font-bold text-[#4A4A4A] mb-4">Detalhes</h2>
+        <p className="text-[#4A4A4A] mb-4"><strong>Avaliação dos clientes:</strong></p>
         {restaurant.rating && restaurant.rating > 0 ? (
           <div className="flex items-center mb-4">
             {renderStars(restaurant.rating)}
@@ -199,7 +200,63 @@ export default function RestaurantDetailClient() {
         <p className="text-[#4A4A4A] mb-2"><strong>Bairro:</strong> {restaurant.addressDistrict}</p>
         <p className="text-[#4A4A4A] mb-2"><strong>Cidade:</strong> {restaurant.addressCity} - {restaurant.addressState}</p>
         <p className="text-[#4A4A4A] mb-2"><strong>CEP:</strong> {restaurant.postalCode}</p>
-        <p className="text-[#4A4A4A] mb-2"><strong>Coordenadas:</strong> {restaurant.coordinates?.latitude}, {restaurant.coordinates?.longitude}</p>
+        <p className="text-[#4A4A4A] mb-2">
+          <a
+            href={
+              restaurant.deliveryConfig?.enabled
+                ? `https://app.gula.menu/welcomeDelivery?pPlace=${restaurant.id}`
+                : `https://app.gula.menu/mainMenu?pPlace=${restaurant.id}`
+            }
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#FF5842] hover:underline"
+          >
+            {restaurant.deliveryConfig?.enabled ? 'Peça agora mesmo' : 'Veja o cardápio'}
+          </a>
+        </p>
+        {restaurant.deliveryConfig?.enabled && (
+          <div className="flex items-center mb-2">
+            {!restaurant.deliveryConfig?.takeoutDisabled && (
+              <Image
+                src="/images/icons/takeout-gray.svg"
+                alt="Retirada disponível"
+                width={24}
+                height={24}
+                className="mr-2"
+                unoptimized
+              />
+            )}
+            {!restaurant.deliveryConfig?.deliveryDisabled && (
+              <Image
+                src="/images/icons/delivery-gray.svg"
+                alt="Delivery disponível"
+                width={24}
+                height={24}
+                unoptimized
+              />
+            )}
+          </div>
+        )}
+        {restaurant.instagramLink && (
+          <p className="text-[#4A4A4A] mb-2">
+            <strong>Instagram:</strong>
+            <a
+              href={`https://www.instagram.com/${restaurant.instagramLink}/`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center text-[#FF5842] hover:underline"
+            >
+              <Image
+                src="/images/logo/instagram.jpg"
+                alt="Instagram Logo"
+                width={24}
+                height={24}
+                unoptimized
+              />
+              <span className="ml-2">Siga no Instagram</span>
+            </a>
+          </p>
+        )}
         {restaurant.coordinates && (
           <div className="flex space-x-4 mb-2">
             <a
@@ -235,30 +292,9 @@ export default function RestaurantDetailClient() {
           </div>
         )}
         {restaurant.phone && <p className="text-[#4A4A4A] mb-2"><strong>Telefone:</strong> {restaurant.phone}</p>}
-        {restaurant.instagramLink && (
-          <p className="text-[#4A4A4A] mb-2">
-            <strong>Instagram:</strong>
-            <a
-              href={`https://www.instagram.com/${restaurant.instagramLink}/`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center text-[#FF5842] hover:underline"
-            >
-              <Image
-                src="/images/logo/instagram.jpg"
-                alt="Instagram Logo"
-                width={24}
-                height={24}
-                unoptimized
-              />
-              <span className="ml-2">Siga no Instagram</span>
-            </a>
-          </p>
-        )}
-        <p className="text-[#4A4A4A] mb-2"><strong>Avaliação:</strong> {restaurant.rating} ({restaurant.reviewCount} avaliações)</p>
         {restaurant.workingHours && restaurant.workingHours.length > 0 && (
           <div className="mt-6">
-            <h2 className="text-2xl font-bold text-[#4A4A4A] mb-2">Horários de Funcionamento</h2>
+            <h2 className="text-2xl font-bold text-[#4A4A4A] mb-2">Horários de Funcionamento (Presencial)</h2>
             <ul className="list-disc list-inside">
               {(() => {
                 const grouped: Record<number, {weekday: number; startTime: number; endTime: number}[]> = {};

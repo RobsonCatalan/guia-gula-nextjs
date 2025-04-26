@@ -313,6 +313,27 @@ export default function RestaurantDetailClient() {
             </ul>
           </div>
         )}
+        {restaurant.deliveryConfig?.workingHours && restaurant.deliveryConfig.workingHours.length > 0 && (
+          <div className="mt-6">
+            <h2 className="text-2xl font-bold text-[#4A4A4A] mb-2">Horários de Funcionamento (Pedidos Online)</h2>
+            <ul className="list-disc list-inside">
+              {(() => {
+                const grouped: Record<number, {weekday: number; startTime: number; endTime: number}[]> = {};
+                restaurant.deliveryConfig.workingHours.forEach(wh => {
+                  if (!grouped[wh.weekday]) grouped[wh.weekday] = [];
+                  grouped[wh.weekday].push(wh);
+                });
+                return Object.entries(grouped)
+                  .sort(([a], [b]) => Number(a) - Number(b))
+                  .map(([day, hours], idx) => (
+                    <li key={`delivery-${idx}`} className="text-[#4A4A4A]">
+                      {weekdayNames[+day] || 'Dia inválido'}: {joinWithAnd(hours.map(h => `${formatTime(h.startTime)} - ${formatTime(h.endTime)}`))}
+                    </li>
+                  ));
+              })()}
+            </ul>
+          </div>
+        )}
         {restaurant.menu && restaurant.menu.length > 0 && (
           <div className="mt-8">
             <h2 className="text-2xl font-bold text-[#4A4A4A] mb-4">Menu</h2>

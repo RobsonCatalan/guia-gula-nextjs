@@ -3,15 +3,27 @@
     "source": "functions",
     "predeploy": [
       "npm.cmd --prefix \"%RESOURCE_DIR%\\..\" run build",
-      "powershell -Command \"Copy-Item './.next' 'functions/.next' -Recurse -Force\"",
-      "powershell -Command \"Copy-Item './public/*' 'functions/public' -Recurse -Force\""
+      "node \"%RESOURCE_DIR%\\..\\copyNext.js\""
     ]
   },
   "hosting": {
     "public": "public/",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
-      { "source": "**", "function": "ssr" }
+      {
+        "source": "/_next/static/**",
+        "run": {
+          "serviceId": "ssr",
+          "region": "us-central1"
+        }
+      },
+      {
+        "source": "**",
+        "run": {
+          "serviceId": "ssr",
+          "region": "us-central1"
+        }
+      }
     ]
   }
 }

@@ -3,7 +3,7 @@ const next = require('next');
 
 const app = next({
   dev: false,
-  conf: { distDir: '../.next' }
+  conf: { distDir: '.next' }
 });
 const handle = app.getRequestHandler();
 

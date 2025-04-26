@@ -1,7 +1,0 @@
-{
-  "headers": {
-    "x-nextjs-stale-time": "4294967294",
-    "x-nextjs-prerender": "1",
-    "x-next-cache-tags": "_N_T_/layout,_N_T_/restaurante/layout,_N_T_/restaurante/[cidade]/layout,_N_T_/restaurante/[cidade]/[categoria]/layout,_N_T_/restaurante/[cidade]/[categoria]/page,_N_T_/restaurante/belo-horizonte/churrasco-grelhados"
-  }
-}

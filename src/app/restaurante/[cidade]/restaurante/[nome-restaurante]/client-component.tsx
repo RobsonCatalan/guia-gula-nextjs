@@ -292,11 +292,11 @@ export default function RestaurantDetailClient() {
           {/* Peça Online Card (se delivery habilitado) */}
           {restaurant.deliveryConfig?.enabled && (
             <div className="bg-white p-6 rounded-lg shadow">
-              <h3 className="text-xl font-bold mb-4 text-[#4A4A4A]">Peça Online</h3>
+              <h3 className="text-xl font-bold mb-4 text-[#4A4A4A]">Pedir Online</h3>
               <div className="flex items-center mb-4">
                 <span className={`font-medium ${isOnlineOpen ? 'text-green-600' : 'text-red-600'}`}>{isOnlineOpen ? 'Aberto agora' : 'Fechado agora'}</span>
                 <span className="mx-2 text-[#4A4A4A]">|</span>
-                <a href="#" onClick={(e) => { e.preventDefault(); setShowOnlineHours(p => !p); }} className="flex items-center !text-black !font-bold !underline !decoration-black hover:!text-black hover:!underline">
+                <a href="#" onClick={(e) => { e.preventDefault(); setShowOnlineHours(p => !p); }} className="flex items-center !text-[#4A4A4A] !font-bold !underline !decoration-[#4A4A4A] hover:!text-[#4A4A4A] hover:!underline">
                   <span>Horário de funcionamento</span>
                   <span className="ml-1">{showOnlineHours ? '▲' : '▼'}</span>
                 </a>

@@ -153,6 +153,15 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
       <div className="p-4">
         <h3 className="text-xl font-bold text-[#4A4A4A] mb-1 truncate">{name}</h3>
         
+        {/* Categories tags */}
+        {categories.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-2">
+            {categories.map(code => (
+              <span key={code} className="bg-[#F4A261] text-white text-xs px-2 py-1 rounded">{categoryMap[code] || code}</span>
+            ))}
+          </div>
+        )}
+        
         {rating && rating > 0 ? (
           <div className="flex items-center mb-2">
             {renderStars(rating)}
@@ -185,17 +194,6 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
             <span>{city}</span>
-          </div>
-        )}
-        
-        {/* Categories tags */}
-        {categories.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-2">
-            {categories.map(code => (
-              <span key={code} className="bg-[#F4A261] text-white text-xs px-2 py-1 rounded">
-                {categoryMap[code] || code}
-              </span>
-            ))}
           </div>
         )}
         

@@ -320,7 +320,7 @@ export default function RestaurantDetailClient() {
           )}
           {/* Culinária section moved below photo */}
           {restaurant.categories && restaurant.categories.length > 0 && (
-            <div className="mt-4 mb-4">
+            <div className="mt-4">
               <div className="flex flex-wrap gap-2">
                 {restaurant.categories.map(code => (
                   <h2 key={code} className="inline-block m-0 !text-xs !font-normal !leading-none bg-[#F4A261] text-white px-2 py-1 rounded">
@@ -330,14 +330,14 @@ export default function RestaurantDetailClient() {
               </div>
             </div>
           )}
+          {restaurant.shortDescription && (
+            <p className="mt-4 text-base text-[#4A4A4A]">
+              {restaurant.shortDescription}
+            </p>
+          )}
         </div>
       </section>
-      <div className="max-w-7xl mx-auto px-6 py-4">
-        {restaurant.shortDescription && (
-          <p className="mt-4 text-base text-[#4A4A4A] mb-4">
-            {restaurant.shortDescription}
-          </p>
-        )}
+      <div className="max-w-7xl mx-auto px-6 pb-4">
         <div className="mb-2">
           <span className="font-semibold text-[#4A4A4A]">Avaliações:</span>
         </div>

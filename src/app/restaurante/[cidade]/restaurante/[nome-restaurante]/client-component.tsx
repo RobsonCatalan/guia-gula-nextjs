@@ -444,7 +444,6 @@ export default function RestaurantDetailClient() {
               {restaurant.deliveryConfig?.contactNumber && (
                 <a href={`https://wa.me/${restaurant.deliveryConfig.contactNumber}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#25D366] hover:underline mt-4">
                   <Image src="/images/icons/Whatsapp.png" alt="WhatsApp" width={24} height={24} unoptimized className="mr-2" />
-                  <span className="ml-2">WhatsApp</span>
                 </a>
               )}
             </div>

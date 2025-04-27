@@ -334,7 +334,7 @@ export default function RestaurantDetailClient() {
       </section>
       <div className="max-w-7xl mx-auto px-6 py-4">
         {restaurant.shortDescription && (
-          <p className="text-base text-[#4A4A4A] mb-4">
+          <p className="mt-4 text-base text-[#4A4A4A] mb-4">
             {restaurant.shortDescription}
           </p>
         )}

@@ -28,6 +28,7 @@ export default function Home() {
   // Selected city and detection flag
   const [selectedCity, setSelectedCity] = useState<string>('sao-paulo');
   const [hasDetected, setHasDetected] = useState<boolean>(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const cityOptions = [
     { value: 'sao-paulo', label: 'São Paulo' },
     { value: 'belo-horizonte', label: 'Belo Horizonte' }
@@ -65,7 +66,7 @@ export default function Home() {
           />
           {hasDetected ? (
             <div className="flex items-baseline space-x-2">
-              <label htmlFor="city-select" className="text-white font-medium">Restaurantes de:</label>
+              <label htmlFor="city-select" className="text-white font-medium hidden md:block">Restaurantes de:</label>
               <select
                 id="city-select"
                 value={selectedCity}
@@ -90,10 +91,26 @@ export default function Home() {
               Para Restaurantes
             </a>
           </nav>
-          <button className="md:hidden text-2xl text-white">☰</button>
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden text-2xl text-white"
+          >
+            ☰
+          </button>
         </div>
       </header>
-
+      {mobileMenuOpen && (
+        <nav className="md:hidden bg-[#FF5842] p-4 space-y-2">
+          <a
+            href="https://www.gulamenu.com.br/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block !text-white hover:!text-[#FFF8F0] transition-colors font-medium"
+          >
+            Para Restaurantes
+          </a>
+        </nav>
+      )}
       {/* Hero Section */}
       <section className="text-white py-16 bg-gradient-to-b from-[#FF7A68] to-[#FFF8F0]">
         <div className="max-w-7xl mx-auto text-center px-6">
@@ -187,10 +204,7 @@ export default function Home() {
           <div>
             <h3 className="text-xl font-bold mb-4">Links Rápidos</h3>
             <ul className="space-y-2">
-              <li><Link href="/" className="!text-white hover:!text-[#FFF8F0]">Início</Link></li>
-              <li><Link href="#" className="!text-white hover:!text-[#FFF8F0]">Cidades</Link></li>
-              <li><Link href="#" className="!text-white hover:!text-[#FFF8F0]">Culinárias</Link></li>
-              <li><Link href="#" className="!text-white hover:!text-[#FFF8F0]">Sobre</Link></li>
+              <li><a href="https://www.gulamenu.com.br/" target="_blank" rel="noopener noreferrer" className="!text-white hover:!text-[#FFF8F0]">Para Restaurantes</a></li>
             </ul>
           </div>
           <div>

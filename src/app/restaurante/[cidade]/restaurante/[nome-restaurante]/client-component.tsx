@@ -212,7 +212,7 @@ export default function RestaurantDetailClient() {
       </nav>
       <section className="text-white py-16 bg-gradient-to-b from-[#FF7A68] to-[#FFF8F0]">
         <div className="max-w-7xl mx-auto text-center px-6">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 font-['Roboto']">{restaurant.name}</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 font-['Roboto']">Restaurante {restaurant.name}</h1>
           {restaurant.mainPhoto && (
             <Image
               src={restaurant.mainPhoto}

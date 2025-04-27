@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import CategoryClientComponent from './client-component';
 import CategorySection from '@/components/CategorySection';
+import { Suspense } from 'react';
 
 // Mapeamento de códigos de categoria para labels
 const categoryMap: Record<string, string> = {
@@ -148,7 +149,9 @@ export default async function CategoryPage(props: { params: any }) {
         <h2 className="text-2xl font-bold text-[#4A4A4A] mb-6">
           Restaurantes da Categoria {categoriaLabel} em {cidadeFormatada}
         </h2>
-        <CategoryClientComponent cidade={cidade} categoria={categoria} />
+        <Suspense fallback={<div>Carregando restaurantes...</div>}>
+          <CategoryClientComponent cidade={cidade} categoria={categoria} />
+        </Suspense>
       </main>
       <CategorySection city={cidade} title={`Explore outras Categorias de Restaurantes em ${cidadeFormatada}`} currentCategory={categoria} />
     </div>

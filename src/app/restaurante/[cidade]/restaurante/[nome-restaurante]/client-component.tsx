@@ -390,12 +390,10 @@ export default function RestaurantDetailClient() {
               <div className="flex items-center mb-4">
                 <a href={`https://www.google.com/maps/dir/?api=1&destination=${restaurant.coordinates.latitude},${restaurant.coordinates.longitude}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#FF5842] hover:underline">
                   <Image src="/images/logo/google-maps.png" alt="Google Maps Logo" width={24} height={24} unoptimized />
-                  <span className="ml-2">Google Maps</span>
                 </a>
                 <span className="mx-2 text-[#4A4A4A]">|</span>
                 <a href={`https://www.waze.com/ul?ll=${restaurant.coordinates.latitude},${restaurant.coordinates.longitude}&navigate=yes`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#FF5842] hover:underline">
                   <Image src="/images/logo/waze.png" alt="Waze Logo" width={24} height={24} unoptimized />
-                  <span className="ml-2">Waze</span>
                 </a>
               </div>
             )}

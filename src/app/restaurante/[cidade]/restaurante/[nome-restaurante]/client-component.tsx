@@ -5,6 +5,7 @@ import { Restaurant, getRestaurantsByCity, getRestaurantReviews, Review } from '
 import Image from 'next/image';
 import Link from 'next/link';
 import ReviewsDrawer from '@/components/ReviewsDrawer';
+import { categoryMap } from '@/components/RestaurantCard';
 
 // Gera slug a partir do texto
 const slugify = (str: string): string =>
@@ -230,12 +231,30 @@ export default function RestaurantDetailClient() {
             {restaurant.shortDescription}
           </p>
         )}
+        {restaurant.categories && restaurant.categories.length > 0 && (
+          <div className="mb-4">
+            <span className="font-semibold text-[#4A4A4A] mr-2">Culinária:</span>
+            <div className="flex flex-wrap gap-2 inline">
+              {restaurant.categories.map(code => (
+                <span key={code} className="bg-[#F4A261] text-white text-xs px-2 py-1 rounded">
+                  {categoryMap[code] || code}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+        <div className="mb-2">
+          <span className="font-semibold text-[#4A4A4A]">Avaliações:</span>
+        </div>
         <div className="flex items-center space-x-2 mb-2">
           <span className="text-xl font-bold text-[#4A4A4A]">{restaurant?.rating?.toFixed(1)}</span>
           <div className="flex">{renderStars(restaurant?.rating || 0)}</div>
           <button onClick={openReviewsDrawer} className="text-[#FF5842] hover:underline ml-2">{restaurant?.reviewCount} avaliações</button>
         </div>
-        {restaurant?.instagramLink && (
+        <div className="mb-2">
+          <span className="font-semibold text-[#4A4A4A]">Redes Sociais:</span>
+        </div>
+        {restaurant.instagramLink && (
           <a href={`https://www.instagram.com/${restaurant.instagramLink}/`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#FF5842] hover:underline mb-4">
             <Image src="/images/logo/instagram.jpg" alt="Instagram Logo" width={24} height={24} unoptimized />
             <span className="ml-2">Instagram</span>

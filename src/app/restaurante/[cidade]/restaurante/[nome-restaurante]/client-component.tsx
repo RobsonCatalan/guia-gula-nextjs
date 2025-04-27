@@ -117,6 +117,27 @@ export default function RestaurantDetailClient() {
   }, [restaurant]);
 
   useEffect(() => {
+    if (restaurant) {
+      const categoryLabels = (restaurant.categories || [])
+        .map(code => categoryMap[code] || code)
+        .join(', ');
+      const district = restaurant.addressDistrict || '';
+      const city = restaurant.addressCity || '';
+      const state = restaurant.addressState || '';
+      const desc = `Restaurante de ${categoryLabels} no bairro ${district} em ${city}/${state}`;
+      let meta: HTMLMetaElement | null = document.querySelector('meta[name="description"]');
+      if (meta) {
+        meta.setAttribute('content', desc);
+      } else {
+        meta = document.createElement('meta');
+        meta.name = 'description';
+        meta.content = desc;
+        document.head.appendChild(meta);
+      }
+    }
+  }, [restaurant]);
+
+  useEffect(() => {
     if (!restaurant) return;
     const now = new Date();
     const jsDay = now.getDay();

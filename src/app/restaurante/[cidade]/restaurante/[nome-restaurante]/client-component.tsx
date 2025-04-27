@@ -163,16 +163,7 @@ export default function RestaurantDetailClient() {
       }
     }) ?? false;
     setIsPresentialOpen(presentialOpen);
-    const onlineOpen = restaurant.deliveryConfig?.workingHours?.some(wh => {
-      const start = wh.startTime;
-      const end = wh.endTime;
-      if (start < end) {
-        return wh.weekday === weekday && minutes >= start && minutes < end;
-      } else {
-        const nextDay = wh.weekday % 7 + 1;
-        return (wh.weekday === weekday && minutes >= start) || (nextDay === weekday && minutes < end);
-      }
-    }) ?? false;
+    const onlineOpen = restaurant.deliveryConfig?.openNow ?? false;
     setIsOnlineOpen(onlineOpen);
   }, [restaurant]);
 
@@ -461,7 +452,7 @@ export default function RestaurantDetailClient() {
               {restaurant.deliveryConfig?.contactNumber && (
                 <a href={`https://wa.me/${restaurant.deliveryConfig.contactNumber}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#25D366] hover:underline mt-4">
                   <Image src="/images/icons/Whatsapp.png" alt="WhatsApp" width={24} height={24} unoptimized className="mr-2" />
-                  Conversar no WhatsApp
+                  <span className="ml-2">WhatsApp</span>
                 </a>
               )}
             </div>

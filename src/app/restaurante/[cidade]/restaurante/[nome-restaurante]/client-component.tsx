@@ -253,7 +253,10 @@ export default function RestaurantDetailClient() {
             <div className="flex items-center mb-4">
               <span className={`font-medium ${isPresentialOpen ? 'text-green-600' : 'text-red-600'}`}>{isPresentialOpen ? 'Aberto agora' : 'Fechado agora'}</span>
               <span className="mx-2 text-[#4A4A4A]">|</span>
-              <a href="#" onClick={(e) => { e.preventDefault(); setShowPresencialHours(p => !p); }} className="!text-black !font-bold !underline !decoration-black hover:!text-black hover:!underline">Horário de funcionamento</a>
+              <a href="#" onClick={(e) => { e.preventDefault(); setShowPresencialHours(p => !p); }} className="flex items-center !text-black !font-bold !underline !decoration-black hover:!text-black hover:!underline">
+                <span>Horário de funcionamento</span>
+                <span className="ml-1">{showPresencialHours ? '▲' : '▼'}</span>
+              </a>
             </div>
             {showPresencialHours && (
               <ul className="list-disc list-inside text-[#4A4A4A] mb-4">
@@ -293,7 +296,10 @@ export default function RestaurantDetailClient() {
               <div className="flex items-center mb-4">
                 <span className={`font-medium ${isOnlineOpen ? 'text-green-600' : 'text-red-600'}`}>{isOnlineOpen ? 'Aberto agora' : 'Fechado agora'}</span>
                 <span className="mx-2 text-[#4A4A4A]">|</span>
-                <a href="#" onClick={(e) => { e.preventDefault(); setShowOnlineHours(p => !p); }} className="!text-black !font-bold !underline !decoration-black hover:!text-black hover:!underline">Horário de funcionamento</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); setShowOnlineHours(p => !p); }} className="flex items-center !text-black !font-bold !underline !decoration-black hover:!text-black hover:!underline">
+                  <span>Horário de funcionamento</span>
+                  <span className="ml-1">{showOnlineHours ? '▲' : '▼'}</span>
+                </a>
               </div>
               {showOnlineHours && (
                 <ul className="list-disc list-inside text-[#4A4A4A] mb-4">

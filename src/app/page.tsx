@@ -30,6 +30,7 @@ export default function Home() {
   const [hasDetected, setHasDetected] = useState<boolean>(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [noResults, setNoResults] = useState<boolean>(false);
   const cityOptions = [
     { value: 'sao-paulo', label: 'São Paulo' },
     { value: 'belo-horizonte', label: 'Belo Horizonte' }
@@ -53,16 +54,22 @@ export default function Home() {
   };
 
   const handleSearch = () => {
-    if (!searchQuery) return;
+    if (!searchQuery) {
+      setNoResults(false);
+      return;
+    }
     const slugTerm = normalize(searchQuery);
     const cards = document.querySelectorAll('[id^="restaurant-"]');
+    let found = false;
     for (const card of cards) {
       const el = card as HTMLElement;
       if (el.id.includes(slugTerm)) {
         el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        return;
+        found = true;
+        break;
       }
     }
+    setNoResults(!found);
   };
 
   return (
@@ -147,6 +154,11 @@ export default function Home() {
               Buscar
             </button>
           </div>
+          {noResults && (
+            <p className="text-center text-sm text-red-600 mt-4">
+              Nenhum restaurante encontrado para "{searchQuery}"
+            </p>
+          )}
         </div>
       </section>
       <CategorySection city={selectedCity} />

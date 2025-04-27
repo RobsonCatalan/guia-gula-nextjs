@@ -108,13 +108,9 @@ export default async function CategoryPage(props: { params: any }) {
               style={{ width: 'auto', height: 'auto' }}
             />
           </Link>
-          <nav className="hidden md:flex space-x-6">
-            <Link href="/" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Início</Link>
-            <Link href="#" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Cidades</Link>
-            <Link href="#" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Culinárias</Link>
-            <Link href="#" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Sobre</Link>
+          <nav className="flex space-x-6">
+            <Link href="https://www.gulamenu.com.br/" target="_blank" rel="noopener noreferrer" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Para Restaurantes</Link>
           </nav>
-          <button className="md:hidden text-2xl text-white">☰</button>
         </div>
       </header>
       <nav className="max-w-7xl mx-auto px-6 py-2 text-sm text-[#4A4A4A]" aria-label="breadcrumb">

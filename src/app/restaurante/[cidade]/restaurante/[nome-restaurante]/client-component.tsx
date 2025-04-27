@@ -321,7 +321,6 @@ export default function RestaurantDetailClient() {
           {/* Culinária section moved below photo */}
           {restaurant.categories && restaurant.categories.length > 0 && (
             <div className="mb-4">
-              <span className="font-semibold text-[#4A4A4A] mr-2">Culinária:</span>
               <div className="flex flex-wrap gap-2">
                 {restaurant.categories.map(code => (
                   <h2 key={code} className="inline-block m-0 !text-xs !font-normal !leading-none bg-[#F4A261] text-white px-2 py-1 rounded">

@@ -338,7 +338,7 @@ export default function RestaurantDetailClient() {
         </div>
       </section>
       <div className="max-w-7xl mx-auto px-6 pb-4">
-        <div className="flex items-center space-x-2 mb-2">
+        <div className="flex items-center space-x-2 mb-4">
           <span className="text-xl font-bold text-[#4A4A4A]">{restaurant?.rating?.toFixed(1)}</span>
           <div className="flex">{renderStars(restaurant?.rating || 0)}</div>
           <a href="#" onClick={(e) => { e.preventDefault(); openReviewsDrawer(); }} className="text-[#FF5842] hover:underline ml-2">{restaurant?.reviewCount} avaliações no gula.menu</a>

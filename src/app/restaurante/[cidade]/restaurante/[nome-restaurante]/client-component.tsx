@@ -310,7 +310,7 @@ export default function RestaurantDetailClient() {
                   ))}
                 </ul>
               )}
-              {isOnlineOpen && (
+              {isOnlineOpen && restaurant.deliveryConfig?.enabled && (
                 <div className="flex items-center space-x-4 mt-4">
                   <a
                     href={`https://app.gula.menu/welcomeDelivery?pPlace=${restaurant.id}`}
@@ -320,8 +320,12 @@ export default function RestaurantDetailClient() {
                   >
                     Pedir Online
                   </a>
-                  <Image src="/images/icons/delivery-gray.svg" alt="Delivery" width={24} height={24} unoptimized />
-                  <Image src="/images/icons/takeout-gray.svg" alt="Takeout" width={24} height={24} unoptimized />
+                  {!restaurant.deliveryConfig.deliveryDisabled && (
+                    <Image src="/images/icons/delivery-gray.svg" alt="Delivery disponível" width={24} height={24} unoptimized />
+                  )}
+                  {!restaurant.deliveryConfig.takeoutDisabled && (
+                    <Image src="/images/icons/takeout-gray.svg" alt="Retirada disponível" width={24} height={24} unoptimized />
+                  )}
                 </div>
               )}
               {restaurant.deliveryConfig?.contactNumber && (

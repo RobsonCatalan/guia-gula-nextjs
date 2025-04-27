@@ -331,7 +331,7 @@ export default function RestaurantDetailClient() {
             </div>
           )}
           {restaurant.shortDescription && (
-            <p className="mt-4 text-base text-[#4A4A4A]">
+            <p className="mt-4 text-base text-[#4A4A4A] text-left">
               {restaurant.shortDescription}
             </p>
           )}

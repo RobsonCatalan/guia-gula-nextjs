@@ -58,12 +58,12 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
             />
           </Link>
           <nav className="hidden md:flex space-x-6">
-            <Link href="/" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Para Restaurantes</Link>
+            <Link href="https://www.gulamenu.com.br/" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Para Restaurantes</Link>
           </nav>
           <details className="md:hidden">
             <summary className="text-2xl text-white list-none">☰</summary>
             <div className="mt-2">
-              <Link href="/" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Para Restaurantes</Link>
+              <Link href="https://www.gulamenu.com.br/" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Para Restaurantes</Link>
             </div>
           </details>
         </div>

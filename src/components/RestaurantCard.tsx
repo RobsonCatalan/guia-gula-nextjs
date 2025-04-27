@@ -24,7 +24,7 @@ interface RestaurantCardProps {
 }
 
 // Map English category codes to Portuguese labels
-const categoryMap: Record<string, string> = {
+export const categoryMap: Record<string, string> = {
   barPub: 'Bar & Pub',
   pizza: 'Pizzaria',
   cafeBakeryDesserts: 'Café & Pães & Doces',

@@ -114,7 +114,6 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
     return (wh.weekday === weekday && minutes >= start) || (nextDay === weekday && minutes < end);
   }) ?? false;
   const onlineOpen = restaurant.deliveryConfig?.openNow ?? false;
-  const isOpenNow = presentialOpen || onlineOpen;
 
   return (
     <div id={`restaurant-${createSlug(name)}`} className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
@@ -165,8 +164,15 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
         
         <div className="text-sm mb-2">
           <span className="font-medium text-[#4A4A4A]">Presencial: </span>
-          <span className={isOpenNow ? 'text-green-600' : 'text-red-600'}>
-            {isOpenNow ? 'Aberto agora' : 'Fechado agora'}
+          <span className={presentialOpen ? 'text-green-600' : 'text-red-600'}>
+            {presentialOpen ? 'Aberto agora' : 'Fechado agora'}
+          </span>
+        </div>
+
+        <div className="text-sm mb-2">
+          <span className="font-medium text-[#4A4A4A]">Online: </span>
+          <span className={onlineOpen ? 'text-green-600' : 'text-red-600'}>
+            {onlineOpen ? 'Aberto agora' : 'Fechado agora'}
           </span>
         </div>
 

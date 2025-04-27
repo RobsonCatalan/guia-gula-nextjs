@@ -225,6 +225,11 @@ export default function RestaurantDetailClient() {
         </div>
       </section>
       <div className="max-w-7xl mx-auto px-6 py-4">
+        {restaurant.shortDescription && (
+          <p className="text-base text-[#4A4A4A] mb-4">
+            {restaurant.shortDescription}
+          </p>
+        )}
         <div className="flex items-center space-x-2 mb-2">
           <span className="text-xl font-bold text-[#4A4A4A]">{restaurant?.rating?.toFixed(1)}</span>
           <div className="flex">{renderStars(restaurant?.rating || 0)}</div>

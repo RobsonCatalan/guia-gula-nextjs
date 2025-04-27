@@ -18,6 +18,7 @@ export interface Restaurant {
   address?: string;
   city?: string;
   description?: string;
+  shortDescription?: string;
   cuisine?: string;
   openingHours?: string;
   imageUrl?: string;
@@ -70,6 +71,7 @@ export interface Review {
 const sanitizeRestaurant = (data: DocumentData): Restaurant => ({
   id: data.id || '',
   name: data.name || '',
+  shortDescription: data.shortDescription || '',
   address: data.fiscalInformation?.fiscalAddress?.formattedAddress || data.address || '',
   city: data.guideConfig?.address?.city || data.city || '',
   description: data.description || '',

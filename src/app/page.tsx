@@ -136,6 +136,7 @@ export default function Home() {
               placeholder="Nome do Restaurante..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               className="flex-grow p-4 text-[#4A4A4A] outline-none"
             />
             <button onClick={handleSearch} className="bg-[#F4A261] text-white px-6 py-4 font-bold">

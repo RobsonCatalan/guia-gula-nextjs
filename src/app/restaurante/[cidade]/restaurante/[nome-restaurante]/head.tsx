@@ -1,5 +1,5 @@
 import React from 'react';
-import Head from 'next/head';
+import NextHead from 'next/head';
 import { getRestaurantsByCity } from '@/lib/restaurantService';
 import { slugify } from '@/lib/utils';
 import { categoryMap } from '@/components/RestaurantCard';
@@ -56,7 +56,7 @@ export default async function Head({ params }: Props) {
   };
 
   return (
-    <Head>
+    <NextHead>
       <title>{title}</title>
       <meta name="description" content={desc} />
       <link rel="canonical" href={pageUrl} />
@@ -64,6 +64,6 @@ export default async function Head({ params }: Props) {
       <meta property="og:description" content={desc} />
       <meta property="og:image" content={restaurant?.mainPhoto || restaurant?.imageUrl || '/images/logo/logo.webp'} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-    </Head>
+    </NextHead>
   );
 }

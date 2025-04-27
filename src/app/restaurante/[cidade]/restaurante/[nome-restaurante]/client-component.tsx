@@ -344,8 +344,13 @@ export default function RestaurantDetailClient() {
           <a href="#" onClick={(e) => { e.preventDefault(); openReviewsDrawer(); }} className="text-[#FF5842] hover:underline ml-2">{restaurant?.reviewCount} avaliações no gula.menu</a>
         </div>
         {restaurant.instagramLink && (
-          <div className="mb-4">
-            <a href={`https://www.instagram.com/${restaurant.instagramLink}/`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#FF5842] hover:underline mb-4">
+          <div className="flex items-center mb-4">
+            <a href={`https://app.gula.menu/mainMenu?pPlace=${restaurant.id}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#FF5842] hover:underline">
+              <div style={{ WebkitMaskImage: `url('/images/icons/menu.png')`, maskImage: `url('/images/icons/menu.png')`, WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat', WebkitMaskSize: 'contain', maskSize: 'contain', backgroundColor: '#FF5842', width: '24px', height: '24px' }} />
+              <span className="ml-2">Cardápio</span>
+            </a>
+            <span className="mx-2 text-[#4A4A4A]">|</span>
+            <a href={`https://www.instagram.com/${restaurant.instagramLink}/`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#FF5842] hover:underline">
               <Image src="/images/logo/instagram.jpg" alt="Instagram Logo" width={24} height={24} unoptimized />
             </a>
           </div>
@@ -385,11 +390,9 @@ export default function RestaurantDetailClient() {
               <div className="flex space-x-4 mb-4">
                 <a href={`https://www.google.com/maps/dir/?api=1&destination=${restaurant.coordinates.latitude},${restaurant.coordinates.longitude}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#FF5842] hover:underline">
                   <Image src="/images/logo/google-maps.png" alt="Google Maps Logo" width={24} height={24} unoptimized />
-                  <span className="ml-2">Google Maps</span>
                 </a>
                 <a href={`https://www.waze.com/ul?ll=${restaurant.coordinates.latitude},${restaurant.coordinates.longitude}&navigate=yes`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#FF5842] hover:underline">
                   <Image src="/images/logo/waze.png" alt="Waze Logo" width={24} height={24} unoptimized />
-                  <span className="ml-2">Waze</span>
                 </a>
               </div>
             )}
@@ -397,10 +400,6 @@ export default function RestaurantDetailClient() {
             <p className="text-[#4A4A4A] mb-2"><strong>Rua:</strong> {restaurant.addressStreet}, {restaurant.addressNumber}{restaurant.addressComplement && `, ${restaurant.addressComplement}`}</p>
             <p className="text-[#4A4A4A] mb-2"><strong>Bairro:</strong> {restaurant.addressDistrict}</p>
             <p className="text-[#4A4A4A] mb-2"><strong>Cidade:</strong> {restaurant.addressCity} - {restaurant.addressState}</p>
-            <a href={`https://app.gula.menu/mainMenu?pPlace=${restaurant.id}`} target="_blank" rel="noopener noreferrer" className="flex items-center mb-4 text-[#FF5842] hover:underline">
-              <div style={{ WebkitMaskImage: `url('/images/icons/menu.png')`, maskImage: `url('/images/icons/menu.png')`, WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat', WebkitMaskSize: 'contain', maskSize: 'contain', backgroundColor: '#FF5842', width: '24px', height: '24px' }} />
-              <span className="ml-2">Cardápio</span>
-            </a>
           </div>
           {/* Peça Online Card (se delivery habilitado) */}
           {restaurant.deliveryConfig?.enabled && (

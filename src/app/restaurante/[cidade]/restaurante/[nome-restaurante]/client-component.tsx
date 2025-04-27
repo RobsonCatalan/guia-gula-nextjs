@@ -229,7 +229,7 @@ export default function RestaurantDetailClient() {
                   {
                     '@type': 'BreadcrumbList',
                     itemListElement: [
-                      { '@type': 'ListItem', position: 1, name: 'Para Restaurantes', item: 'https://www.gulamenu.com.br/' },
+                      { '@type': 'ListItem', position: 1, name: 'Início', item: `${origin}/` },
                       { '@type': 'ListItem', position: 2, name: restaurant.name, item: pageUrl },
                     ],
                   },
@@ -293,7 +293,7 @@ export default function RestaurantDetailClient() {
       {!hideLayout && (
         <nav className="max-w-7xl mx-auto px-6 py-2 text-sm text-[#4A4A4A]" aria-label="breadcrumb">
           <ol className="list-none flex">
-            <li><Link href="https://www.gulamenu.com.br/" target="_blank" rel="noopener noreferrer" className="hover:underline">Para Restaurantes</Link><span className="mx-2">/</span></li>
+            <li><Link href="/" className="hover:underline">Início</Link><span className="mx-2">/</span></li>
             <li className="font-medium">{restaurant.name}</li>
           </ol>
         </nav>

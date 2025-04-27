@@ -341,7 +341,7 @@ export default function RestaurantDetailClient() {
         <div className="flex items-center space-x-2 mb-2">
           <span className="text-xl font-bold text-[#4A4A4A]">{restaurant?.rating?.toFixed(1)}</span>
           <div className="flex">{renderStars(restaurant?.rating || 0)}</div>
-          <a href="#" onClick={(e) => { e.preventDefault(); openReviewsDrawer(); }} className="text-[#FF5842] hover:underline ml-2">{restaurant?.reviewCount} avaliações</a>
+          <a href="#" onClick={(e) => { e.preventDefault(); openReviewsDrawer(); }} className="text-[#FF5842] hover:underline ml-2">{restaurant?.reviewCount} avaliações no gula.menu</a>
         </div>
         {restaurant.instagramLink && (
           <div className="mb-4">

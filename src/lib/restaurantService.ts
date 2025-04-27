@@ -38,6 +38,7 @@ export interface Restaurant {
     enabled: boolean;
     deliveryDisabled: boolean;
     takeoutDisabled: boolean;
+    openNow?: boolean;
     workingHours?: { weekday: number; startTime: number; endTime: number }[];
     contactNumber?: string;
   };
@@ -110,6 +111,7 @@ const sanitizeRestaurant = (data: DocumentData): Restaurant => ({
     enabled: data.deliveryConfig?.enabled ?? false,
     deliveryDisabled: data.deliveryConfig?.deliveryDisabled ?? false,
     takeoutDisabled: data.deliveryConfig?.takeoutDisabled ?? false,
+    openNow: data.deliveryConfig?.openNow ?? false,
     workingHours: Array.isArray(data.deliveryConfig?.workingHours)
       ? data.deliveryConfig.workingHours.map((wh: any) => ({
           weekday: wh.weekday,

@@ -54,10 +54,14 @@ export default function Home() {
 
   const handleSearch = () => {
     if (!searchQuery) return;
-    const slug = normalize(searchQuery);
-    const element = document.getElementById(`restaurant-${slug}`);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const slugTerm = normalize(searchQuery);
+    const cards = document.querySelectorAll('[id^="restaurant-"]');
+    for (const card of cards) {
+      const el = card as HTMLElement;
+      if (el.id.includes(slugTerm)) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
     }
   };
 

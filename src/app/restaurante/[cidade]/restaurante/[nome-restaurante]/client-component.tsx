@@ -111,6 +111,12 @@ export default function RestaurantDetailClient() {
   }, [restaurant]);
 
   useEffect(() => {
+    if (restaurant) {
+      document.title = `Restaurante ${restaurant.name}`;
+    }
+  }, [restaurant]);
+
+  useEffect(() => {
     if (!restaurant) return;
     const now = new Date();
     const jsDay = now.getDay();

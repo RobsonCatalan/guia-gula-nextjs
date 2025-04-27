@@ -99,6 +99,23 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
     return stars;
   };
 
+  // Determine open state based on workingHours and deliveryConfig
+  const now = new Date();
+  const jsDay = now.getDay();
+  const weekday = jsDay === 0 ? 7 : jsDay;
+  const minutes = now.getHours() * 60 + now.getMinutes();
+  const presentialOpen = restaurant.workingHours?.some(wh => {
+    const start = wh.startTime;
+    const end = wh.endTime;
+    if (start < end) {
+      return wh.weekday === weekday && minutes >= start && minutes < end;
+    }
+    const nextDay = wh.weekday % 7 + 1;
+    return (wh.weekday === weekday && minutes >= start) || (nextDay === weekday && minutes < end);
+  }) ?? false;
+  const onlineOpen = restaurant.deliveryConfig?.openNow ?? false;
+  const isOpenNow = presentialOpen || onlineOpen;
+
   return (
     <div id={`restaurant-${createSlug(name)}`} className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
       {/* Imagem principal do restaurante */}
@@ -146,6 +163,13 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
           <p className="text-sm text-[#4A4A4A] mb-2">Sem avaliações</p>
         )}
         
+        <div className="text-sm mb-2">
+          <span className="font-medium">Funcionamento: </span>
+          <span className={isOpenNow ? 'text-green-600' : 'text-red-600'}>
+            {isOpenNow ? 'Aberto agora' : 'Fechado agora'}
+          </span>
+        </div>
+
         {city && (
           <div className="flex items-center text-sm text-gray-600 mb-2">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">

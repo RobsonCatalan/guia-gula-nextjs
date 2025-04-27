@@ -397,7 +397,7 @@ export default function RestaurantDetailClient() {
                 </a>
               </div>
             )}
-            <p className="text-[#4A4A4A] mb-4"><strong>Endereço Completo:</strong> {restaurant.address}</p>
+            <p className="text-[#4A4A4A] mb-4">{restaurant.address}</p>
             <p className="text-[#4A4A4A] mb-2"><strong>Rua:</strong> {restaurant.addressStreet}, {restaurant.addressNumber}{restaurant.addressComplement && `, ${restaurant.addressComplement}`}</p>
             <p className="text-[#4A4A4A] mb-2"><strong>Bairro:</strong> {restaurant.addressDistrict}</p>
             <p className="text-[#4A4A4A] mb-2"><strong>Cidade:</strong> {restaurant.addressCity} - {restaurant.addressState}</p>

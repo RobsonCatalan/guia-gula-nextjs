@@ -106,9 +106,9 @@ export default function CategorySection({ city, title, currentCategory }: Catego
                 <Link
                   key={cat}
                   href={`/restaurante/${city}/${slug}`}
-                  className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-4 block"
+                  className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow block overflow-hidden"
                 >
-                  <div className="relative w-full h-32 overflow-hidden rounded-t-lg mb-2">
+                  <div className="relative w-full h-32">
                     <Image
                       src={`/images/categories/${cat === 'Pastelaria' ? 'pastel' : cat === 'Outros' ? 'outros' : slugify(cat)}.webp`}
                       alt={cat}
@@ -117,7 +117,9 @@ export default function CategorySection({ city, title, currentCategory }: Catego
                       className="object-cover"
                     />
                   </div>
-                  <span className="text-[#D32F2F] font-medium block text-center">{cat}</span>
+                  <div className="p-4">
+                    <span className="text-[#D32F2F] font-medium block text-center">{cat}</span>
+                  </div>
                 </Link>
               );
             })}

@@ -311,7 +311,18 @@ export default function RestaurantDetailClient() {
                 </ul>
               )}
               {isOnlineOpen && (
-                <a href={`https://app.gula.menu/welcomeDelivery?pPlace=${restaurant.id}`} target="_blank" rel="noopener noreferrer" className="!bg-[#FF5842] !text-white px-4 py-2 rounded-lg inline-block hover:!bg-[#FF5842] hover:!underline transition-all duration-300">Pedir Online</a>
+                <div className="flex items-center space-x-4 mt-4">
+                  <a
+                    href={`https://app.gula.menu/welcomeDelivery?pPlace=${restaurant.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="!bg-[#FF5842] !text-white px-4 py-2 rounded-lg inline-block hover:!bg-[#FF5842] hover:!underline transition-all duration-300"
+                  >
+                    Pedir Online
+                  </a>
+                  <Image src="/images/icons/delivery-gray.svg" alt="Delivery" width={24} height={24} unoptimized />
+                  <Image src="/images/icons/takeout-gray.svg" alt="Takeout" width={24} height={24} unoptimized />
+                </div>
               )}
               {restaurant.deliveryConfig?.contactNumber && (
                 <a href={`https://wa.me/${restaurant.deliveryConfig.contactNumber}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#25D366] hover:underline mt-4">

@@ -210,6 +210,7 @@ export default function RestaurantDetailClient() {
       {/* JSON-LD structured data */}
       {restaurant && (
         <Head>
+          <title>{`Restaurante ${restaurant.name} | Gula.menu`}</title>
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{

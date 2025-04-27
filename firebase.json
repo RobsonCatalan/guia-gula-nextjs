@@ -2,6 +2,9 @@
   "functions": {
     "source": "functions",
     "predeploy": [
+      "powershell -Command \"Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue\"",
+      "powershell -Command \"Remove-Item -Recurse -Force functions/.next -ErrorAction SilentlyContinue\"",
+      "powershell -Command \"Remove-Item -Recurse -Force functions/public -ErrorAction SilentlyContinue\"",
       "npm run build",
       "powershell -Command \"Remove-Item '.next/trace' -Force -ErrorAction SilentlyContinue\"",
       "powershell -Command \"Copy-Item './.next' 'functions/.next' -Recurse -Force\"",

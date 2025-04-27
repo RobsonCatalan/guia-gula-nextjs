@@ -164,7 +164,7 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
         )}
         
         <div className="text-sm mb-2">
-          <span className="font-medium">Presencial: </span>
+          <span className="font-medium text-[#4A4A4A]">Presencial: </span>
           <span className={isOpenNow ? 'text-green-600' : 'text-red-600'}>
             {isOpenNow ? 'Aberto agora' : 'Fechado agora'}
           </span>

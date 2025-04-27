@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Roboto } from "next/font/google";
 import "./globals.css";
 import FirebaseAppCheckProvider from '@/components/FirebaseAppCheckProvider';
-import Footer from '@/components/Footer';
+import LayoutFooter from '@/components/LayoutFooter';
 
 const inter = Inter({
   variable: "--font-inter",
@@ -42,7 +42,7 @@ export default function RootLayout({
       >
         <FirebaseAppCheckProvider>
           {children}
-          <Footer />
+          <LayoutFooter />
         </FirebaseAppCheckProvider>
       </body>
     </html>

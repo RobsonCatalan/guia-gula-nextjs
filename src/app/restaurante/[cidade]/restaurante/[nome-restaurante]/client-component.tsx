@@ -140,6 +140,11 @@ export default function RestaurantDetailClient() {
     setIsOnlineOpen(onlineOpen);
   }, [restaurant]);
 
+  // Highlight current day's hours in bold
+  const nowForHighlight = new Date();
+  const jsDayForHighlight = nowForHighlight.getDay();
+  const todayWeekday = jsDayForHighlight === 0 ? 7 : jsDayForHighlight;
+
   // Prepara grupos de horários
   const presentialGroups = restaurant?.workingHours ? groupWorkingHours(restaurant.workingHours) : [];
   const onlineGroups = restaurant?.deliveryConfig?.workingHours ? groupWorkingHours(restaurant.deliveryConfig.workingHours) : [];
@@ -253,7 +258,9 @@ export default function RestaurantDetailClient() {
             {showPresencialHours && (
               <ul className="list-disc list-inside text-[#4A4A4A] mb-4">
                 {presentialGroups.map((group, i) => (
-                  <li key={i}>{joinWithAnd(group.days.map(d => weekdayNames[d]))}: {formatTime(group.startTime)} - {formatTime(group.endTime)}</li>
+                  <li key={i} className={group.days.includes(todayWeekday) ? 'font-bold' : ''}>
+                    {joinWithAnd(group.days.map(d => weekdayNames[d]))}: {formatTime(group.startTime)} - {formatTime(group.endTime)}
+                  </li>
                 ))}
               </ul>
             )}
@@ -291,7 +298,9 @@ export default function RestaurantDetailClient() {
               {showOnlineHours && (
                 <ul className="list-disc list-inside text-[#4A4A4A] mb-4">
                   {onlineGroups.map((group, i) => (
-                    <li key={i}>{joinWithAnd(group.days.map(d => weekdayNames[d]))}: {formatTime(group.startTime)} - {formatTime(group.endTime)}</li>
+                    <li key={i} className={group.days.includes(todayWeekday) ? 'font-bold' : ''}>
+                      {joinWithAnd(group.days.map(d => weekdayNames[d]))}: {formatTime(group.startTime)} - {formatTime(group.endTime)}
+                    </li>
                   ))}
                 </ul>
               )}

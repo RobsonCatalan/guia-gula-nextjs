@@ -364,7 +364,7 @@ export default function RestaurantDetailClient() {
           restaurantName={restaurant?.name || ''}
         />
       </div>
-      <main className="max-w-7xl mx-auto px-6 py-12 bg-[#FFF8F0]">
+      <main className="max-w-7xl mx-auto px-6 pt-0 pb-12 bg-[#FFF8F0]">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Ir ao Restaurante Card */}
           <div className="bg-white p-6 rounded-lg shadow">

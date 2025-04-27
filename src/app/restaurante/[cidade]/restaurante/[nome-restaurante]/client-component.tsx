@@ -313,6 +313,12 @@ export default function RestaurantDetailClient() {
               {isOnlineOpen && (
                 <a href={`https://app.gula.menu/welcomeDelivery?pPlace=${restaurant.id}`} target="_blank" rel="noopener noreferrer" className="!bg-[#FF5842] !text-white px-4 py-2 rounded-lg inline-block hover:!bg-[#FF5842] hover:!underline transition-all duration-300">Pedir Online</a>
               )}
+              {restaurant.deliveryConfig?.contactNumber && (
+                <a href={`https://wa.me/${restaurant.deliveryConfig.contactNumber}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#25D366] hover:underline mt-4">
+                  <Image src="/images/icons/Whatsapp.png" alt="WhatsApp" width={24} height={24} unoptimized className="mr-2" />
+                  Conversar no WhatsApp
+                </a>
+              )}
             </div>
           )}
         </div>

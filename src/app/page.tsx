@@ -29,6 +29,7 @@ export default function Home() {
   const [selectedCity, setSelectedCity] = useState<string>('sao-paulo');
   const [hasDetected, setHasDetected] = useState<boolean>(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const cityOptions = [
     { value: 'sao-paulo', label: 'São Paulo' },
     { value: 'belo-horizonte', label: 'Belo Horizonte' }
@@ -49,6 +50,15 @@ export default function Home() {
     const slug = normalize(cityName);
     setSelectedCity(cityOptions.some(opt => opt.value === slug) ? slug : 'sao-paulo');
     setHasDetected(true);
+  };
+
+  const handleSearch = () => {
+    if (!searchQuery) return;
+    const slug = normalize(searchQuery);
+    const element = document.getElementById(`restaurant-${slug}`);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   return (
@@ -123,10 +133,12 @@ export default function Home() {
           <div className="bg-white rounded-full overflow-hidden flex max-w-xl mx-auto">
             <input
               type="text"
-              placeholder="Buscar restaurantes, culinárias..."
+              placeholder="Nome do Restaurante..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="flex-grow p-4 text-[#4A4A4A] outline-none"
             />
-            <button className="bg-[#F4A261] text-white px-6 py-4 font-bold">
+            <button onClick={handleSearch} className="bg-[#F4A261] text-white px-6 py-4 font-bold">
               Buscar
             </button>
           </div>

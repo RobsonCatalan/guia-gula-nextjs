@@ -100,7 +100,7 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
+    <div id={`restaurant-${createSlug(name)}`} className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
       {/* Imagem principal do restaurante */}
       <div className="relative h-48 w-full bg-[#FFF8F0]">
         {mainPhoto && !mainPhotoError ? (

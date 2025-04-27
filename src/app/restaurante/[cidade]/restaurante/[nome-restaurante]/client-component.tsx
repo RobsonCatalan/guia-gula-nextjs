@@ -251,14 +251,16 @@ export default function RestaurantDetailClient() {
           <div className="flex">{renderStars(restaurant?.rating || 0)}</div>
           <button onClick={openReviewsDrawer} className="text-[#FF5842] hover:underline ml-2">{restaurant?.reviewCount} avaliações</button>
         </div>
-        <div className="mb-2">
-          <span className="font-semibold text-[#4A4A4A]">Redes Sociais:</span>
-        </div>
         {restaurant.instagramLink && (
-          <a href={`https://www.instagram.com/${restaurant.instagramLink}/`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#FF5842] hover:underline mb-4">
-            <Image src="/images/logo/instagram.jpg" alt="Instagram Logo" width={24} height={24} unoptimized />
-            <span className="ml-2">Instagram</span>
-          </a>
+          <div className="mb-4">
+            <div className="mb-2">
+              <span className="font-semibold text-[#4A4A4A]">Redes Sociais:</span>
+            </div>
+            <a href={`https://www.instagram.com/${restaurant.instagramLink}/`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#FF5842] hover:underline mb-4">
+              <Image src="/images/logo/instagram.jpg" alt="Instagram Logo" width={24} height={24} unoptimized />
+              <span className="ml-2">Instagram</span>
+            </a>
+          </div>
         )}
         <ReviewsDrawer
           reviews={reviews}

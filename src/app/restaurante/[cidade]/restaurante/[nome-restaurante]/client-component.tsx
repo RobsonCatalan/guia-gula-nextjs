@@ -250,15 +250,22 @@ export default function RestaurantDetailClient() {
               <span className="mx-2 text-[#4A4A4A]">|</span>
               <a href="#" onClick={(e) => { e.preventDefault(); setShowPresencialHours(p => !p); }} className="!text-black !font-bold !underline !decoration-black hover:!text-black hover:!underline">Horário de funcionamento</a>
             </div>
+            {showPresencialHours && (
+              <ul className="list-disc list-inside text-[#4A4A4A] mb-4">
+                {presentialGroups.map((group, i) => (
+                  <li key={i}>{joinWithAnd(group.days.map(d => weekdayNames[d]))}: {formatTime(group.startTime)} - {formatTime(group.endTime)}</li>
+                ))}
+              </ul>
+            )}
             {restaurant.coordinates && (
               <div className="flex space-x-4 mb-4">
                 <a href={`https://www.google.com/maps/dir/?api=1&destination=${restaurant.coordinates.latitude},${restaurant.coordinates.longitude}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#FF5842] hover:underline">
                   <Image src="/images/logo/google-maps.png" alt="Google Maps Logo" width={24} height={24} unoptimized />
-                  <span className="ml-2">Venha com o Google Maps</span>
+                  <span className="ml-2">Google Maps</span>
                 </a>
                 <a href={`https://www.waze.com/ul?ll=${restaurant.coordinates.latitude},${restaurant.coordinates.longitude}&navigate=yes`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#FF5842] hover:underline">
                   <Image src="/images/logo/waze.png" alt="Waze Logo" width={24} height={24} unoptimized />
-                  <span className="ml-2">Venha com o Waze</span>
+                  <span className="ml-2">Waze</span>
                 </a>
               </div>
             )}
@@ -267,14 +274,10 @@ export default function RestaurantDetailClient() {
             <p className="text-[#4A4A4A] mb-2"><strong>Bairro:</strong> {restaurant.addressDistrict}</p>
             <p className="text-[#4A4A4A] mb-2"><strong>Cidade:</strong> {restaurant.addressCity} - {restaurant.addressState}</p>
             <p className="text-[#4A4A4A] mb-4"><strong>CEP:</strong> {restaurant.postalCode}</p>
-            <Link href="#menu" className="text-[#FF5842] hover:underline mb-4 block">Veja o cardápio</Link>
-            {showPresencialHours && (
-              <ul className="list-disc list-inside text-[#4A4A4A] mb-4">
-                {presentialGroups.map((group, i) => (
-                  <li key={i}>{joinWithAnd(group.days.map(d => weekdayNames[d]))}: {formatTime(group.startTime)} - {formatTime(group.endTime)}</li>
-                ))}
-              </ul>
-            )}
+            <a href={`https://app.gula.menu/mainMenu?pPlace=${restaurant.id}`} target="_blank" rel="noopener noreferrer" className="flex items-center mb-4 text-[#FF5842] hover:underline">
+              <div style={{ WebkitMaskImage: `url('/images/icons/menu.png')`, maskImage: `url('/images/icons/menu.png')`, WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat', WebkitMaskSize: 'contain', maskSize: 'contain', backgroundColor: '#FF5842', width: '24px', height: '24px' }} />
+              <span className="ml-2">Veja o cardápio</span>
+            </a>
           </div>
           {/* Peça Online Card (se delivery habilitado) */}
           {restaurant.deliveryConfig?.enabled && (

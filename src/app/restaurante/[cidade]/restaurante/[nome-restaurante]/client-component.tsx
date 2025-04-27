@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams, useSearchParams, usePathname } from 'next/navigation';
 import { Restaurant, getRestaurantsByCity, getRestaurantReviews, Review } from '@/lib/restaurantService';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -86,6 +86,9 @@ export default function RestaurantDetailClient() {
   // Hide layout if version=restaurant param
   const searchParams = useSearchParams();
   const hideLayout = searchParams.get('version') === 'restaurant';
+  const pathname = usePathname();
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  const pageUrl = `${origin}${pathname}`;
 
   useEffect(() => {
     async function load() {
@@ -213,6 +216,7 @@ export default function RestaurantDetailClient() {
 
   return (
     <div className="bg-[#FFF8F0]">
+      {/* JSON-LD structured data */}
       {restaurant && (
         <Head>
           <script
@@ -220,13 +224,58 @@ export default function RestaurantDetailClient() {
             dangerouslySetInnerHTML={{
               __html: JSON.stringify({
                 '@context': 'https://schema.org',
-                '@type': 'Restaurant',
-                name: restaurant.name,
-                aggregateRating: {
-                  '@type': 'AggregateRating',
-                  ratingValue: restaurant.rating || 0,
-                  reviewCount: restaurant.reviewCount || 0,
-                },
+                '@graph': [
+                  {
+                    '@type': 'WebPage',
+                    '@id': pageUrl,
+                    url: pageUrl,
+                    name: `Restaurante ${restaurant.name}`,
+                    mainEntity: {
+                      '@type': 'Restaurant',
+                      '@id': `${pageUrl}#restaurant`,
+                    },
+                  },
+                  {
+                    '@type': 'BreadcrumbList',
+                    itemListElement: [
+                      { '@type': 'ListItem', position: 1, name: 'Início', item: `${origin}/` },
+                      { '@type': 'ListItem', position: 2, name: 'Restaurantes', item: `${origin}/restaurante/${cidade}` },
+                      { '@type': 'ListItem', position: 3, name: restaurant.name, item: pageUrl },
+                    ],
+                  },
+                  {
+                    '@type': 'Restaurant',
+                    '@id': `${pageUrl}#restaurant`,
+                    name: restaurant.name,
+                    image: restaurant.imageUrl,
+                    address: {
+                      '@type': 'PostalAddress',
+                      streetAddress: `${restaurant.addressStreet} ${restaurant.addressNumber}${restaurant.addressComplement ? ', ' + restaurant.addressComplement : ''}`,
+                      addressLocality: restaurant.addressCity,
+                      addressRegion: restaurant.addressState,
+                      postalCode: restaurant.postalCode,
+                      addressCountry: 'BR',
+                    },
+                    geo: restaurant.coordinates ? {
+                      '@type': 'GeoCoordinates',
+                      latitude: restaurant.coordinates.latitude,
+                      longitude: restaurant.coordinates.longitude,
+                    } : undefined,
+                    telephone: restaurant.phone,
+                    url: pageUrl,
+                    aggregateRating: {
+                      '@type': 'AggregateRating',
+                      ratingValue: restaurant.rating || 0,
+                      reviewCount: restaurant.reviewCount || 0,
+                    },
+                    openingHoursSpecification: restaurant.workingHours?.map(({ weekday, startTime, endTime }) => ({
+                      '@type': 'OpeningHoursSpecification',
+                      dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'][weekday - 1],
+                      opens: formatTime(startTime),
+                      closes: formatTime(endTime),
+                    })),
+                  },
+                ],
               }),
             }}
           />

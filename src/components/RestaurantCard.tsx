@@ -117,7 +117,7 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
   const onlineOpen = restaurant.deliveryConfig?.openNow ?? false;
 
   return (
-    <div id={`restaurant-${createSlug(name)}`} className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
+    <div id={`restaurant-${createSlug(name)}`} className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
       {/* Imagem principal do restaurante */}
       <div className="relative h-48 w-full bg-[#FFF8F0]">
         {mainPhoto && !mainPhotoError ? (
@@ -151,7 +151,7 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
         )}
       </div>
       
-      <div className="p-4">
+      <div className="p-4 flex flex-col flex-grow">
         <h3 className="text-xl font-bold text-[#4A4A4A] mb-1 truncate">{name}</h3>
         
         {/* Categories tags */}
@@ -228,7 +228,7 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
           </div>
         )}
         
-        <div className="flex justify-end mt-2">
+        <div className="mt-auto flex justify-end">
           <Link
             href={restaurantUrl}
             className="bg-[#D32F2F] !text-white px-4 py-2 rounded-full hover:bg-red-700 transition-colors text-sm font-medium"

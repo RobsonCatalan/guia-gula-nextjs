@@ -7,7 +7,6 @@ import Link from 'next/link';
 import ReviewsDrawer from '@/components/ReviewsDrawer';
 import { categoryMap } from '@/components/RestaurantCard';
 import Head from 'next/head';
-import Footer from '@/components/Footer';
 
 // Gera slug a partir do texto
 const slugify = (str: string): string =>
@@ -460,9 +459,6 @@ export default function RestaurantDetailClient() {
           )}
         </div>
       </main>
-      {!hideLayout && (
-        <Footer />
-      )}
     </div>
   );
 }

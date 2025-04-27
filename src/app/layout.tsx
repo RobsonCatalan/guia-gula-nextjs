@@ -3,6 +3,7 @@ import { Inter, Roboto } from "next/font/google";
 import "./globals.css";
 import FirebaseAppCheckProvider from '@/components/FirebaseAppCheckProvider';
 import LayoutFooter from '@/components/LayoutFooter';
+import { Suspense } from 'react';
 
 const inter = Inter({
   variable: "--font-inter",
@@ -42,7 +43,9 @@ export default function RootLayout({
       >
         <FirebaseAppCheckProvider>
           {children}
-          <LayoutFooter />
+          <Suspense fallback={null}>
+            <LayoutFooter />
+          </Suspense>
         </FirebaseAppCheckProvider>
       </body>
     </html>

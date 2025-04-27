@@ -1,6 +1,6 @@
 import React from 'react';
 
-type Props = { params: { 'nome-restaurante': string } };
+type Props = { params: { cidade: string; 'nome-restaurante': string } };
 
 export default function Head({ params }: Props) {
   const slug = params['nome-restaurante'];

@@ -120,12 +120,6 @@ export default function RestaurantDetailClient() {
 
   useEffect(() => {
     if (restaurant) {
-      document.title = `Restaurante ${restaurant.name}`;
-    }
-  }, [restaurant]);
-
-  useEffect(() => {
-    if (restaurant) {
       const categoryLabels = (restaurant.categories || [])
         .map(code => categoryMap[code] || code)
         .join(', ');
@@ -210,6 +204,7 @@ export default function RestaurantDetailClient() {
       {/* JSON-LD structured data */}
       {restaurant && (
         <Head>
+          <title>{`Restaurante ${restaurant.name} | Gula.menu`}</title>
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{

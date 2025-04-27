@@ -373,7 +373,7 @@ export default function RestaurantDetailClient() {
               <span className={`font-medium ${isPresentialOpen ? 'text-green-600' : 'text-red-600'}`}>{isPresentialOpen ? 'Aberto agora' : 'Fechado agora'}</span>
               <span className="mx-2 text-[#4A4A4A]">|</span>
               <a href="#" onClick={(e) => { e.preventDefault(); setShowPresentialHours(p => !p); }} className="flex items-center !text-[#4A4A4A] !font-bold !underline !decoration-[#4A4A4A] hover:!text-[#4A4A4A] hover:!underline">
-                <span>Horário de funcionamento</span>
+                <span>Horários</span>
                 <span className="ml-1">{showPresentialHours ? '▲' : '▼'}</span>
               </a>
             </div>
@@ -410,7 +410,7 @@ export default function RestaurantDetailClient() {
                 <span className={`font-medium ${isOnlineOpen ? 'text-green-600' : 'text-red-600'}`}>{isOnlineOpen ? 'Aberto agora' : 'Fechado agora'}</span>
                 <span className="mx-2 text-[#4A4A4A]">|</span>
                 <a href="#" onClick={(e) => { e.preventDefault(); setShowOnlineHours(p => !p); }} className="flex items-center !text-[#4A4A4A] !font-bold !underline !decoration-[#4A4A4A] hover:!text-[#4A4A4A] hover:!underline">
-                  <span>Horário de funcionamento</span>
+                  <span>Horários</span>
                   <span className="ml-1">{showOnlineHours ? '▲' : '▼'}</span>
                 </a>
               </div>

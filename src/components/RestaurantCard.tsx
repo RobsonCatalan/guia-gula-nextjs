@@ -169,13 +169,15 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
           </span>
         </div>
 
-        <div className="text-sm mb-2">
-          <span className="font-medium text-[#4A4A4A]">Online: </span>
-          <span className={onlineOpen ? 'text-green-600' : 'text-red-600'}>
-            {onlineOpen ? 'Aberto agora' : 'Fechado agora'}
-          </span>
-        </div>
-
+        {restaurant.deliveryConfig?.enabled && (
+          <div className="text-sm mb-2">
+            <span className="font-medium text-[#4A4A4A]">Online: </span>
+            <span className={onlineOpen ? 'text-green-600' : 'text-red-600'}>
+              {onlineOpen ? 'Aberto agora' : 'Fechado agora'}
+            </span>
+          </div>
+        )}
+        
         {city && (
           <div className="flex items-center text-sm text-gray-600 mb-2">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">

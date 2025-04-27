@@ -331,16 +331,13 @@ export default function RestaurantDetailClient() {
             </div>
           )}
           {restaurant.shortDescription && (
-            <p className="mt-4 text-base text-[#4A4A4A] text-left">
+            <p className="mt-4 mb-4 text-base text-[#4A4A4A] text-left">
               {restaurant.shortDescription}
             </p>
           )}
         </div>
       </section>
       <div className="max-w-7xl mx-auto px-6 pb-4">
-        <div className="mb-2">
-          <span className="font-semibold text-[#4A4A4A]">Avaliações:</span>
-        </div>
         <div className="flex items-center space-x-2 mb-2">
           <span className="text-xl font-bold text-[#4A4A4A]">{restaurant?.rating?.toFixed(1)}</span>
           <div className="flex">{renderStars(restaurant?.rating || 0)}</div>
@@ -348,9 +345,6 @@ export default function RestaurantDetailClient() {
         </div>
         {restaurant.instagramLink && (
           <div className="mb-4">
-            <div className="mb-2">
-              <span className="font-semibold text-[#4A4A4A]">Redes Sociais:</span>
-            </div>
             <a href={`https://www.instagram.com/${restaurant.instagramLink}/`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#FF5842] hover:underline mb-4">
               <Image src="/images/logo/instagram.jpg" alt="Instagram Logo" width={24} height={24} unoptimized />
               <span className="ml-2">Instagram</span>

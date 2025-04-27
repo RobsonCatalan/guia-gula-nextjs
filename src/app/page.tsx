@@ -63,16 +63,6 @@ export default function Home() {
             priority
             style={{ width: 'auto', height: 'auto' }}
           />
-          <nav className="hidden md:flex space-x-6">
-            <a
-              href="https://www.gulamenu.com.br/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="!text-white hover:text-[#FFF8F0] transition-colors font-medium"
-            >
-              Para Restaurantes
-            </a>
-          </nav>
           {hasDetected ? (
             <div className="flex items-baseline space-x-2">
               <label htmlFor="city-select" className="text-white font-medium">Restaurantes de:</label>
@@ -90,6 +80,16 @@ export default function Home() {
           ) : (
             <CityDetector onCityDetected={handleCityDetected} />
           )}
+          <nav className="hidden md:flex space-x-6">
+            <a
+              href="https://www.gulamenu.com.br/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="!text-white hover:text-[#FFF8F0] transition-colors font-medium"
+            >
+              Para Restaurantes
+            </a>
+          </nav>
           <button className="md:hidden text-2xl text-white">☰</button>
         </div>
       </header>

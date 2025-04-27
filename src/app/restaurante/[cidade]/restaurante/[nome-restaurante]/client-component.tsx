@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import ReviewsDrawer from '@/components/ReviewsDrawer';
 import { categoryMap } from '@/components/RestaurantCard';
+import Head from 'next/head';
 
 // Gera slug a partir do texto
 const slugify = (str: string): string =>
@@ -212,6 +213,25 @@ export default function RestaurantDetailClient() {
 
   return (
     <div className="bg-[#FFF8F0]">
+      {restaurant && (
+        <Head>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'Restaurant',
+                name: restaurant.name,
+                aggregateRating: {
+                  '@type': 'AggregateRating',
+                  ratingValue: restaurant.rating || 0,
+                  reviewCount: restaurant.reviewCount || 0,
+                },
+              }),
+            }}
+          />
+        </Head>
+      )}
       {!hideLayout && (
         <header className="bg-[#FF5842] text-white p-6 shadow-sm">
           <div className="max-w-7xl mx-auto flex justify-between items-center">

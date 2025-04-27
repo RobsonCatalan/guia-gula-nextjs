@@ -58,12 +58,14 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
             />
           </Link>
           <nav className="hidden md:flex space-x-6">
-            <Link href="/" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Início</Link>
-            <Link href="#" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Cidades</Link>
-            <Link href="#" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Culinárias</Link>
-            <Link href="#" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Sobre</Link>
+            <Link href="/" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Para Restaurantes</Link>
           </nav>
-          <button className="md:hidden text-2xl text-white">☰</button>
+          <details className="md:hidden">
+            <summary className="text-2xl text-white list-none">☰</summary>
+            <div className="mt-2">
+              <Link href="/" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Para Restaurantes</Link>
+            </div>
+          </details>
         </div>
       </header>
       <nav className="max-w-7xl mx-auto px-6 py-2 text-sm text-[#4A4A4A]" aria-label="breadcrumb">

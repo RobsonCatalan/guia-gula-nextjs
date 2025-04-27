@@ -229,9 +229,8 @@ export default function RestaurantDetailClient() {
                   {
                     '@type': 'BreadcrumbList',
                     itemListElement: [
-                      { '@type': 'ListItem', position: 1, name: 'Início', item: `${origin}/` },
-                      { '@type': 'ListItem', position: 2, name: 'Restaurantes', item: `${origin}/restaurante/${cidade}` },
-                      { '@type': 'ListItem', position: 3, name: restaurant.name, item: pageUrl },
+                      { '@type': 'ListItem', position: 1, name: 'Para Restaurantes', item: 'https://www.gulamenu.com.br/' },
+                      { '@type': 'ListItem', position: 2, name: restaurant.name, item: pageUrl },
                     ],
                   },
                   {
@@ -285,22 +284,16 @@ export default function RestaurantDetailClient() {
                 style={{ width: 'auto', height: 'auto' }}
               />
             </Link>
-            <nav className="hidden md:flex space-x-6">
-              <Link href="/" className="!text-white hover:text-[#FFF8F0] font-medium">Início</Link>
-              <Link
-                href={`/restaurante/${cidade}`}
-                className="!text-white hover:text-[#FFF8F0] font-medium"
-              >Restaurantes</Link>
+            <nav className="flex space-x-6">
+              <Link href="https://www.gulamenu.com.br/" target="_blank" rel="noopener noreferrer" className="!text-white hover:text-[#FFF8F0] font-medium">Para Restaurantes</Link>
             </nav>
-            <button className="md:hidden text-2xl text-white">☰</button>
           </div>
         </header>
       )}
       {!hideLayout && (
         <nav className="max-w-7xl mx-auto px-6 py-2 text-sm text-[#4A4A4A]" aria-label="breadcrumb">
           <ol className="list-none flex">
-            <li><Link href="/" className="hover:underline">Início</Link><span className="mx-2">/</span></li>
-            <li><Link href={`/restaurante/${cidade}`} className="hover:underline">Restaurantes</Link><span className="mx-2">/</span></li>
+            <li><Link href="https://www.gulamenu.com.br/" target="_blank" rel="noopener noreferrer" className="hover:underline">Para Restaurantes</Link><span className="mx-2">/</span></li>
             <li className="font-medium">{restaurant.name}</li>
           </ol>
         </nav>

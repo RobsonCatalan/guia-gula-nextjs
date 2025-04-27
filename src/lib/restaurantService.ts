@@ -38,6 +38,7 @@ export interface Restaurant {
     deliveryDisabled: boolean;
     takeoutDisabled: boolean;
     workingHours?: { weekday: number; startTime: number; endTime: number }[];
+    contactNumber?: string;
   };
 }
 
@@ -114,6 +115,7 @@ const sanitizeRestaurant = (data: DocumentData): Restaurant => ({
           endTime: wh.endTime,
         }))
       : [],
+    contactNumber: data.deliveryConfig?.contactNumber || data.contactInfo?.phoneNumber || '',
   },
 });
 

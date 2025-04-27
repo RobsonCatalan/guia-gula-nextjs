@@ -6,18 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import ReviewsDrawer from '@/components/ReviewsDrawer';
 import { categoryMap } from '@/components/RestaurantCard';
-import Head from 'next/head';
-
-// Gera slug a partir do texto
-const slugify = (str: string): string =>
-  str
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-+|-+$/g, '');
+import { slugify } from '@/lib/utils';
 
 // Formata slug de cidade para exibição
 const formatSlug = (slug: string): string =>
@@ -119,27 +108,6 @@ export default function RestaurantDetailClient() {
   }, [restaurant]);
 
   useEffect(() => {
-    if (restaurant) {
-      const categoryLabels = (restaurant.categories || [])
-        .map(code => categoryMap[code] || code)
-        .join(', ');
-      const district = restaurant.addressDistrict || '';
-      const city = restaurant.addressCity || '';
-      const state = restaurant.addressState || '';
-      const desc = `Restaurante de ${categoryLabels} no bairro ${district} em ${city}/${state}`;
-      let meta: HTMLMetaElement | null = document.querySelector('meta[name="description"]');
-      if (meta) {
-        meta.setAttribute('content', desc);
-      } else {
-        meta = document.createElement('meta');
-        meta.name = 'description';
-        meta.content = desc;
-        document.head.appendChild(meta);
-      }
-    }
-  }, [restaurant]);
-
-  useEffect(() => {
     if (!restaurant) return;
     const now = new Date();
     const jsDay = now.getDay();
@@ -201,71 +169,7 @@ export default function RestaurantDetailClient() {
 
   return (
     <div className="bg-[#FFF8F0]">
-      {/* JSON-LD structured data */}
-      {restaurant && (
-        <Head>
-          <title>{`Restaurante ${restaurant.name} | Gula.menu`}</title>
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                '@context': 'https://schema.org',
-                '@graph': [
-                  {
-                    '@type': 'WebPage',
-                    '@id': pageUrl,
-                    url: pageUrl,
-                    name: `Restaurante ${restaurant.name}`,
-                    mainEntity: {
-                      '@type': 'Restaurant',
-                      '@id': `${pageUrl}#restaurant`,
-                    },
-                  },
-                  {
-                    '@type': 'BreadcrumbList',
-                    itemListElement: [
-                      { '@type': 'ListItem', position: 1, name: 'Início', item: `${origin}/` },
-                      { '@type': 'ListItem', position: 2, name: restaurant.name, item: pageUrl },
-                    ],
-                  },
-                  {
-                    '@type': 'Restaurant',
-                    '@id': `${pageUrl}#restaurant`,
-                    name: restaurant.name,
-                    image: restaurant.imageUrl,
-                    address: {
-                      '@type': 'PostalAddress',
-                      streetAddress: `${restaurant.addressStreet} ${restaurant.addressNumber}${restaurant.addressComplement ? ', ' + restaurant.addressComplement : ''}`,
-                      addressLocality: restaurant.addressCity,
-                      addressRegion: restaurant.addressState,
-                      postalCode: restaurant.postalCode,
-                      addressCountry: 'BR',
-                    },
-                    geo: restaurant.coordinates ? {
-                      '@type': 'GeoCoordinates',
-                      latitude: restaurant.coordinates.latitude,
-                      longitude: restaurant.coordinates.longitude,
-                    } : undefined,
-                    telephone: restaurant.phone,
-                    url: pageUrl,
-                    aggregateRating: {
-                      '@type': 'AggregateRating',
-                      ratingValue: restaurant.rating || 0,
-                      reviewCount: restaurant.reviewCount || 0,
-                    },
-                    openingHoursSpecification: restaurant.workingHours?.map(({ weekday, startTime, endTime }) => ({
-                      '@type': 'OpeningHoursSpecification',
-                      dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'][weekday - 1],
-                      opens: formatTime(startTime),
-                      closes: formatTime(endTime),
-                    })),
-                  },
-                ],
-              }),
-            }}
-          />
-        </Head>
-      )}
+      {/* Removed JSON-LD and meta description injection; now handled in head.tsx */}
       {!hideLayout && (
         <header className="bg-[#FF5842] text-white p-6 shadow-sm">
           <div className="max-w-7xl mx-auto flex justify-between items-center">

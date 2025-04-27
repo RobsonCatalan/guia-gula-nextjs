@@ -78,7 +78,7 @@ export default function RestaurantDetailClient() {
   const openReviewsDrawer = () => { setIsReviewsDrawerOpen(true); document.body.style.overflow = 'hidden'; };
   const closeReviewsDrawer = () => { setIsReviewsDrawerOpen(false); document.body.style.overflow = 'auto'; };
   // Accordion state for working hours
-  const [showPresencialHours, setShowPresencialHours] = useState(false);
+  const [showPresentialHours, setShowPresentialHours] = useState(false);
   const [showOnlineHours, setShowOnlineHours] = useState(false);
 
   useEffect(() => {
@@ -253,12 +253,12 @@ export default function RestaurantDetailClient() {
             <div className="flex items-center mb-4">
               <span className={`font-medium ${isPresentialOpen ? 'text-green-600' : 'text-red-600'}`}>{isPresentialOpen ? 'Aberto agora' : 'Fechado agora'}</span>
               <span className="mx-2 text-[#4A4A4A]">|</span>
-              <a href="#" onClick={(e) => { e.preventDefault(); setShowPresencialHours(p => !p); }} className="flex items-center !text-[#4A4A4A] !font-bold !underline !decoration-[#4A4A4A] hover:!text-[#4A4A4A] hover:!underline">
+              <a href="#" onClick={(e) => { e.preventDefault(); setShowPresentialHours(p => !p); }} className="flex items-center !text-[#4A4A4A] !font-bold !underline !decoration-[#4A4A4A] hover:!text-[#4A4A4A] hover:!underline">
                 <span>Horário de funcionamento</span>
-                <span className="ml-1">{showPresencialHours ? '▲' : '▼'}</span>
+                <span className="ml-1">{showPresentialHours ? '▲' : '▼'}</span>
               </a>
             </div>
-            {showPresencialHours && (
+            {showPresentialHours && (
               <ul className="list-disc list-inside text-[#4A4A4A] mb-4">
                 {presentialGroups.map((group, i) => (
                   <li key={i} className={group.days.includes(todayWeekday) ? 'font-bold' : ''}>
@@ -310,7 +310,9 @@ export default function RestaurantDetailClient() {
                   ))}
                 </ul>
               )}
-              <Link href={restaurant.website || '#'} className="bg-[#FF5842] text-white px-4 py-2 rounded-lg inline-block">Peça agora mesmo</Link>
+              {isOnlineOpen && (
+                <a href={`https://app.gula.menu/welcomeDelivery?pPlace=${restaurant.id}`} target="_blank" rel="noopener noreferrer" className="!bg-[#FF5842] !text-white px-4 py-2 rounded-lg inline-block hover:!bg-[#FF5842] hover:!underline transition-all duration-300">Pedir Online</a>
+              )}
             </div>
           )}
         </div>
@@ -324,8 +326,8 @@ export default function RestaurantDetailClient() {
           <div>
             <h3 className="text-xl font-bold mb-4">Links Rápidos</h3>
             <ul className="space-y-2">
-              <li><Link href="/" className="!text-white hover:!text-[#FFF8F0]">Início</Link></li>
-              <li><Link href={`/restaurante/${cidade}`} className="!text-white hover:!text-[#FFF8F0]">Restaurantes</Link></li>
+              <li><Link href="/" className="text-white hover:text-[#FFF8F0]">Início</Link></li>
+              <li><Link href={`/restaurante/${cidade}`} className="text-white hover:text-[#FFF8F0]">Restaurantes</Link></li>
             </ul>
           </div>
           <div>

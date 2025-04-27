@@ -64,10 +64,14 @@ export default function Home() {
             style={{ width: 'auto', height: 'auto' }}
           />
           <nav className="hidden md:flex space-x-6">
-            <Link href="/" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Início</Link>
-            <Link href="#" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Cidades</Link>
-            <Link href="#" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Culinárias</Link>
-            <Link href="#" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Sobre</Link>
+            <a
+              href="https://www.gulamenu.com.br/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="!text-white hover:text-[#FFF8F0] transition-colors font-medium"
+            >
+              Para Restaurantes
+            </a>
           </nav>
           {hasDetected ? (
             <div className="flex items-baseline space-x-2">

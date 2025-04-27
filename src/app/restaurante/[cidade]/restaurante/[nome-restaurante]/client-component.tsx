@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { Restaurant, getRestaurantsByCity, getRestaurantReviews, Review } from '@/lib/restaurantService';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -81,6 +81,10 @@ export default function RestaurantDetailClient() {
   // Accordion state for working hours
   const [showPresentialHours, setShowPresentialHours] = useState(false);
   const [showOnlineHours, setShowOnlineHours] = useState(false);
+
+  // Hide layout if version=restaurant param
+  const searchParams = useSearchParams();
+  const hideLayout = searchParams.get('version') === 'restaurant';
 
   useEffect(() => {
     async function load() {
@@ -208,35 +212,39 @@ export default function RestaurantDetailClient() {
 
   return (
     <div className="bg-[#FFF8F0]">
-      <header className="bg-[#FF5842] text-white p-6 shadow-sm">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <Link href="/">
-            <Image
-              src="/images/logo/logo.webp"
-              alt="Gula.menu"
-              width={150}
-              height={50}
-              priority
-              style={{ width: 'auto', height: 'auto' }}
-            />
-          </Link>
-          <nav className="hidden md:flex space-x-6">
-            <Link href="/" className="!text-white hover:text-[#FFF8F0] font-medium">Início</Link>
-            <Link
-              href={`/restaurante/${cidade}`}
-              className="!text-white hover:text-[#FFF8F0] font-medium"
-            >Restaurantes</Link>
-          </nav>
-          <button className="md:hidden text-2xl text-white">☰</button>
-        </div>
-      </header>
-      <nav className="max-w-7xl mx-auto px-6 py-2 text-sm text-[#4A4A4A]" aria-label="breadcrumb">
-        <ol className="list-none flex">
-          <li><Link href="/" className="hover:underline">Início</Link><span className="mx-2">/</span></li>
-          <li><Link href={`/restaurante/${cidade}`} className="hover:underline">Restaurantes</Link><span className="mx-2">/</span></li>
-          <li className="font-medium">{restaurant.name}</li>
-        </ol>
-      </nav>
+      {!hideLayout && (
+        <header className="bg-[#FF5842] text-white p-6 shadow-sm">
+          <div className="max-w-7xl mx-auto flex justify-between items-center">
+            <Link href="/">
+              <Image
+                src="/images/logo/logo.webp"
+                alt="Gula.menu"
+                width={150}
+                height={50}
+                priority
+                style={{ width: 'auto', height: 'auto' }}
+              />
+            </Link>
+            <nav className="hidden md:flex space-x-6">
+              <Link href="/" className="!text-white hover:text-[#FFF8F0] font-medium">Início</Link>
+              <Link
+                href={`/restaurante/${cidade}`}
+                className="!text-white hover:text-[#FFF8F0] font-medium"
+              >Restaurantes</Link>
+            </nav>
+            <button className="md:hidden text-2xl text-white">☰</button>
+          </div>
+        </header>
+      )}
+      {!hideLayout && (
+        <nav className="max-w-7xl mx-auto px-6 py-2 text-sm text-[#4A4A4A]" aria-label="breadcrumb">
+          <ol className="list-none flex">
+            <li><Link href="/" className="hover:underline">Início</Link><span className="mx-2">/</span></li>
+            <li><Link href={`/restaurante/${cidade}`} className="hover:underline">Restaurantes</Link><span className="mx-2">/</span></li>
+            <li className="font-medium">{restaurant.name}</li>
+          </ol>
+        </nav>
+      )}
       <section className="text-white py-16 bg-gradient-to-b from-[#FF7A68] to-[#FFF8F0]">
         <div className="max-w-7xl mx-auto text-center px-6">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 font-['Roboto']">Restaurante {restaurant.name}</h1>
@@ -391,28 +399,30 @@ export default function RestaurantDetailClient() {
           )}
         </div>
       </main>
-      <footer className="bg-[#FF5842] text-white py-8 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <h3 className="text-xl font-bold mb-4">Gula.menu</h3>
-            <p className="text-sm">Seu guia gastronômico completo para encontrar os melhores restaurantes da sua cidade.</p>
+      {!hideLayout && (
+        <footer className="bg-[#FF5842] text-white py-8 px-6">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <h3 className="text-xl font-bold mb-4">Gula.menu</h3>
+              <p className="text-sm">Seu guia gastronômico completo para encontrar os melhores restaurantes da sua cidade.</p>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold mb-4">Links Rápidos</h3>
+              <ul className="space-y-2">
+                <li><Link href="/" className="text-white hover:text-[#FFF8F0]">Início</Link></li>
+                <li><Link href={`/restaurante/${cidade}`} className="text-white hover:text-[#FFF8F0]">Restaurantes</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold mb-4">Contato</h3>
+              <p className="text-sm">contato@gula.menu<br/>São Paulo, SP - Brasil</p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-xl font-bold mb-4">Links Rápidos</h3>
-            <ul className="space-y-2">
-              <li><Link href="/" className="text-white hover:text-[#FFF8F0]">Início</Link></li>
-              <li><Link href={`/restaurante/${cidade}`} className="text-white hover:text-[#FFF8F0]">Restaurantes</Link></li>
-            </ul>
+          <div className="max-w-7xl mx-auto mt-8 pt-6 border-t border-gray-600 text-center text-sm">
+            <span className="text-white"> Gula.menu - Todos os direitos reservados</span>
           </div>
-          <div>
-            <h3 className="text-xl font-bold mb-4">Contato</h3>
-            <p className="text-sm">contato@gula.menu<br/>São Paulo, SP - Brasil</p>
-          </div>
-        </div>
-        <div className="max-w-7xl mx-auto mt-8 pt-6 border-t border-gray-600 text-center text-sm">
-          <span className="text-white"> Gula.menu - Todos os direitos reservados</span>
-        </div>
-      </footer>
+        </footer>
+      )}
     </div>
   );
 }

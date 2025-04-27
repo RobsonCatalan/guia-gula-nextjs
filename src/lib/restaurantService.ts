@@ -227,7 +227,10 @@ export const getRestaurantsByCity = async (
     }));
     return { restaurants: restaurantsWithStats, lastVisible: null };
   } catch (error) {
-    console.error('Erro ao buscar restaurantes por cidade:', error);
+    // Only log on server-side to avoid client-side permission errors
+    if (typeof window === 'undefined') {
+      console.error('Erro ao buscar restaurantes por cidade:', error);
+    }
     return { 
       restaurants: [], 
       lastVisible: null 

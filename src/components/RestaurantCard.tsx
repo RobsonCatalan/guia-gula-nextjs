@@ -171,6 +171,16 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
           <p className="text-sm text-[#4A4A4A] mb-2">Sem avaliações</p>
         )}
         
+        {city && (
+          <div className="flex items-center text-sm text-gray-600 mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span>{city}</span>
+          </div>
+        )}
+        
         <div className="text-sm mb-2">
           <span className="font-medium text-[#4A4A4A]">Presencial: </span>
           <span className={presentialOpen ? 'text-green-600' : 'text-red-600'}>
@@ -184,16 +194,6 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
             <span className={onlineOpen ? 'text-green-600' : 'text-red-600'}>
               {onlineOpen ? 'Aberto agora' : 'Fechado agora'}
             </span>
-          </div>
-        )}
-        
-        {city && (
-          <div className="flex items-center text-sm text-gray-600 mb-2">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            <span>{city}</span>
           </div>
         )}
         

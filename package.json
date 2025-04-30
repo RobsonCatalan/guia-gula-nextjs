@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest"
+    "test": "jest",
+    "predeploy:clean": "powershell -Command \"Remove-Item -Recurse -Force .next, functions/.next, functions/public -ErrorAction SilentlyContinue\"",
+    "predeploy:copy": "powershell -Command \"Copy-Item './.next' 'functions/.next' -Recurse -Force; Copy-Item './public' 'functions/public' -Recurse -Force\""
   },
   "dependencies": {
     "firebase": "^11.6.0",

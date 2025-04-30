@@ -4,6 +4,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Restaurant } from '@/lib/restaurantService';
 
 // Função para converter texto em formato slug para URL
@@ -77,6 +78,8 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
     ? `/restaurante/${createSlug(city)}/restaurante/${createSlug(name)}`
     : `/restaurante/${createSlug(name)}`;
 
+  const router = useRouter();
+
   // Helper to render 5 stars with partial fill based on rating
   const renderStars = (ratingValue: number) => {
     const stars = [];
@@ -117,7 +120,11 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
   const onlineOpen = restaurant.deliveryConfig?.openNow ?? false;
 
   return (
-    <div id={`restaurant-${createSlug(name)}`} className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col h-full">
+    <div
+      id={`restaurant-${createSlug(name)}`}
+      onClick={() => router.push(restaurantUrl)}
+      className="cursor-pointer bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col h-full"
+    >
       {/* Imagem principal do restaurante */}
       <div className="relative h-48 w-full bg-[#FFF8F0]">
         {mainPhoto && !mainPhotoError ? (

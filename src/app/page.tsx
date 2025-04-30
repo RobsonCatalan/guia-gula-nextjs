@@ -7,6 +7,7 @@ import type { RestaurantListProps } from '@/components/RestaurantList';
 import CityDetector from '@/components/CityDetector';
 import CategorySection from '@/components/CategorySection';
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 
 // Importação dinâmica com loading fallback para o componente que usa Firebase
 const RestaurantList = dynamic<RestaurantListProps>(
@@ -71,6 +72,8 @@ export default function Home() {
     }
     setNoResults(!found);
   };
+
+  const router = useRouter();
 
   return (
     <div className="min-h-screen bg-[#FFF8F0]">
@@ -172,7 +175,10 @@ export default function Home() {
             <h2 className="text-3xl font-bold text-[#4A4A4A] mb-6">Explore outras Cidades</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {/* Belo Horizonte */}
-              <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
+              <div
+                onClick={() => router.push('/restaurante/belo-horizonte')}
+                className="cursor-pointer bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300"
+              >
                 <Image
                   src="/images/cities/belo-horizonte.webp"
                   alt="Belo Horizonte"
@@ -189,7 +195,10 @@ export default function Home() {
                 </div>
               </div>
               {/* São Paulo */}
-              <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
+              <div
+                onClick={() => router.push('/restaurante/sao-paulo')}
+                className="cursor-pointer bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300"
+              >
                 <Image
                   src="/images/cities/sao-paulo.webp"
                   alt="São Paulo"

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from "next/image";
 import dynamic from 'next/dynamic';
 import type { RestaurantListProps } from '@/components/RestaurantList';
@@ -26,9 +26,23 @@ const RestaurantList = dynamic<RestaurantListProps>(
 );
 
 export default function Home() {
-  // Selected city and detection flag
+  // Cookie utility
+  function getCookie(name: string): string | null {
+    if (typeof document === 'undefined') return null;
+    const cookies = document.cookie ? document.cookie.split(';') : [];
+    for (const cookie of cookies) {
+      const [rawName, ...rest] = cookie.split('=');
+      if (rawName.trim() === name) {
+        return decodeURIComponent(rest.join('='));
+      }
+    }
+    return null;
+  }
+
+  // State: default selection and detection flags
   const [selectedCity, setSelectedCity] = useState<string>('sao-paulo');
-  const [hasDetected, setHasDetected] = useState<boolean>(false);
+  const [detected, setDetected] = useState<boolean>(false);
+  const [initialized, setInitialized] = useState<boolean>(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [noResults, setNoResults] = useState<boolean>(false);
@@ -51,7 +65,9 @@ export default function Home() {
   const handleCityDetected = (cityName: string) => {
     const slug = normalize(cityName);
     setSelectedCity(cityOptions.some(opt => opt.value === slug) ? slug : 'sao-paulo');
-    setHasDetected(true);
+    setDetected(true);
+    // Persist detected city to cookie
+    document.cookie = `selectedCity=${slug}; path=/; max-age=2592000`;
   };
 
   const handleSearch = () => {
@@ -75,6 +91,16 @@ export default function Home() {
 
   const router = useRouter();
 
+  // On client mount, read cookie and mark initialization
+  useEffect(() => {
+    const cookie = getCookie('selectedCity');
+    if (cookie) {
+      setSelectedCity(cookie);
+      setDetected(true);
+    }
+    setInitialized(true);
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#FFF8F0]">
       {/* Header */}
@@ -88,13 +114,18 @@ export default function Home() {
             priority
             style={{ width: 'auto', height: 'auto' }}
           />
-          {hasDetected ? (
+          {initialized ? (detected ? (
             <div className="flex items-baseline space-x-2">
               <label htmlFor="city-select" className="text-white font-medium hidden md:block">Restaurantes de:</label>
               <select
                 id="city-select"
                 value={selectedCity}
-                onChange={(e) => setSelectedCity(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setSelectedCity(val);
+                  setDetected(true);
+                  document.cookie = `selectedCity=${val}; path=/; max-age=2592000`;
+                }}
                 className="px-4 py-2 border border-white rounded bg-white text-[#4A4A4A] focus:outline-none"
               >
                 {cityOptions.map(opt => (
@@ -104,7 +135,7 @@ export default function Home() {
             </div>
           ) : (
             <CityDetector onCityDetected={handleCityDetected} />
-          )}
+          )) : null}
           <nav className="hidden md:flex space-x-6">
             <a
               href="https://www.gulamenu.com.br/"

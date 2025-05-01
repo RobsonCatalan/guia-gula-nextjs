@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useMemo } from 'react';
 import { useAppCheckContext } from '@/components/FirebaseAppCheckProvider';
 import { Restaurant, getRestaurantsByCity } from '@/lib/restaurantService';
 import RestaurantCard from '@/components/RestaurantCard';
@@ -21,6 +21,11 @@ export default function ClientComponent({
   const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState<boolean>(false);
 
+  // Estados para ordenação e cálculo de tempo de viagem
+  const [sortOption, setSortOption] = useState<'time' | 'rating'>('time');
+  const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [driveTimes, setDriveTimes] = useState<Record<string, { duration: number; text: string }>>({});
+
   // Preparar JSON-LD para SEO após carregamento de restaurantes
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -39,6 +44,15 @@ export default function ClientComponent({
         }
       }
     }))
+  };
+
+  // Converte duração textual em minutos
+  const parseDuration = (text: string): number => {
+    const matchH = text.match(/(\d+)\s*hour/);
+    const matchM = text.match(/(\d+)\s*min/);
+    const hours = matchH ? parseInt(matchH[1]) : 0;
+    const mins = matchM ? parseInt(matchM[1]) : 0;
+    return hours * 60 + mins;
   };
 
   // Função inicial para carregar os restaurantes quando o componente montar
@@ -83,6 +97,37 @@ export default function ClientComponent({
     loadInitialRestaurants();
   }, [cidade, isAppCheckReady]);
 
+  // Geolocalização do usuário
+  useEffect(() => {
+    if (!userLocation && typeof window !== 'undefined') {
+      navigator.geolocation.getCurrentPosition(
+        pos => setUserLocation({ latitude: pos.coords.latitude, longitude: pos.coords.longitude }),
+        err => console.error('Erro ao obter geolocalização:', err)
+      );
+    }
+  }, [userLocation]);
+
+  // Busca tempo de viagem para cada restaurante
+  useEffect(() => {
+    if (userLocation) {
+      restaurants.forEach(r => {
+        if (r.coordinates && !driveTimes[r.id]) {
+          const origin = `${userLocation.latitude},${userLocation.longitude}`;
+          const dest = `${r.coordinates.latitude},${r.coordinates.longitude}`;
+          fetch(`/api/distance?origin=${origin}&destination=${dest}`)
+            .then(res => res.json())
+            .then(data => {
+              if (data.duration) {
+                const duration = parseDuration(data.duration);
+                setDriveTimes(prev => ({ ...prev, [r.id]: { duration, text: data.duration } }));
+              }
+            })
+            .catch(err => console.error('Erro Distance API:', err));
+        }
+      });
+    }
+  }, [userLocation, restaurants, driveTimes]);
+
   const loadMoreRestaurants = async () => {
     if (loading || !hasMore || !isAppCheckReady) return;
     
@@ -124,6 +169,17 @@ export default function ClientComponent({
     }
   };
 
+  // Lista ordenada com base na opção selecionada
+  const sortedRestaurants = useMemo(() => {
+    const arr = [...restaurants];
+    if (sortOption === 'time') {
+      arr.sort((a, b) => (driveTimes[a.id]?.duration ?? Infinity) - (driveTimes[b.id]?.duration ?? Infinity));
+    } else {
+      arr.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    }
+    return arr;
+  }, [restaurants, driveTimes, sortOption]);
+
   // Garantir que renderizamos apenas quando temos um array válido
   const restaurantsArray = Array.isArray(restaurants) ? restaurants : [];
 
@@ -152,11 +208,25 @@ export default function ClientComponent({
             </p>
           </div>
         ) : restaurantsArray.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {restaurantsArray.map(restaurant => (
-              <RestaurantCard key={restaurant.id} restaurant={restaurant} />
-            ))}
-          </div>
+          <>
+            {/* Controle de ordenação */}
+            <div className="flex justify-end mb-4">
+              <label className="mr-2 text-sm font-medium text-[#4A4A4A]">Ordenar por:</label>
+              <select
+                value={sortOption}
+                onChange={e => setSortOption(e.target.value as 'time' | 'rating')}
+                className="px-4 py-2 border border-white rounded bg-white text-[#4A4A4A] focus:outline-none"
+              >
+                <option value="time">Menor tempo</option>
+                <option value="rating">Melhor avaliado</option>
+              </select>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {sortedRestaurants.map(restaurant => (
+                <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+              ))}
+            </div>
+          </>
         ) : (
           <div className="text-center py-8 bg-[#FFF8F0] rounded-lg border border-[#4A4A4A]/10 p-6">
             <div className="w-16 h-16 mx-auto mb-4">

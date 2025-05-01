@@ -206,7 +206,10 @@ export default function Home() {
               type="text"
               placeholder="Nome do Restaurante..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setNoResults(false);
+              }}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               className="flex-grow p-4 text-[#4A4A4A] outline-none"
             />

@@ -1,5 +1,4 @@
 /** @type {import('next').NextConfig} */
-const path = require('path');
 
 const nextConfig = {
   // Expor variáveis de ambiente do servidor para as API routes
@@ -8,7 +7,7 @@ const nextConfig = {
   },
   images: {
     loader: 'custom',
-    loaderFile: path.resolve(__dirname, 'image-loader.js'),
+    loaderFile: './image-loader.js',
   },
   eslint: {
     ignoreDuringBuilds: true,

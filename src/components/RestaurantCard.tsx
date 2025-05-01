@@ -219,9 +219,13 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
         
         {driveTime && (
           <div className="flex items-center text-sm text-[#4A4A4A] mb-2">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 text-[#4A4A4A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l2 2m6-2a10 10 0 11-10 10 10 10 0 0010-10z" />
-            </svg>
+            <Image
+              src="/images/icons/car.png"
+              alt="Car icon"
+              width={16}
+              height={16}
+              className="h-4 w-auto mr-1"
+            />
             <span>~ {driveTime}</span>
           </div>
         )}

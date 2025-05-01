@@ -71,6 +71,8 @@ export default function RestaurantDetailClient() {
   // Accordion state for working hours
   const [showPresentialHours, setShowPresentialHours] = useState(false);
   const [showOnlineHours, setShowOnlineHours] = useState(false);
+  const [driveTime, setDriveTime] = useState<string>('');
+  const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
 
   // Hide layout if version=restaurant param
   const searchParams = useSearchParams();
@@ -128,6 +130,26 @@ export default function RestaurantDetailClient() {
     const onlineOpen = restaurant.deliveryConfig?.openNow ?? false;
     setIsOnlineOpen(onlineOpen);
   }, [restaurant]);
+
+  useEffect(() => {
+    if (restaurant?.coordinates && !userLocation) {
+      navigator.geolocation.getCurrentPosition(
+        pos => setUserLocation({ latitude: pos.coords.latitude, longitude: pos.coords.longitude }),
+        err => console.error('Erro ao obter geolocalização:', err)
+      );
+    }
+  }, [restaurant, userLocation]);
+
+  useEffect(() => {
+    if (userLocation && restaurant?.coordinates) {
+      const origin = `${userLocation.latitude},${userLocation.longitude}`;
+      const dest = `${restaurant.coordinates.latitude},${restaurant.coordinates.longitude}`;
+      fetch(`/api/distance?origin=${origin}&destination=${dest}`)
+        .then(res => res.json())
+        .then(data => { if (data.duration) setDriveTime(data.duration); })
+        .catch(err => console.error('Erro Distance API:', err));
+    }
+  }, [userLocation, restaurant]);
 
   // Highlight current day's hours in bold
   const nowForHighlight = new Date();
@@ -277,6 +299,18 @@ export default function RestaurantDetailClient() {
                   </li>
                 ))}
               </ul>
+            )}
+            {driveTime && (
+              <div className="flex items-center text-sm text-[#4A4A4A] mb-2">
+                <Image
+                  src="/images/icons/car.png"
+                  alt="Car icon"
+                  width={16}
+                  height={16}
+                  className="h-4 w-auto mr-1"
+                />
+                <span>~ {driveTime}</span>
+              </div>
             )}
             {restaurant.coordinates && (
               <div className="flex items-center mb-4">

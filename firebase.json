@@ -2,7 +2,7 @@
   "functions": {
     "source": "functions",
     "predeploy": [
-      "node predeploy.js"
+      "node functions/predeploy.js"
     ]
   },
   "hosting": {

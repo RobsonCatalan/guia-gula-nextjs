@@ -1,9 +1,10 @@
-// src/app/[cidade]/restaurantes/page.tsx
 import { Metadata } from 'next';
 import ClientComponent from './client-component';
 import Image from 'next/image';
 import CategorySection from '@/components/CategorySection';
 import Link from 'next/link';
+import fs from 'fs';
+import path from 'path';
 
 export async function generateMetadata({ params }: { params: Promise<{ cidade: string }> }): Promise<Metadata> {
   const { cidade } = await params;
@@ -41,8 +42,9 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
   
   console.log(`Cidade: ${cidadeFormatada}`);
   
-  // Em vez de buscar os dados no servidor (onde temos problemas de permissão),
-  // vamos passar a cidade para o Cliente e deixar que ele busque os dados
+  const imgPath = path.join(process.cwd(), 'public', 'images', 'cities', `${cidade}.webp`);
+  const hasImage = fs.existsSync(imgPath);
+  
   return (
     <div className="bg-[#FFF8F0]">
       <header className="bg-[#FF5842] text-white p-6 shadow-sm">
@@ -76,14 +78,20 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
           <h1 className="text-4xl md:text-5xl font-bold mb-4 font-['Roboto']">
             Restaurantes em {cidadeFormatada}
           </h1>
-          <Image
-            src={`/images/cities/${cidade}.webp`}
-            alt={`Imagem de ${cidadeFormatada}`}
-            width={800}
-            height={400}
-            className="object-cover w-full h-64 rounded-lg"
-            priority
-          />
+          {hasImage ? (
+            <Image
+              src={`/images/cities/${cidade}.webp`}
+              alt={`Imagem de ${cidadeFormatada}`}
+              width={800}
+              height={400}
+              className="object-cover w-full h-64 rounded-lg"
+              priority
+            />
+          ) : (
+            <div className="w-full h-64 bg-gray-200 flex items-center justify-center rounded-lg">
+              <span className="text-[#4A4A4A]">Imagem indisponível</span>
+            </div>
+          )}
         </div>
       </section>
       <CategorySection city={cidade} />

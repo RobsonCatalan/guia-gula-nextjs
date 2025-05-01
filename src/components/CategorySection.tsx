@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useAppCheckContext } from '@/components/FirebaseAppCheckProvider';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getRestaurantsByCity } from '@/lib/restaurantService';
@@ -62,8 +63,10 @@ export default function CategorySection({ city, title, currentCategory }: Catego
   const cityFormatted = formatSlug(city);
   const [cityCategories, setCityCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const { isAppCheckReady } = useAppCheckContext();
 
   useEffect(() => {
+    if (!isAppCheckReady) return;
     const loadCats = async () => {
       try {
         setLoading(true);
@@ -79,7 +82,7 @@ export default function CategorySection({ city, title, currentCategory }: Catego
       }
     };
     loadCats();
-  }, [city]);
+  }, [city, isAppCheckReady]);
 
   // Determina título completo da seção
   const heading = title ?? `Categorias de Restaurantes em ${cityFormatted}`;

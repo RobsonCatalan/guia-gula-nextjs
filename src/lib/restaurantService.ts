@@ -366,3 +366,25 @@ export const countReviewsByRating = (reviews: Review[]): Record<number, number> 
   
   return counts;
 };
+
+// Function to get unique city slugs
+export async function getAllCities(): Promise<string[]> {
+  const snapshot = await getDocs(collection(db, 'places'));
+  const visibleDocs = snapshot.docs.filter(d => d.data().guideConfig?.isVisible);
+  const citiesSet = new Set<string>();
+  visibleDocs.forEach(d => {
+    const data = d.data();
+    const cityRaw = data.guideConfig?.address?.city || data.city;
+    if (cityRaw) {
+      const slug = cityRaw.toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^\w\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-+|-+$/g, '');
+      citiesSet.add(slug);
+    }
+  });
+  return Array.from(citiesSet);
+}

@@ -1,7 +1,7 @@
 // src/components/RestaurantCard.tsx
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -66,12 +66,15 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
     rating,
     categories = [],
     reviewCount = 0,
-    addressDistrict
+    addressDistrict,
+    coordinates
   } = restaurant;
 
   // Estado para controlar erros de carregamento de imagem
   const [mainPhotoError, setMainPhotoError] = useState(false);
   const [logoError, setLogoError] = useState(false);
+  const [driveTime, setDriveTime] = useState<string>('');
+  const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
 
   // URL para página do restaurante seguindo o formato /restaurante/[cidade]/restaurante/[nome-restaurante]
   const restaurantUrl = city
@@ -79,6 +82,28 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
     : `/restaurante/${createSlug(name)}`;
 
   const router = useRouter();
+
+  useEffect(() => {
+    if (coordinates && !userLocation) {
+      navigator.geolocation.getCurrentPosition(
+        pos => setUserLocation({ latitude: pos.coords.latitude, longitude: pos.coords.longitude }),
+        err => console.error('Erro ao obter geolocalização:', err)
+      );
+    }
+  }, [coordinates, userLocation]);
+
+  useEffect(() => {
+    if (userLocation && coordinates) {
+      const origin = `${userLocation.latitude},${userLocation.longitude}`;
+      const dest = `${coordinates.latitude},${coordinates.longitude}`;
+      fetch(`/api/distance?origin=${origin}&destination=${dest}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.duration) setDriveTime(data.duration);
+        })
+        .catch(err => console.error('Erro Distance API:', err));
+    }
+  }, [userLocation, coordinates]);
 
   // Helper to render 5 stars with partial fill based on rating
   const renderStars = (ratingValue: number) => {
@@ -189,6 +214,15 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
               {city}
               {addressDistrict && ` | ${addressDistrict}`}
             </span>
+          </div>
+        )}
+        
+        {driveTime && (
+          <div className="flex items-center text-sm text-[#4A4A4A] mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 text-[#4A4A4A]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l2 2m6-2a10 10 0 11-10 10 10 10 0 0010-10z" />
+            </svg>
+            <span>~ {driveTime}</span>
           </div>
         )}
         

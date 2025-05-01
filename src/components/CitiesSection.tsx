@@ -7,7 +7,11 @@ import { useRouter } from 'next/navigation';
 import { useAppCheckContext } from '@/components/FirebaseAppCheckProvider';
 import { getAllCities } from '@/lib/restaurantService';
 
-export default function CitiesSection() {
+interface CitiesSectionProps {
+  currentCity?: string;
+}
+
+export default function CitiesSection({ currentCity }: CitiesSectionProps) {
   const [cities, setCities] = useState<string[]>([]);
   const [failedImgs, setFailedImgs] = useState<Record<string, boolean>>({});
   const { isAppCheckReady } = useAppCheckContext();
@@ -39,7 +43,7 @@ export default function CitiesSection() {
 
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-      {cities.map(slug => {
+      {cities.filter(slug => slug !== currentCity).map(slug => {
         const label = normalizeLabel(slug);
         return (
           <Link

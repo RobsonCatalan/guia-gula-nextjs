@@ -233,7 +233,7 @@ export default function Home() {
           {/* Explore outras Cidades */}
           <section className="mt-16 px-6">
             <h2 className="text-3xl font-bold text-[#4A4A4A] mb-6">Explore outras Cidades</h2>
-            <CitiesSection />
+            <CitiesSection currentCity={selectedCity} />
           </section>
           <div className="mt-16 text-center">
             <h2 className="text-2xl font-bold text-[#4A4A4A] mb-4 font-['Roboto']">

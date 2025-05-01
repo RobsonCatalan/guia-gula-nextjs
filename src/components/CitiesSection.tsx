@@ -38,45 +38,31 @@ export default function CitiesSection() {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {cities.map(slug => (
-        <div
-          key={slug}
-          onClick={() => router.push(`/restaurante/${slug}`)}
-          className="cursor-pointer bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300"
-        >
-          {failedImgs[slug] ? (
-            <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
-              <span className="text-[#4A4A4A]">Imagem indisponível</span>
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+      {cities.map(slug => {
+        const label = normalizeLabel(slug);
+        return (
+          <Link
+            key={slug}
+            href={`/restaurante/${slug}`}
+            className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow block overflow-hidden"
+          >
+            <div className="relative w-full h-32">
+              <Image
+                src={`/images/cities/${slug}.webp`}
+                alt={label}
+                fill
+                sizes="(min-width: 1024px) 16.66vw, (min-width: 768px) 25vw, (min-width: 640px) 33.33vw, 50vw"
+                className="object-cover"
+                onError={() => handleImgError(slug)}
+              />
             </div>
-          ) : (
-            <Image
-              src={`/images/cities/${slug}.webp`}
-              alt={normalizeLabel(slug)}
-              width={800}
-              height={500}
-              className="object-cover w-full h-48"
-              onError={() => handleImgError(slug)}
-            />
-          )}
-          <div className="p-4">
-            <h3 className="text-xl font-semibold text-[#4A4A4A] mb-2">
-              {normalizeLabel(slug)}
-            </h3>
-            <p className="text-[#4A4A4A] mb-4">
-              Confira restaurantes em {normalizeLabel(slug)}.
-            </p>
-            <div className="flex justify-end mt-2">
-              <Link
-                href={`/restaurante/${slug}`}
-                className="bg-[#D32F2F] text-white px-4 py-2 rounded-full hover:bg-red-700 transition-colors text-sm font-medium"
-              >
-                Ver mais
-              </Link>
+            <div className="p-4">
+              <span className="text-[#D32F2F] font-medium block text-center">{label}</span>
             </div>
-          </div>
-        </div>
-      ))}
+          </Link>
+        );
+      })}
     </div>
   );
 }

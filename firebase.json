@@ -2,8 +2,7 @@
   "functions": {
     "source": "functions",
     "predeploy": [
-      "npm --prefix functions run predeploy:clean",
-      "npm --prefix functions run predeploy:copy"
+      "node functions/predeploy.js"
     ]
   },
   "hosting": {

@@ -9,6 +9,8 @@ import CategorySection from '@/components/CategorySection';
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import CitiesSection from '@/components/CitiesSection';
+import { useAppCheckContext } from '@/components/FirebaseAppCheckProvider';
+import { getAllCities } from '@/lib/restaurantService';
 
 // Importação dinâmica com loading fallback para o componente que usa Firebase
 const RestaurantList = dynamic<RestaurantListProps>(
@@ -47,10 +49,29 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [noResults, setNoResults] = useState<boolean>(false);
-  const cityOptions = [
-    { value: 'sao-paulo', label: 'São Paulo' },
-    { value: 'belo-horizonte', label: 'Belo Horizonte' }
-  ];
+  const { isAppCheckReady } = useAppCheckContext();
+  const [cityOptions, setCityOptions] = useState<{ value: string; label: string }[]>([]);
+
+  useEffect(() => {
+    if (!isAppCheckReady) return;
+    async function loadCityOptions() {
+      try {
+        const slugs = await getAllCities();
+        const options = slugs.map(slug => ({
+          value: slug,
+          label: slug
+            .split('-')
+            .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+            .join(' ')
+            .replace(/\bSao\b/g, 'São'),
+        }));
+        setCityOptions(options);
+      } catch (err) {
+        console.error('Erro ao carregar opções de cidades:', err);
+      }
+    }
+    loadCityOptions();
+  }, [isAppCheckReady]);
 
   // Normalize string to slug (remove accents, spaces → hyphens)
   const normalize = (str: string) =>
@@ -65,7 +86,7 @@ export default function Home() {
   // Handle callback: override selectedCity and mark detected
   const handleCityDetected = (cityName: string) => {
     const slug = normalize(cityName);
-    setSelectedCity(cityOptions.some(opt => opt.value === slug) ? slug : 'sao-paulo');
+    setSelectedCity(slug);
     setDetected(true);
     // Persist detected city to cookie
     document.cookie = `selectedCity=${slug}; path=/; max-age=2592000`;
@@ -115,28 +136,32 @@ export default function Home() {
             priority
             style={{ width: 'auto', height: 'auto' }}
           />
-          {initialized ? (detected ? (
-            <div className="flex items-baseline space-x-2">
-              <label htmlFor="city-select" className="text-white font-medium hidden md:block">Restaurantes de:</label>
-              <select
-                id="city-select"
-                value={selectedCity}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setSelectedCity(val);
-                  setDetected(true);
-                  document.cookie = `selectedCity=${val}; path=/; max-age=2592000`;
-                }}
-                className="px-4 py-2 border border-white rounded bg-white text-[#4A4A4A] focus:outline-none"
-              >
-                {cityOptions.map(opt => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
-                ))}
-              </select>
-            </div>
-          ) : (
-            <CityDetector onCityDetected={handleCityDetected} />
-          )) : null}
+          {initialized && (
+            !detected ? (
+              <CityDetector onCityDetected={handleCityDetected} />
+            ) : cityOptions.length > 0 ? (
+              <div className="flex items-baseline space-x-2">
+                <label htmlFor="city-select" className="text-white font-medium hidden md:block">Restaurantes de:</label>
+                <select
+                  id="city-select"
+                  value={selectedCity}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setSelectedCity(val);
+                    setDetected(true);
+                    document.cookie = `selectedCity=${val}; path=/; max-age=2592000`;
+                  }}
+                  className="px-4 py-2 border border-white rounded bg-white text-[#4A4A4A] focus:outline-none"
+                >
+                  {cityOptions.map(opt => (
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                  ))}
+                </select>
+              </div>
+            ) : (
+              <div className="text-white px-4 py-2">Carregando cidades...</div>
+            )
+          )}
           <nav className="hidden md:flex space-x-6">
             <a
               href="https://www.gulamenu.com.br/"

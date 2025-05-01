@@ -255,7 +255,7 @@ export const getRestaurantsByCuisine = async (
     // Filtrar somente visíveis
     const visibleDocs = snapshot.docs.filter(doc => doc.data().guideConfig?.isVisible);
     // Ordenar por nome
-    visibleDocs.sort((a, b) => (a.data().name || '').localeCompare(b.data().name || ''));
+    visibleDocs.sort((a, b) => (a.data().name || '').localeCompare(a.data().name || ''));
     // Paginação: determinar índice de início
     const startIndex = lastVisible
       ? visibleDocs.findIndex(d => d.id === lastVisible.id) + 1
@@ -277,6 +277,34 @@ export const getRestaurantsByCuisine = async (
   } catch (error) {
     console.error('Erro ao buscar restaurantes por tipo de cozinha:', error);
     return { restaurants: [], lastVisible: null };
+  }
+};
+
+// Obter todas as cidades (slugs) do Firestore
+export const getAllCities = async (): Promise<string[]> => {
+  if (!isClient) return [];
+  try {
+    const snapshot = await getDocs(collection(db, 'places'));
+    const visibleDocs = snapshot.docs.filter(d => d.data().guideConfig?.isVisible);
+    const slugsSet = new Set<string>();
+    visibleDocs.forEach(doc => {
+      const data = doc.data();
+      const cityRaw = data.guideConfig?.address?.city || data.city || '';
+      if (cityRaw) {
+        const slug = cityRaw
+          .toLowerCase()
+          .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^\w\s-]/g, '')
+          .replace(/\s+/g, '-')
+          .replace(/-+/g, '-')
+          .replace(/^-+|-+$/g, '');
+        slugsSet.add(slug);
+      }
+    });
+    return Array.from(slugsSet);
+  } catch (error) {
+    console.error('Error fetching cities:', error);
+    return [];
   }
 };
 
@@ -366,25 +394,3 @@ export const countReviewsByRating = (reviews: Review[]): Record<number, number> 
   
   return counts;
 };
-
-// Function to get unique city slugs
-export async function getAllCities(): Promise<string[]> {
-  const snapshot = await getDocs(collection(db, 'places'));
-  const visibleDocs = snapshot.docs.filter(d => d.data().guideConfig?.isVisible);
-  const citiesSet = new Set<string>();
-  visibleDocs.forEach(d => {
-    const data = d.data();
-    const cityRaw = data.guideConfig?.address?.city || data.city;
-    if (cityRaw) {
-      const slug = cityRaw.toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/[^\w\s-]/g, '')
-        .replace(/\s+/g, '-')
-        .replace(/-+/g, '-')
-        .replace(/^-+|-+$/g, '');
-      citiesSet.add(slug);
-    }
-  });
-  return Array.from(citiesSet);
-}

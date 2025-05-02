@@ -229,7 +229,7 @@ export default function Home() {
           <CitiesSection currentCity={selectedCity} />
         </div>
       </section>
-      <div className="mt-8 text-center">
+      <div className="mt-0 py-6 text-center">
         <h2 className="text-2xl font-bold text-[#4A4A4A] mb-4 font-['Roboto']">
           Conheça o Gula.menu
         </h2>

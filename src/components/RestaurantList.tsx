@@ -126,12 +126,9 @@ export default function RestaurantList({ city }: RestaurantListProps) {
         </Head>
       )}
       <div className="w-full max-w-7xl mx-auto">
-        <h2 className="text-2xl font-bold text-[#4A4A4A] mb-6">
-          Destaques{cityFormatted ? ` em ${cityFormatted}` : ''}
-        </h2>
-        {/* Controle de ordenação */}
         {restaurants.length > 0 && (
-          <div className="flex justify-end mb-4">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-[#4A4A4A]">Destaques</h2>
             <select
               value={sortOption}
               onChange={e => setSortOption(e.target.value as 'time' | 'rating')}

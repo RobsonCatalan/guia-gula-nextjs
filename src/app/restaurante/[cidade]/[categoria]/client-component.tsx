@@ -152,7 +152,6 @@ export default function CategoryClientComponent({ cidade, categoria }: CategoryC
         <>
           {/* Controle de ordenação */}
           <div className="flex justify-end mb-4">
-            <label className="mr-2 text-sm font-medium text-[#4A4A4A]">Ordenar por:</label>
             <select
               value={sortOption}
               onChange={e => setSortOption(e.target.value as 'time' | 'rating')}

@@ -105,6 +105,19 @@ button:hover,
 .m-5 { margin: 1.25rem; }   /* 20px */
 .m-6 { margin: 1.5rem; }    /* 24px */
 
+/* Logo mask for header tint */
+.logo-mask {
+  mask-image: url('/images/logo/logo.png');
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-image: url('/images/logo/logo.png');
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+  background-color: #FF5842;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;

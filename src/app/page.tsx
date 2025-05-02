@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from "next/image";
 import dynamic from 'next/dynamic';
 import type { RestaurantListProps } from '@/components/RestaurantList';
 import CityDetector from '@/components/CityDetector';
@@ -128,14 +127,7 @@ export default function Home() {
       {/* Header */}
       <header className="bg-[#ECE2D9] text-[#4A4A4A] p-6 shadow-sm">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <Image
-            src="/images/logo/logo.webp"
-            alt="Gula.menu"
-            width={150}
-            height={50}
-            priority
-            style={{ width: 'auto', height: 'auto' }}
-          />
+          <div role="img" aria-label="Gula.menu" className="logo-mask w-[150px] h-[50px]"></div>
           {initialized && (
             !detected ? (
               <CityDetector onCityDetected={handleCityDetected} />

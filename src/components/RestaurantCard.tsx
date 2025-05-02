@@ -181,7 +181,7 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
       </div>
       
       <div className="p-2 flex flex-col flex-grow">
-        <h3 className="text-base font-bold text-[#4A4A4A] mb-1 truncate">{name}</h3>
+        <h3 className="text-base font-bold text-[#4A4A4A] mb-1 whitespace-normal break-words">{name}</h3>
         
         {/* Categories tags */}
         {categories.length > 0 && (

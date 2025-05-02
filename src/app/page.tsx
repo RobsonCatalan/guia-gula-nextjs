@@ -20,7 +20,7 @@ const RestaurantList = dynamic<RestaurantListProps>(
       <div className="w-full max-w-7xl mx-auto">
         <h2 className="text-2xl font-bold text-[#4A4A4A] mb-6">Restaurantes em Destaque</h2>
         <div className="flex justify-center my-8">
-          <div className="w-10 h-10 border-4 border-[#F4A261] border-t-[#D32F2F] rounded-full animate-spin"></div>
+          <div className="w-10 h-10 border-4 border-[#F4A261] border-t-[#FF5842] rounded-full animate-spin"></div>
         </div>
       </div>
     )
@@ -202,7 +202,7 @@ export default function Home() {
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               className="flex-grow px-4 py-2 text-[#4A4A4A] outline-none"
             />
-            <button onClick={handleSearch} aria-label="Buscar" className="px-4 py-2 bg-[#F4A261] text-white flex items-center justify-center">
+            <button onClick={handleSearch} aria-label="Buscar" className="px-4 py-2 bg-[#FF5842] text-white flex items-center justify-center">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>

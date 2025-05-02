@@ -160,7 +160,7 @@ export default function RestaurantList({ city }: RestaurantListProps) {
         )}
         {loading && (
           <div className="flex justify-center my-8">
-            <div className="w-10 h-10 border-4 border-[#F4A261] border-t-[#D32F2F] rounded-full animate-spin"></div>
+            <div className="w-10 h-10 border-4 border-[#F4A261] border-t-[#FF5842] rounded-full animate-spin"></div>
           </div>
         )}
       </div>

@@ -97,7 +97,7 @@ export default function CitiesSection({ currentCity }: CitiesSectionProps) {
                     />
                   </div>
                   <div className="p-4">
-                    <span className="text-[#D32F2F] text-sm font-medium block text-center">{label}</span>
+                    <span className="text-[#FF5842] text-sm font-medium block text-center">{label}</span>
                   </div>
                 </Link>
               );
@@ -120,7 +120,7 @@ export default function CitiesSection({ currentCity }: CitiesSectionProps) {
                     />
                   </div>
                   <div className="p-4">
-                    <span className="text-[#D32F2F] text-sm font-medium block text-center">{label}</span>
+                    <span className="text-[#FF5842] text-sm font-medium block text-center">{label}</span>
                   </div>
                 </Link>
               );

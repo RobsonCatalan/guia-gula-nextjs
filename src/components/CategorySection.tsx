@@ -158,7 +158,7 @@ export default function CategorySection({ city, title, currentCategory }: Catego
   });
 
   return (
-    <section className="py-12 px-6 bg-[#FFF8F0]">
+    <section className="py-6 px-6 bg-[#ECE2D9]">
       <div className="max-w-7xl mx-auto">
         {heading && (
           <h2 className="text-3xl font-bold font-['Roboto'] text-[#4A4A4A] mb-6">
@@ -204,7 +204,7 @@ export default function CategorySection({ city, title, currentCategory }: Catego
                           />
                         </div>
                         <div className="p-4">
-                          <span className="text-[#D32F2F] text-sm font-medium block text-center">{cat}</span>
+                          <span className="text-[#FF5842] text-sm font-medium block text-center">{cat}</span>
                         </div>
                       </Link>
                     );
@@ -232,7 +232,7 @@ export default function CategorySection({ city, title, currentCategory }: Catego
                           />
                         </div>
                         <div className="p-4">
-                          <span className="text-[#D32F2F] text-sm font-medium block text-center">{cat}</span>
+                          <span className="text-[#FF5842] text-sm font-medium block text-center">{cat}</span>
                         </div>
                       </Link>
                     );

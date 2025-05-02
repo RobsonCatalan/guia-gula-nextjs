@@ -145,7 +145,7 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
     <Link
       id={`restaurant-${createSlug(name)}`}
       href={restaurantUrl}
-      className="cursor-pointer bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 flex h-[12rem]"
+      className="cursor-pointer bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 flex h-[14rem]"
     >
       {/* Imagem principal do restaurante */}
       <div className="relative w-[8rem] h-full bg-[#FFF8F0] flex-shrink-0">

@@ -127,7 +127,7 @@ export default function RestaurantList({ city }: RestaurantListProps) {
       )}
       <div className="w-full max-w-7xl mx-auto">
         <h2 className="text-2xl font-bold text-[#4A4A4A] mb-6">
-          Restaurantes em Destaque{cityFormatted ? ` em ${cityFormatted}` : ''}
+          Destaques{cityFormatted ? ` em ${cityFormatted}` : ''}
         </h2>
         {/* Controle de ordenação */}
         {restaurants.length > 0 && (

@@ -221,7 +221,7 @@ export default function Home() {
           {/* Firestore Integration Demo */}
           <RestaurantList city={selectedCity} />
           {/* Explore outras Cidades */}
-          <section className="py-6 mt-8 px-6">
+          <section className="py-6 mt-8 px-6 bg-[#ECE2D9]">
             <h2 className="text-3xl font-bold text-[#4A4A4A] mb-6">Explore outras Cidades</h2>
             <CitiesSection currentCity={selectedCity} />
           </section>

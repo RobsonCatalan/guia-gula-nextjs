@@ -220,21 +220,23 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           {/* Firestore Integration Demo */}
           <RestaurantList city={selectedCity} />
-          {/* Explore outras Cidades */}
-          <section className="py-6 mt-8 px-6 bg-[#ECE2D9]">
-            <h2 className="text-3xl font-bold text-[#4A4A4A] mb-6">Explore outras Cidades</h2>
-            <CitiesSection currentCity={selectedCity} />
-          </section>
-          <div className="mt-8 text-center">
-            <h2 className="text-2xl font-bold text-[#4A4A4A] mb-4 font-['Roboto']">
-              Conheça o Gula.menu
-            </h2>
-            <p className="text-[#4A4A4A] max-w-3xl mx-auto">
-              Descubra restaurantes de diversas culinárias na sua cidade, veja os cardápios, avaliações, horários de funcionamento e disponibilidade de delivery. Se você for proprietário de um restaurante <a href="https://www.gulamenu.com.br/" target="_blank" rel="noopener noreferrer" className="font-medium text-[#FF5842] underline">clique aqui</a>
-            </p>
-          </div>
         </div>
       </main>
+      {/* Explore outras Cidades */}
+      <section className="py-6 mt-0 px-6 bg-[#ECE2D9]">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl font-bold text-[#4A4A4A] mb-6">Explore outras Cidades</h2>
+          <CitiesSection currentCity={selectedCity} />
+        </div>
+      </section>
+      <div className="mt-8 text-center">
+        <h2 className="text-2xl font-bold text-[#4A4A4A] mb-4 font-['Roboto']">
+          Conheça o Gula.menu
+        </h2>
+        <p className="text-[#4A4A4A] max-w-3xl mx-auto">
+          Descubra restaurantes de diversas culinárias na sua cidade, veja os cardápios, avaliações, horários de funcionamento e disponibilidade de delivery. Se você for proprietário de um restaurante <a href="https://www.gulamenu.com.br/" target="_blank" rel="noopener noreferrer" className="font-medium text-[#FF5842] underline">clique aqui</a>
+        </p>
+      </div>
     </div>
   );
 }

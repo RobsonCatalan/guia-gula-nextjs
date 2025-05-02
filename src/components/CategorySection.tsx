@@ -183,7 +183,7 @@ export default function CategorySection({ city, title, currentCategory }: Catego
                 // No mobile, usamos rolagem nativa com inércia
                 <div
                   ref={containerRef}
-                  className="flex flex-nowrap space-x-4 overflow-x-auto pb-4 hide-scrollbar"
+                  className="flex flex-nowrap space-x-4 overflow-x-auto pb-0 hide-scrollbar"
                   style={{ 
                     touchAction: 'pan-x',
                     WebkitOverflowScrolling: 'touch'
@@ -214,7 +214,7 @@ export default function CategorySection({ city, title, currentCategory }: Catego
                 // Em desktop, usamos o ScrollContainer para drag-to-scroll
                 <ScrollContainer
                   innerRef={containerRef}
-                  className="flex flex-nowrap space-x-4 overflow-x-auto pb-4 hide-scrollbar cursor-grab"
+                  className="flex flex-nowrap space-x-4 overflow-x-auto pb-0 hide-scrollbar cursor-grab"
                   hideScrollbars={true}
                   activationDistance={10}
                 >

@@ -88,6 +88,41 @@ export default function CategorySection({ city, title, currentCategory }: Catego
     loadCats();
   }, [city, isAppCheckReady]);
 
+  // Drag-to-scroll support for mouse & touch
+  const isDownRef = useRef(false);
+  const startXRef = useRef(0);
+  const scrollLeftRef = useRef(0);
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    e.preventDefault();
+    isDownRef.current = true;
+    const el = scrollRef.current;
+    if (!el) return;
+    el.style.cursor = 'grabbing';
+    startXRef.current = e.clientX;
+    scrollLeftRef.current = el.scrollLeft;
+    el.setPointerCapture(e.pointerId);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDownRef.current) return;
+    e.preventDefault();
+    const el = scrollRef.current;
+    if (!el) return;
+    const dx = e.clientX - startXRef.current;
+    el.scrollLeft = scrollLeftRef.current - dx;
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDownRef.current) return;
+    isDownRef.current = false;
+    const el = scrollRef.current;
+    if (!el) return;
+    el.style.cursor = 'grab';
+    el.releasePointerCapture(e.pointerId);
+  };
+
   // Determina título completo da seção
   const heading = title ?? `Categorias de Restaurantes em ${cityFormatted}`;
   // Filtra para não mostrar a categoria atual
@@ -131,7 +166,16 @@ export default function CategorySection({ city, title, currentCategory }: Catego
               <button onClick={scrollLeft} className="absolute left-0 top-1/2 z-10 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#4A4A4A]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
               </button>
-              <div ref={scrollRef} className="flex flex-nowrap space-x-4 overflow-x-auto pb-4 hide-scrollbar">
+              <div
+                ref={scrollRef}
+                className="flex flex-nowrap space-x-4 overflow-x-auto pb-4 hide-scrollbar select-none cursor-grab"
+                style={{ touchAction: 'none' }}
+                onPointerDown={handlePointerDown}
+                onPointerMove={handlePointerMove}
+                onPointerUp={handlePointerUp}
+                onPointerLeave={handlePointerUp}
+                onPointerCancel={handlePointerUp}
+              >
                 {sortedCategories.map((cat) => {
                   const slug = slugify(cat);
                   return (

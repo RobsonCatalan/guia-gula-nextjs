@@ -66,29 +66,8 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
           <li className="font-medium">{cidadeFormatada}</li>
         </ol>
       </nav>
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto text-center px-6">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 font-['Roboto'] text-[#4A4A4A]">
-            Restaurantes em {cidadeFormatada}
-          </h1>
-          {hasImage ? (
-            <Image
-              src={`/images/cities/${cidade}.webp`}
-              alt={`Imagem de ${cidadeFormatada}`}
-              width={800}
-              height={400}
-              className="object-cover w-full h-64 rounded-lg"
-              priority
-            />
-          ) : (
-            <div className="w-full h-64 bg-gray-200 flex items-center justify-center rounded-lg">
-              <span className="text-[#4A4A4A]">Imagem indisponível</span>
-            </div>
-          )}
-        </div>
-      </section>
       <CategorySection city={cidade} />
-      <main className="max-w-7xl mx-auto px-6 py-12 bg-[#FFF8F0]">
+      <main id="restaurants" className="max-w-7xl mx-auto px-6 py-12 bg-[#FFF8F0]">
         <h2 className="text-2xl font-bold text-[#4A4A4A] mb-6">
           Todos os Restaurantes em {cidadeFormatada}
         </h2>

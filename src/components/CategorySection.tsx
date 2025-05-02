@@ -98,6 +98,30 @@ export default function CategorySection({ city, title, currentCategory }: Catego
     loadCats();
   }, [city, isAppCheckReady]);
 
+  // Hook para detectar se é um dispositivo móvel
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  // Detecta dispositivo móvel com base na largura da tela e eventos de toque
+  useEffect(() => {
+    // Verifica se é mobile inicialmente
+    const checkIfMobile = () => {
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const isSmallScreen = window.innerWidth < 768;
+      setIsMobile(isTouchDevice && isSmallScreen);
+    };
+
+    // Verifica na primeira renderização
+    checkIfMobile();
+
+    // Adiciona listener para mudanças de tamanho da tela
+    window.addEventListener('resize', checkIfMobile);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', checkIfMobile);
+    };
+  }, []);
+
   // Determina título completo da seção
   const heading = title ?? `Categorias de Restaurantes em ${cityFormatted}`;
   // Filtra para não mostrar a categoria atual
@@ -141,32 +165,66 @@ export default function CategorySection({ city, title, currentCategory }: Catego
               <button onClick={scrollLeft} className="absolute left-0 top-1/2 z-10 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#4A4A4A]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
               </button>
-              <ScrollContainer
-                innerRef={containerRef}
-                className="flex flex-nowrap space-x-4 overflow-x-auto pb-4 hide-scrollbar cursor-grab"
-                hideScrollbars={true}
-                activationDistance={10}
-              >
-                {sortedCategories.map((cat) => {
-                  const slug = slugify(cat);
-                  return (
-                    <Link key={cat} href={`/restaurante/${city}/${slug}`} className="flex-none w-56 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-                      <div className="relative w-full h-32">
-                        <Image
-                          src={`/images/categories/${cat === 'Pastelaria' ? 'pastel' : cat === 'Outros' ? 'outros' : slugify(cat)}.webp`}
-                          alt={cat}
-                          fill
-                          sizes="(min-width: 1024px) 16.66vw, (min-width: 768px) 25vw, (min-width: 640px) 33.33vw, 50vw"
-                          className="object-cover"
-                        />
-                      </div>
-                      <div className="p-4">
-                        <span className="text-[#D32F2F] font-medium block text-center">{cat}</span>
-                      </div>
-                    </Link>
-                  );
-                })}
-              </ScrollContainer>
+              {isMobile ? (
+                // No mobile, usamos rolagem nativa com inércia
+                <div
+                  ref={containerRef}
+                  className="flex flex-nowrap space-x-4 overflow-x-auto pb-4 hide-scrollbar"
+                  style={{ 
+                    touchAction: 'pan-x',
+                    WebkitOverflowScrolling: 'touch'
+                  }}
+                >
+                  {sortedCategories.map((cat) => {
+                    const slug = slugify(cat);
+                    return (
+                      <Link key={cat} href={`/restaurante/${city}/${slug}`} className="flex-none w-56 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+                        <div className="relative w-full h-32">
+                          <Image
+                            src={`/images/categories/${cat === 'Pastelaria' ? 'pastel' : cat === 'Outros' ? 'outros' : slugify(cat)}.webp`}
+                            alt={cat}
+                            fill
+                            priority
+                            sizes="(max-width: 640px) 100vw, 224px"
+                            style={{ objectFit: 'cover' }}
+                          />
+                          <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                            <span className="text-white text-lg font-semibold">{cat}</span>
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              ) : (
+                // Em desktop, usamos o ScrollContainer para drag-to-scroll
+                <ScrollContainer
+                  innerRef={containerRef}
+                  className="flex flex-nowrap space-x-4 overflow-x-auto pb-4 hide-scrollbar cursor-grab"
+                  hideScrollbars={true}
+                  activationDistance={10}
+                >
+                  {sortedCategories.map((cat) => {
+                    const slug = slugify(cat);
+                    return (
+                      <Link key={cat} href={`/restaurante/${city}/${slug}`} className="flex-none w-56 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+                        <div className="relative w-full h-32">
+                          <Image
+                            src={`/images/categories/${cat === 'Pastelaria' ? 'pastel' : cat === 'Outros' ? 'outros' : slugify(cat)}.webp`}
+                            alt={cat}
+                            fill
+                            sizes="(min-width: 1024px) 16.66vw, (min-width: 768px) 25vw, (min-width: 640px) 33.33vw, 50vw"
+                            className="object-cover"
+                          />
+                        </div>
+                        <div className="p-4">
+                          <span className="text-[#D32F2F] font-medium block text-center">{cat}</span>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </ScrollContainer>
+              )}
               <button onClick={scrollRight} className="absolute right-0 top-1/2 z-10 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#4A4A4A]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
               </button>

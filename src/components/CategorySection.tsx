@@ -90,6 +90,22 @@ export default function CategorySection({ city, title, currentCategory }: Catego
   const displayCategories = currentCategory
     ? cityCategories.filter(cat => slugify(cat) !== currentCategory)
     : cityCategories;
+  // Ordena categorias conforme ordem definida
+  const categoryOrder = [
+    'Bar & Pub','Pizzaria','Café & Pães & Doces','Lanches & Burgers','Churrasco & Grelhados',
+    'Pastelaria','Japonês','Italiano','Mineiro','Árabe','Self-service & Buffet','Frutos do Mar',
+    'Mexicano','Wine Bar','Chinês','Português','Vegano & Vegetariano','Brasileiro','Francês',
+    'Peruano','Espanhol','Alemão','Indiano','Internacional','Saudável & Sucos','Quiosques & Barracas',
+    'Empório & Delicatessen','Outros'
+  ];
+  const sortedCategories = [...displayCategories].sort((a, b) => {
+    const ia = categoryOrder.indexOf(a);
+    const ib = categoryOrder.indexOf(b);
+    if (ia === -1 && ib === -1) return a.localeCompare(b);
+    if (ia === -1) return 1;
+    if (ib === -1) return -1;
+    return ia - ib;
+  });
 
   return (
     <section className="py-12 px-6 bg-[#FFF8F0]">
@@ -103,7 +119,7 @@ export default function CategorySection({ city, title, currentCategory }: Catego
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {displayCategories.map((cat) => {
+            {sortedCategories.map((cat) => {
               const slug = slugify(cat);
               return (
                 <Link

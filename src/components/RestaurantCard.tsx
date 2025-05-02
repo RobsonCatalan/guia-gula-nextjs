@@ -215,7 +215,7 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
         )}
         
         {driveTime && (
-          <div className="flex items-center text-xs text-[#4A4A4A] mb-1">
+          <div className="flex items-center text-xs text-[#4A4A4A] mb-2">
             <Image
               src="/images/icons/car.png"
               alt="Car icon"

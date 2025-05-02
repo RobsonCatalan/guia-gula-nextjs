@@ -135,7 +135,7 @@ export default function RestaurantList({ city }: RestaurantListProps) {
             <select
               value={sortOption}
               onChange={e => setSortOption(e.target.value as 'time' | 'rating')}
-              className="px-4 py-2 border border-white rounded bg-white text-[#4A4A4A] focus:outline-none shadow-md"
+              className="px-4 py-2 border border-[#4A4A4A] rounded bg-white text-[#4A4A4A] focus:outline-none shadow-md"
             >
               <option value="time">Menor tempo</option>
               <option value="rating">Melhor avaliado</option>

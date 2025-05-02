@@ -122,6 +122,18 @@ export default function CategorySection({ city, title, currentCategory }: Catego
     };
   }, []);
 
+  // State to show scroll arrows only when overflow
+  const [showScroll, setShowScroll] = useState(false);
+  useEffect(() => {
+    const container = containerRef.current;
+    const updateScroll = () => {
+      if (container) setShowScroll(container.scrollWidth > container.clientWidth);
+    };
+    updateScroll();
+    window.addEventListener('resize', updateScroll);
+    return () => window.removeEventListener('resize', updateScroll);
+  }, [cityCategories, isMobile]);
+
   // Determina título completo da seção
   const heading = title ?? `Categorias de Restaurantes em ${cityFormatted}`;
   // Filtra para não mostrar a categoria atual
@@ -164,9 +176,9 @@ export default function CategorySection({ city, title, currentCategory }: Catego
               .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
             `}</style>
             <div className="relative">
-              <button onClick={scrollLeft} className="absolute left-0 top-1/2 z-10 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md">
+              {showScroll && <button onClick={scrollLeft} className="absolute left-0 top-1/2 z-10 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-              </button>
+              </button>}
               {isMobile ? (
                 // No mobile, usamos rolagem nativa com inércia
                 <div
@@ -227,9 +239,9 @@ export default function CategorySection({ city, title, currentCategory }: Catego
                   })}
                 </ScrollContainer>
               )}
-              <button onClick={scrollRight} className="absolute right-0 top-1/2 z-10 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md">
+              {showScroll && <button onClick={scrollRight} className="absolute right-0 top-1/2 z-10 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-              </button>
+              </button>}
             </div>
           </>
         )}

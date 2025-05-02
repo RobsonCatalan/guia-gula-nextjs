@@ -46,6 +46,17 @@ export default function CitiesSection({ currentCity }: CitiesSectionProps) {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  const [showScroll, setShowScroll] = useState(false);
+  useEffect(() => {
+    const container = containerRef.current;
+    const updateScroll = () => {
+      if (container) setShowScroll(container.scrollWidth > container.clientWidth);
+    };
+    updateScroll();
+    window.addEventListener('resize', updateScroll);
+    return () => window.removeEventListener('resize', updateScroll);
+  }, [cities, isMobile]);
+
   const normalizeLabel = (slug: string) =>
     slug
       .split('-')
@@ -64,11 +75,11 @@ export default function CitiesSection({ currentCity }: CitiesSectionProps) {
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
       <div className="relative">
-        <button onClick={scrollLeft} className="absolute left-0 top-1/2 z-10 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md">
+        {showScroll && <button onClick={scrollLeft} className="absolute left-0 top-1/2 z-10 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-        </button>
+        </button>}
         {isMobile ? (
           <div ref={containerRef} className="flex flex-nowrap space-x-4 overflow-x-auto pb-4 hide-scrollbar" style={{ touchAction: 'pan-x', WebkitOverflowScrolling: 'touch' }}>
             {cities.filter(slug => slug !== currentCity).map(slug => {
@@ -116,11 +127,11 @@ export default function CitiesSection({ currentCity }: CitiesSectionProps) {
             })}
           </ScrollContainer>
         )}
-        <button onClick={scrollRight} className="absolute right-0 top-1/2 z-10 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md">
+        {showScroll && <button onClick={scrollRight} className="absolute right-0 top-1/2 z-10 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
-        </button>
+        </button>}
       </div>
     </>
   );

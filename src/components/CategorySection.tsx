@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import ScrollContainer from 'react-indiana-drag-scroll';
 import { useAppCheckContext } from '@/components/FirebaseAppCheckProvider';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -64,10 +65,19 @@ export default function CategorySection({ city, title, currentCategory }: Catego
   const [cityCategories, setCityCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { isAppCheckReady } = useAppCheckContext();
-  const scrollRef = useRef<HTMLDivElement>(null);
   const scrollStep = 240;
-  const scrollLeft = () => scrollRef.current?.scrollBy({ left: -scrollStep, behavior: 'smooth' });
-  const scrollRight = () => scrollRef.current?.scrollBy({ left: scrollStep, behavior: 'smooth' });
+
+  // Referência para o componente de scroll
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Funções para rolar com os botões
+  const scrollLeft = () => {
+    containerRef.current?.scrollBy({ left: -scrollStep, behavior: 'smooth' });
+  };
+
+  const scrollRight = () => {
+    containerRef.current?.scrollBy({ left: scrollStep, behavior: 'smooth' });
+  };
 
   useEffect(() => {
     if (!isAppCheckReady) return;
@@ -87,41 +97,6 @@ export default function CategorySection({ city, title, currentCategory }: Catego
     };
     loadCats();
   }, [city, isAppCheckReady]);
-
-  // Drag-to-scroll support for mouse & touch
-  const isDownRef = useRef(false);
-  const startXRef = useRef(0);
-  const scrollLeftRef = useRef(0);
-
-  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (e.pointerType === 'mouse' && e.button !== 0) return;
-    e.preventDefault();
-    isDownRef.current = true;
-    const el = scrollRef.current;
-    if (!el) return;
-    el.style.cursor = 'grabbing';
-    startXRef.current = e.clientX;
-    scrollLeftRef.current = el.scrollLeft;
-    el.setPointerCapture(e.pointerId);
-  };
-
-  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!isDownRef.current) return;
-    e.preventDefault();
-    const el = scrollRef.current;
-    if (!el) return;
-    const dx = e.clientX - startXRef.current;
-    el.scrollLeft = scrollLeftRef.current - dx;
-  };
-
-  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!isDownRef.current) return;
-    isDownRef.current = false;
-    const el = scrollRef.current;
-    if (!el) return;
-    el.style.cursor = 'grab';
-    el.releasePointerCapture(e.pointerId);
-  };
 
   // Determina título completo da seção
   const heading = title ?? `Categorias de Restaurantes em ${cityFormatted}`;
@@ -166,15 +141,11 @@ export default function CategorySection({ city, title, currentCategory }: Catego
               <button onClick={scrollLeft} className="absolute left-0 top-1/2 z-10 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#4A4A4A]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
               </button>
-              <div
-                ref={scrollRef}
-                className="flex flex-nowrap space-x-4 overflow-x-auto pb-4 hide-scrollbar select-none cursor-grab"
-                style={{ touchAction: 'none' }}
-                onPointerDown={handlePointerDown}
-                onPointerMove={handlePointerMove}
-                onPointerUp={handlePointerUp}
-                onPointerLeave={handlePointerUp}
-                onPointerCancel={handlePointerUp}
+              <ScrollContainer
+                innerRef={containerRef}
+                className="flex flex-nowrap space-x-4 overflow-x-auto pb-4 hide-scrollbar cursor-grab"
+                hideScrollbars={true}
+                activationDistance={10}
               >
                 {sortedCategories.map((cat) => {
                   const slug = slugify(cat);
@@ -195,7 +166,7 @@ export default function CategorySection({ city, title, currentCategory }: Catego
                     </Link>
                   );
                 })}
-              </div>
+              </ScrollContainer>
               <button onClick={scrollRight} className="absolute right-0 top-1/2 z-10 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#4A4A4A]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
               </button>

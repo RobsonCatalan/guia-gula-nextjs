@@ -44,7 +44,7 @@ export default function NotFound() {
               <h3 className="text-xl font-semibold text-[#4A4A4A] mb-2">Belo Horizonte</h3>
               <p className="text-[#4A4A4A] mb-4">Conhecida pelos tradicionais pratos mineiros e pelos diversos bares e botecos.</p>
               <div className="flex justify-end mt-2">
-                <Link href="/restaurante/belo-horizonte" className="bg-[#D32F2F] !text-white px-4 py-2 rounded-full hover:bg-red-700 transition-colors text-sm font-medium">
+                <Link href="/restaurante/belo-horizonte" className="bg-[#FF5842] !text-white px-4 py-2 rounded-full hover:opacity-90 transition-colors text-sm font-medium">
                   Ver mais
                 </Link>
               </div>
@@ -63,7 +63,7 @@ export default function NotFound() {
               <h3 className="text-xl font-semibold text-[#4A4A4A] mb-2">São Paulo</h3>
               <p className="text-[#4A4A4A] mb-4">Maior metrópole do Brasil, famosa pela rica diversidade de culinárias e restaurantes renomados.</p>
               <div className="flex justify-end mt-2">
-                <Link href="/restaurante/sao-paulo" className="bg-[#D32F2F] !text-white px-4 py-2 rounded-full hover:bg-red-700 transition-colors text-sm font-medium">
+                <Link href="/restaurante/sao-paulo" className="bg-[#FF5842] !text-white px-4 py-2 rounded-full hover:opacity-90 transition-colors text-sm font-medium">
                   Ver mais
                 </Link>
               </div>

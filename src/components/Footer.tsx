@@ -28,7 +28,7 @@ export default function Footer() {
         <div>
           <h3 className="text-xl font-bold mb-4">Contato</h3>
           <p className="text-sm">
-            contato@gula.menu<br />São Paulo, SP - Brasil
+            contato@gulamenu.com.br<br />São Paulo, SP - Brasil
           </p>
         </div>
       </div>

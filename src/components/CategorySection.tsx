@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAppCheckContext } from '@/components/FirebaseAppCheckProvider';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -64,6 +64,10 @@ export default function CategorySection({ city, title, currentCategory }: Catego
   const [cityCategories, setCityCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { isAppCheckReady } = useAppCheckContext();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollStep = 240;
+  const scrollLeft = () => scrollRef.current?.scrollBy({ left: -scrollStep, behavior: 'smooth' });
+  const scrollRight = () => scrollRef.current?.scrollBy({ left: scrollStep, behavior: 'smooth' });
 
   useEffect(() => {
     if (!isAppCheckReady) return;
@@ -118,31 +122,41 @@ export default function CategorySection({ city, title, currentCategory }: Catego
             <div className="w-8 h-8 border-4 border-[#F4A261] border-t-[#D32F2F] rounded-full animate-spin"></div>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {sortedCategories.map((cat) => {
-              const slug = slugify(cat);
-              return (
-                <Link
-                  key={cat}
-                  href={`/restaurante/${city}/${slug}`}
-                  className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow block overflow-hidden"
-                >
-                  <div className="relative w-full h-32">
-                    <Image
-                      src={`/images/categories/${cat === 'Pastelaria' ? 'pastel' : cat === 'Outros' ? 'outros' : slugify(cat)}.webp`}
-                      alt={cat}
-                      fill
-                      sizes="(min-width: 1024px) 16.66vw, (min-width: 768px) 25vw, (min-width: 640px) 33.33vw, 50vw"
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <span className="text-[#D32F2F] font-medium block text-center">{cat}</span>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+          <>
+            <style jsx>{`
+              .hide-scrollbar::-webkit-scrollbar { display: none; }
+              .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+            `}</style>
+            <div className="relative">
+              <button onClick={scrollLeft} className="absolute left-0 top-1/2 z-10 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#4A4A4A]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+              </button>
+              <div ref={scrollRef} className="flex flex-nowrap space-x-4 overflow-x-auto pb-4 hide-scrollbar">
+                {sortedCategories.map((cat) => {
+                  const slug = slugify(cat);
+                  return (
+                    <Link key={cat} href={`/restaurante/${city}/${slug}`} className="flex-none w-56 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+                      <div className="relative w-full h-32">
+                        <Image
+                          src={`/images/categories/${cat === 'Pastelaria' ? 'pastel' : cat === 'Outros' ? 'outros' : slugify(cat)}.webp`}
+                          alt={cat}
+                          fill
+                          sizes="(min-width: 1024px) 16.66vw, (min-width: 768px) 25vw, (min-width: 640px) 33.33vw, 50vw"
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="p-4">
+                        <span className="text-[#D32F2F] font-medium block text-center">{cat}</span>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+              <button onClick={scrollRight} className="absolute right-0 top-1/2 z-10 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#4A4A4A]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+              </button>
+            </div>
+          </>
         )}
       </div>
     </section>

@@ -198,9 +198,6 @@ export default function Home() {
           <h1 className="text-4xl md:text-5xl font-bold mb-6 font-['Roboto']">
             Visite ou Peça dos Melhores Restaurantes
           </h1>
-          <p className="text-xl mb-8 max-w-3xl mx-auto">
-            Encontre os melhores lugares para comer em sua cidade, veja avaliações e menus.
-          </p>
           <div className="bg-white rounded-full overflow-hidden flex max-w-xl mx-auto">
             <input
               type="text"

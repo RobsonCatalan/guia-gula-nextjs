@@ -126,7 +126,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#FFF8F0]">
       {/* Header */}
-      <header className="bg-[#FF5842] text-white p-6 shadow-sm">
+      <header className="bg-[#ECE2D9] text-[#4A4A4A] p-6 shadow-sm">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <Image
             src="/images/logo/logo.webp"
@@ -141,7 +141,7 @@ export default function Home() {
               <CityDetector onCityDetected={handleCityDetected} />
             ) : cityOptions.length > 0 ? (
               <div className="flex items-baseline space-x-2">
-                <label htmlFor="city-select" className="text-white font-medium hidden md:block">Restaurantes de:</label>
+                <label htmlFor="city-select" className="text-[#4A4A4A] font-medium hidden md:block">Restaurantes de:</label>
                 <select
                   id="city-select"
                   value={selectedCity}
@@ -151,7 +151,7 @@ export default function Home() {
                     setDetected(true);
                     document.cookie = `selectedCity=${val}; path=/; max-age=2592000`;
                   }}
-                  className="px-4 py-2 border border-white rounded bg-white text-[#4A4A4A] focus:outline-none shadow-md"
+                  className="px-4 py-2 border border-[#4A4A4A] rounded bg-white text-[#4A4A4A] focus:outline-none shadow-md"
                 >
                   {cityOptions.map(opt => (
                     <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -159,7 +159,7 @@ export default function Home() {
                 </select>
               </div>
             ) : (
-              <div className="text-white px-4 py-2">Carregando cidades...</div>
+              <div className="text-[#4A4A4A] px-4 py-2">Carregando cidades...</div>
             )
           )}
           <nav className="hidden md:flex space-x-6">
@@ -167,33 +167,33 @@ export default function Home() {
               href="https://www.gulamenu.com.br/"
               target="_blank"
               rel="noopener noreferrer"
-              className="!text-white hover:text-[#FFF8F0] transition-colors font-medium"
+              className="!text-[#4A4A4A] hover:text-[#FFF8F0] transition-colors font-medium"
             >
               Para Restaurantes
             </a>
           </nav>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden text-2xl text-white"
+            className="md:hidden text-2xl text-[#4A4A4A]"
           >
             ☰
           </button>
         </div>
       </header>
       {mobileMenuOpen && (
-        <nav className="md:hidden bg-[#FF5842] p-4 space-y-2">
+        <nav className="md:hidden bg-[#ECE2D9] p-4 space-y-2">
           <a
             href="https://www.gulamenu.com.br/"
             target="_blank"
             rel="noopener noreferrer"
-            className="block !text-white hover:!text-[#FFF8F0] transition-colors font-medium"
+            className="block !text-[#4A4A4A] hover:!text-[#FFF8F0] transition-colors font-medium"
           >
             Para Restaurantes
           </a>
         </nav>
       )}
       {/* Hero Section */}
-      <section className="py-8 bg-[#FFF8F0]">
+      <section className="py-6 bg-[#FFF8F0]">
         <div className="max-w-7xl mx-auto text-center px-6">
           <h1 className="!text-[1.75rem] font-bold mb-6 font-['Roboto'] text-[#4A4A4A]">
             Visite ou Peça dos Melhores Restaurantes
@@ -230,7 +230,7 @@ export default function Home() {
           {/* Firestore Integration Demo */}
           <RestaurantList city={selectedCity} />
           {/* Explore outras Cidades */}
-          <section className="mt-8 px-6">
+          <section className="py-6 mt-8 px-6">
             <h2 className="text-3xl font-bold text-[#4A4A4A] mb-6">Explore outras Cidades</h2>
             <CitiesSection currentCity={selectedCity} />
           </section>

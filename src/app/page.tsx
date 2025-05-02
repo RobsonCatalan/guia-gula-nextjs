@@ -158,7 +158,7 @@ export default function Home() {
               href="https://www.gulamenu.com.br/"
               target="_blank"
               rel="noopener noreferrer"
-              className="!text-[#4A4A4A] hover:text-[#FFF8F0] transition-colors font-medium"
+              className="!text-[#FF5842] hover:text-[#FFF8F0] transition-colors font-medium"
             >
               Para Restaurantes
             </a>
@@ -177,7 +177,7 @@ export default function Home() {
             href="https://www.gulamenu.com.br/"
             target="_blank"
             rel="noopener noreferrer"
-            className="block !text-[#4A4A4A] hover:!text-[#FFF8F0] transition-colors font-medium"
+            className="block !text-[#FF5842] hover:!text-[#FFF8F0] transition-colors font-medium"
           >
             Para Restaurantes
           </a>

@@ -5,6 +5,7 @@ import CategorySection from '@/components/CategorySection';
 import Link from 'next/link';
 import fs from 'fs';
 import path from 'path';
+import CitiesSection from '@/components/CitiesSection';
 
 export async function generateMetadata({ params }: { params: Promise<{ cidade: string }> }): Promise<Metadata> {
   const { cidade } = await params;
@@ -73,6 +74,12 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
         </h1>
         <ClientComponent cidade={cidadeFormatada} />
       </main>
+      <section className="py-6 mt-0 px-6 bg-[#ECE2D9]">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl font-bold text-[#4A4A4A] mb-6">Explore outras Cidades</h2>
+          <CitiesSection currentCity={cidade} />
+        </div>
+      </section>
     </div>
   );
 }

@@ -119,10 +119,10 @@ export default async function CategoryPage(props: { params: any }) {
         </ol>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-6 py-12 bg-[#FFF8F0]">
-        <h2 className="text-2xl font-bold text-[#4A4A4A] mb-6">
+      <main className="max-w-7xl mx-auto px-6 py-6 bg-[#FFF8F0]">
+        <h1 className="text-2xl font-bold text-[#4A4A4A] mb-6">
           Restaurantes da Categoria {categoriaLabel} em {cidadeFormatada}
-        </h2>
+        </h1>
         <Suspense fallback={<div>Carregando restaurantes...</div>}>
           <CategoryClientComponent cidade={cidade} categoria={categoria} />
         </Suspense>

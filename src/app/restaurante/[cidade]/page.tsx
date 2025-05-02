@@ -47,20 +47,13 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
   
   return (
     <div className="bg-[#FFF8F0]">
-      <header className="bg-[#FF5842] text-white p-6 shadow-sm">
+      <header className="bg-[#ECE2D9] text-[#4A4A4A] p-6 shadow-sm">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <Link href="/">
-            <Image
-              src="/images/logo/logo.webp"
-              alt="Gula.menu"
-              width={150}
-              height={50}
-              priority
-              style={{ width: 'auto', height: 'auto' }}
-            />
+            <div role="img" aria-label="Gula.menu" className="logo-mask w-[150px] h-[50px]"></div>
           </Link>
           <nav className="flex space-x-6">
-            <Link href="https://www.gulamenu.com.br/" target="_blank" rel="noopener noreferrer" className="!text-white hover:text-[#FFF8F0] transition-colors font-medium">Para Restaurantes</Link>
+            <Link href="https://www.gulamenu.com.br/" target="_blank" rel="noopener noreferrer" className="!text-[#FF5842] hover:text-[#FFF8F0] transition-colors font-medium">Para Restaurantes</Link>
           </nav>
         </div>
       </header>

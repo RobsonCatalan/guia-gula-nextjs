@@ -133,7 +133,6 @@ export default function Home() {
               <CityDetector onCityDetected={handleCityDetected} />
             ) : cityOptions.length > 0 ? (
               <div className="flex items-baseline space-x-2">
-                <label htmlFor="city-select" className="text-[#4A4A4A] font-medium hidden md:block">Restaurantes de:</label>
                 <select
                   id="city-select"
                   value={selectedCity}

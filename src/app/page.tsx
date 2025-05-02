@@ -221,7 +221,7 @@ export default function Home() {
           )}
         </div>
       </section>
-      <CategorySection city={selectedCity} />
+      <CategorySection city={selectedCity} title="" />
       {/* Main Content */}
       <main className="py-12 px-6">
         <div className="max-w-7xl mx-auto">

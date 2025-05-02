@@ -148,9 +148,11 @@ export default function CategorySection({ city, title, currentCategory }: Catego
   return (
     <section className="py-12 px-6 bg-[#FFF8F0]">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold font-['Roboto'] text-[#4A4A4A] mb-6">
-          {heading}
-        </h2>
+        {heading && (
+          <h2 className="text-3xl font-bold font-['Roboto'] text-[#4A4A4A] mb-6">
+            {heading}
+          </h2>
+        )}
         {loading ? (
           <div className="flex justify-center my-8">
             <div className="w-8 h-8 border-4 border-[#F4A261] border-t-[#D32F2F] rounded-full animate-spin"></div>

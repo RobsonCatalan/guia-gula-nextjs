@@ -160,8 +160,8 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
             priority
           />
         ) : (
-          <div className="absolute inset-0 bg-[#FF5842] flex items-center justify-center">
-            <span className="text-white text-4xl font-bold">{name.charAt(0)}</span>
+          <div className="absolute inset-0 bg-[#ECE2D9] flex items-center justify-center">
+            <span className="text-[#FF5842] text-4xl font-bold">{name.charAt(0)}</span>
           </div>
         )}
 

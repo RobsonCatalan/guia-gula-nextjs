@@ -132,11 +132,10 @@ export default function RestaurantList({ city }: RestaurantListProps) {
         {/* Controle de ordenação */}
         {restaurants.length > 0 && (
           <div className="flex justify-end mb-4">
-            <label className="mr-2 text-sm font-medium text-[#4A4A4A]">Ordenar por:</label>
             <select
               value={sortOption}
               onChange={e => setSortOption(e.target.value as 'time' | 'rating')}
-              className="px-4 py-2 border border-white rounded bg-white text-[#4A4A4A] focus:outline-none"
+              className="px-4 py-2 border border-white rounded bg-white text-[#4A4A4A] focus:outline-none shadow-md"
             >
               <option value="time">Menor tempo</option>
               <option value="rating">Melhor avaliado</option>

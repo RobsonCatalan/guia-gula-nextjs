@@ -80,6 +80,14 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
           <CitiesSection currentCity={cidade} />
         </div>
       </section>
+      <div className="mt-0 py-6 text-center">
+        <h2 className="text-2xl font-bold text-[#4A4A4A] mb-4 font-['Roboto']">
+          Conheça o Gula.menu
+        </h2>
+        <p className="text-[#4A4A4A] max-w-3xl mx-auto">
+          Descubra restaurantes de diversas culinárias na sua cidade, veja os cardápios, avaliações, horários de funcionamento e disponibilidade de delivery. Se você for proprietário de um restaurante <a href="https://www.gulamenu.com.br/" target="_blank" rel="noopener noreferrer" className="font-medium text-[#FF5842] underline">clique aqui</a>
+        </p>
+      </div>
     </div>
   );
 }

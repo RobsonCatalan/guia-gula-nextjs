@@ -195,7 +195,7 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
         {rating && rating > 0 ? (
           <div className="flex items-center mb-1">
             {renderStars(rating)}
-            <span className="ml-1 text-xs text-[#4A4A4A]">{rating.toFixed(1)} ({reviewCount} avaliações)</span>
+            <span className="ml-1 text-xs text-[#4A4A4A]">{rating.toFixed(1)} ({reviewCount})</span>
           </div>
         ) : (
           <p className="text-xs text-[#4A4A4A] mb-1">Sem avaliações</p>

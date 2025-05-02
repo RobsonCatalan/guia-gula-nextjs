@@ -119,23 +119,6 @@ export default async function CategoryPage(props: { params: any }) {
         </ol>
       </nav>
 
-      {/* Hero Section */}
-      <section className="py-16 bg-[#FFF8F0]">
-        <div className="max-w-7xl mx-auto text-center px-6">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 font-['Roboto'] text-[#4A4A4A]">
-            {categoriaLabel} em {cidadeFormatada}
-          </h1>
-          <Image
-            src={`/images/categories/${imageSlug}.webp`}
-            alt={`Imagem de ${categoriaLabel}`}
-            width={800}
-            height={400}
-            className="object-cover w-full h-64 rounded-lg"
-            priority
-          />
-        </div>
-      </section>
-
       <main className="max-w-7xl mx-auto px-6 py-12 bg-[#FFF8F0]">
         <h2 className="text-2xl font-bold text-[#4A4A4A] mb-6">
           Restaurantes da Categoria {categoriaLabel} em {cidadeFormatada}

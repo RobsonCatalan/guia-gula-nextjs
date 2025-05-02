@@ -193,7 +193,7 @@ export default function Home() {
         </nav>
       )}
       {/* Hero Section */}
-      <section className="text-white py-16 bg-gradient-to-b from-[#FF7A68] to-[#FFF8F0]">
+      <section className="text-white py-8 bg-gradient-to-b from-[#FF7A68] to-[#FFF8F0]">
         <div className="max-w-7xl mx-auto text-center px-6">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 font-['Roboto']">
             Visite ou Peça dos Melhores Restaurantes
@@ -223,16 +223,16 @@ export default function Home() {
       </section>
       <CategorySection city={selectedCity} title="" />
       {/* Main Content */}
-      <main className="py-12 px-6">
+      <main className="py-6 px-6">
         <div className="max-w-7xl mx-auto">
           {/* Firestore Integration Demo */}
           <RestaurantList city={selectedCity} />
           {/* Explore outras Cidades */}
-          <section className="mt-16 px-6">
+          <section className="mt-8 px-6">
             <h2 className="text-3xl font-bold text-[#4A4A4A] mb-6">Explore outras Cidades</h2>
             <CitiesSection currentCity={selectedCity} />
           </section>
-          <div className="mt-16 text-center">
+          <div className="mt-8 text-center">
             <h2 className="text-2xl font-bold text-[#4A4A4A] mb-4 font-['Roboto']">
               Conheça o Gula.menu
             </h2>

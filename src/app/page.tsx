@@ -151,7 +151,7 @@ export default function Home() {
                     setDetected(true);
                     document.cookie = `selectedCity=${val}; path=/; max-age=2592000`;
                   }}
-                  className="px-4 py-2 border border-white rounded bg-white text-[#4A4A4A] focus:outline-none"
+                  className="px-4 py-2 border border-white rounded bg-white text-[#4A4A4A] focus:outline-none shadow-md"
                 >
                   {cityOptions.map(opt => (
                     <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -193,12 +193,12 @@ export default function Home() {
         </nav>
       )}
       {/* Hero Section */}
-      <section className="text-white py-8 bg-gradient-to-b from-[#FF7A68] to-[#FFF8F0]">
+      <section className="py-8 bg-[#FFF8F0]">
         <div className="max-w-7xl mx-auto text-center px-6">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 font-['Roboto']">
+          <h1 className="!text-[1.75rem] font-bold mb-6 font-['Roboto'] text-[#4A4A4A]">
             Visite ou Peça dos Melhores Restaurantes
           </h1>
-          <div className="bg-white rounded-full overflow-hidden flex max-w-xl mx-auto">
+          <div className="bg-white rounded overflow-hidden flex max-w-xl mx-auto shadow-md">
             <input
               type="text"
               placeholder="Nome do Restaurante..."
@@ -208,10 +208,12 @@ export default function Home() {
                 setNoResults(false);
               }}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-              className="flex-grow p-4 text-[#4A4A4A] outline-none"
+              className="flex-grow px-4 py-2 text-[#4A4A4A] outline-none"
             />
-            <button onClick={handleSearch} className="bg-[#F4A261] text-white px-6 py-4 font-bold">
-              Buscar
+            <button onClick={handleSearch} aria-label="Buscar" className="px-4 py-2 bg-[#F4A261] text-white flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
             </button>
           </div>
           {noResults && (

@@ -68,7 +68,7 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
         </ol>
       </nav>
       <CategorySection city={cidade} title="" />
-      <main id="restaurants" className="max-w-7xl mx-auto px-6 py-12 bg-[#FFF8F0]">
+      <main id="restaurants" className="max-w-7xl mx-auto px-6 py-6 bg-[#FFF8F0]">
         <h1 className="text-2xl font-bold text-[#4A4A4A] mb-6">
           Todos os Restaurantes em {cidadeFormatada}
         </h1>

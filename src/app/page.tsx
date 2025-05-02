@@ -187,7 +187,7 @@ export default function Home() {
       <section className="py-6 bg-[#FFF8F0]">
         <div className="max-w-7xl mx-auto text-center px-6">
           <h1 className="!text-[1.75rem] font-bold mb-6 font-['Roboto'] text-[#4A4A4A]">
-            Visite ou Peça dos Melhores Restaurantes
+            Os Melhores Restaurantes para Visitar ou Pedir
           </h1>
           <div className="bg-white rounded overflow-hidden flex max-w-xl mx-auto shadow-md">
             <input

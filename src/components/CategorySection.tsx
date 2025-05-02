@@ -180,8 +180,8 @@ export default function CategorySection({ city, title, currentCategory }: Catego
                   {sortedCategories.map((cat) => {
                     const slug = slugify(cat);
                     return (
-                      <Link key={cat} href={`/restaurante/${city}/${slug}`} className="flex-none w-56 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-                        <div className="relative w-full h-32">
+                      <Link key={cat} href={`/restaurante/${city}/${slug}`} className="flex-none w-[9.8rem] bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+                        <div className="relative w-full h-[5.6rem]">
                           <Image
                             src={`/images/categories/${cat === 'Pastelaria' ? 'pastel' : cat === 'Outros' ? 'outros' : slugify(cat)}.webp`}
                             alt={cat}
@@ -190,9 +190,9 @@ export default function CategorySection({ city, title, currentCategory }: Catego
                             sizes="(max-width: 640px) 100vw, 224px"
                             style={{ objectFit: 'cover' }}
                           />
-                          <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                            <span className="text-white text-lg font-semibold">{cat}</span>
-                          </div>
+                        </div>
+                        <div className="p-4">
+                          <span className="text-[#D32F2F] text-sm font-medium block text-center">{cat}</span>
                         </div>
                       </Link>
                     );
@@ -209,8 +209,8 @@ export default function CategorySection({ city, title, currentCategory }: Catego
                   {sortedCategories.map((cat) => {
                     const slug = slugify(cat);
                     return (
-                      <Link key={cat} href={`/restaurante/${city}/${slug}`} className="flex-none w-56 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden">
-                        <div className="relative w-full h-32">
+                      <Link key={cat} href={`/restaurante/${city}/${slug}`} className="flex-none w-[9.8rem] bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+                        <div className="relative w-full h-[5.6rem]">
                           <Image
                             src={`/images/categories/${cat === 'Pastelaria' ? 'pastel' : cat === 'Outros' ? 'outros' : slugify(cat)}.webp`}
                             alt={cat}
@@ -220,7 +220,7 @@ export default function CategorySection({ city, title, currentCategory }: Catego
                           />
                         </div>
                         <div className="p-4">
-                          <span className="text-[#D32F2F] font-medium block text-center">{cat}</span>
+                          <span className="text-[#D32F2F] text-sm font-medium block text-center">{cat}</span>
                         </div>
                       </Link>
                     );

@@ -221,7 +221,7 @@ export default function RestaurantDetailClient() {
       )}
       <section className="py-16 bg-[#FFF8F0]">
         <div className="max-w-7xl mx-auto text-center px-6">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 font-['Roboto']">Restaurante {restaurant.name}</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 font-['Roboto'] text-[#4A4A4A]">Restaurante {restaurant.name}</h1>
           {restaurant.mainPhoto && (
             <Image
               src={restaurant.mainPhoto}

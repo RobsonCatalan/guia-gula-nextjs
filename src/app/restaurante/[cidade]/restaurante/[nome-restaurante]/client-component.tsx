@@ -265,7 +265,7 @@ export default function RestaurantDetailClient() {
             </a>
             <span className="mx-2 text-[#4A4A4A]">|</span>
             <a href={`https://www.instagram.com/${restaurant.instagramLink}/`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#FF5842] hover:underline">
-              <Image src="/images/logo/instagram.jpg" alt="Instagram Logo" width={24} height={24} unoptimized />
+              <Image src="/images/logo/instagram.jpg" alt="Instagram Logo" width={36} height={36} unoptimized />
             </a>
           </div>
         )}
@@ -315,11 +315,11 @@ export default function RestaurantDetailClient() {
             {restaurant.coordinates && (
               <div className="flex items-center mb-4">
                 <a href={`https://www.google.com/maps/dir/?api=1&destination=${restaurant.coordinates.latitude},${restaurant.coordinates.longitude}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#FF5842] hover:underline">
-                  <Image src="/images/logo/google-maps.png" alt="Google Maps Logo" width={24} height={24} unoptimized />
+                  <Image src="/images/logo/google-maps.png" alt="Google Maps Logo" width={36} height={36} unoptimized />
                 </a>
                 <span className="mx-2 text-[#4A4A4A]">|</span>
                 <a href={`https://www.waze.com/ul?ll=${restaurant.coordinates.latitude},${restaurant.coordinates.longitude}&navigate=yes`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#FF5842] hover:underline">
-                  <Image src="/images/logo/waze.png" alt="Waze Logo" width={24} height={24} unoptimized />
+                  <Image src="/images/logo/waze.png" alt="Waze Logo" width={36} height={36} unoptimized />
                 </a>
               </div>
             )}
@@ -369,7 +369,7 @@ export default function RestaurantDetailClient() {
               )}
               {restaurant.deliveryConfig?.contactNumber && (
                 <a href={`https://wa.me/${restaurant.deliveryConfig.contactNumber}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#25D366] hover:underline mt-4">
-                  <Image src="/images/icons/Whatsapp.png" alt="WhatsApp" width={24} height={24} unoptimized className="mr-2" />
+                  <Image src="/images/icons/Whatsapp.png" alt="WhatsApp" width={36} height={36} unoptimized className="mr-2" />
                 </a>
               )}
             </div>

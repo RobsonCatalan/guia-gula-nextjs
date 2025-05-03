@@ -99,7 +99,9 @@ export default async function CategoryPage(props: { params: any }) {
       {/* Header similar à home */}
       <header className="bg-[#ECE2D9] text-[#4A4A4A] p-6 shadow-sm">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div role="img" aria-label="Gula.menu" className="logo-mask w-[150px] h-[50px]"></div>
+          <Link href="/">
+            <div role="img" aria-label="Gula.menu" className="logo-mask w-[150px] h-[50px]"></div>
+          </Link>
           <nav className="flex space-x-6">
             <Link href="https://www.gulamenu.com.br/" target="_blank" rel="noopener noreferrer" className="!text-[#FF5842] hover:text-[#FFF8F0] transition-colors font-medium">Para Restaurantes</Link>
           </nav>

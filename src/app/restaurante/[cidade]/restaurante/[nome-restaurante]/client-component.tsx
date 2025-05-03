@@ -255,7 +255,7 @@ export default function RestaurantDetailClient() {
         {restaurant.instagramLink && (
           <div className="flex items-center mb-4">
             <a href={`https://app.gula.menu/mainMenu?pPlace=${restaurant.id}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#FF5842] hover:underline">
-              <div style={{ WebkitMaskImage: `url('/images/icons/menu.png')`, maskImage: `url('/images/icons/menu.png')`, WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat', WebkitMaskSize: 'contain', maskSize: 'contain', backgroundColor: '#FF5842', width: '24px', height: '24px' }} />
+              <div style={{ WebkitMaskImage: `url('/images/icons/menu.png')`, maskImage: `url('/images/icons/menu.png')`, WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat', WebkitMaskSize: 'contain', maskSize: 'contain', backgroundColor: '#FF5842', width: '36px', height: '36px' }} />
               <span className="ml-2">Cardápio</span>
             </a>
             <span className="mx-2 text-[#4A4A4A]">|</span>

@@ -148,7 +148,7 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
       className="cursor-pointer bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 flex space-x-4 h-[14.75rem]"
     >
       {/* Imagem principal do restaurante */}
-      <div className="relative w-[11rem] h-full bg-[#FFF8F0] flex-shrink-0">
+      <div className="relative w-[11rem] h-full bg-[#FFF8F0] flex-shrink-0 mr-2">
         {mainPhoto && !mainPhotoError ? (
           <Image
             src={mainPhoto}

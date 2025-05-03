@@ -103,7 +103,7 @@ export default function ReviewsDrawer({
     <div className="fixed inset-y-0 right-0 overflow-hidden z-50 flex justify-end">
       {/* Drawer / Painel lateral */}
       <div className="w-full max-w-md md:max-w-lg shadow-xl">
-        <div className="h-screen bg-white shadow-xl flex flex-col overflow-y-auto">
+        <div className="h-screen bg-[#FFF8F0] shadow-xl flex flex-col overflow-y-auto">
           {/* Cabeçalho */}
           <div className="px-4 py-6 bg-[#FF5842] text-white sticky top-0 z-10">
             <div className="flex items-center justify-between mb-1">
@@ -146,10 +146,10 @@ export default function ReviewsDrawer({
                     </div>
                     <a 
                       onClick={() => handleFilterByRating(star)}
-                      className={`w-12 text-sm text-right font-medium cursor-pointer !underline ${filteredRating === star ? '!text-[#FF5842]' : '!text-black hover:!text-[#FF5842]'}`}
+                      className={`w-12 text-sm text-right font-medium cursor-pointer !underline ${filteredRating === star ? '!text-[#FF5842]' : '!text-[#4A4A4A] hover:!text-[#FF5842]'}`}
                       style={{
                         textDecoration: 'underline !important',
-                        color: filteredRating === star ? '#FF5842 !important' : 'black !important'
+                        color: filteredRating === star ? '#FF5842 !important' : '#4A4A4A !important'
                       }}
                       onMouseOver={(e) => {
                         if (filteredRating !== star) {
@@ -158,7 +158,7 @@ export default function ReviewsDrawer({
                       }}
                       onMouseOut={(e) => {
                         if (filteredRating !== star) {
-                          e.currentTarget.style.color = 'black !important';
+                          e.currentTarget.style.color = '#4A4A4A !important';
                         }
                       }}
                     >

@@ -61,7 +61,7 @@ const renderStars = (ratingValue: number) => {
   for (let i = 0; i < 5; i++) {
     const fill = Math.max(0, Math.min(1, ratingValue - i));
     stars.push(
-      <span key={i} className="relative inline-block w-4 h-4 mr-1">
+      <span key={i} className="relative inline-block w-4 h-4 mr-px">
         <svg xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-gray-300" fill="currentColor" viewBox="0 0 20 20">
           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.165 3.584a1 1 0 00.95.69h3.768c.969 0 1.371 1.24.588 1.81l-3.047 2.213a1 1 0 00-.364 1.118l1.165 3.584c.3.921-.755 1.688-1.538 1.118l-3.047-2.213a1 1 0 00-1.176 0l-3.047 2.213c-.783.57-1.838-.197-1.538-1.118l1.165-3.584a1 1 0 00-.364-1.118L2.575 9.011c-.783-.57-.38-1.81.588-1.81h3.768a1 1 0 00.95-.69l1.165-3.584z" />
         </svg>
@@ -148,7 +148,7 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
       className="cursor-pointer bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 flex space-x-4 h-[14.75rem]"
     >
       {/* Imagem principal do restaurante */}
-      <div className="relative w-[11rem] h-full bg-[#FFF8F0] flex-shrink-0 mr-2">
+      <div className="relative w-[10rem] h-full bg-[#FFF8F0] flex-shrink-0 mr-2">
         {mainPhoto && !mainPhotoError ? (
           <Image
             src={mainPhoto}
@@ -181,7 +181,7 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
       </div>
       
       <div className="p-2 flex flex-col flex-grow">
-        <h3 className="mt-1.5 text-sm font-bold text-[#4A4A4A] mb-1 whitespace-normal break-words">{name}</h3>
+        <h3 className="mt-1.5 text-[1rem] font-bold text-[#4A4A4A] mb-1 whitespace-normal break-words">{name}</h3>
         
         {/* Categories tags */}
         {categories.length > 0 && (

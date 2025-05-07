@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { Restaurant, getRestaurants, getRestaurantsByCity } from '@/lib/restaurantService';
 import RestaurantCard from './RestaurantCard';
 import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
@@ -22,6 +22,7 @@ export default function RestaurantList({ city }: RestaurantListProps) {
   const [sortOption, setSortOption] = useState<'time' | 'rating'>('time');
   const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [driveTimes, setDriveTimes] = useState<Record<string, { duration: number; text: string }>>({});
+  const fetchedDistancesRef = useRef<Set<string>>(new Set());
 
   const loadRestaurants = async () => {
     if (typeof window === 'undefined') return;
@@ -87,7 +88,8 @@ export default function RestaurantList({ city }: RestaurantListProps) {
   useEffect(() => {
     if (userLocation) {
       restaurants.forEach(r => {
-        if (r.coordinates && !driveTimes[r.id]) {
+        if (r.coordinates && !fetchedDistancesRef.current.has(r.id)) {
+          fetchedDistancesRef.current.add(r.id);
           const origin = `${userLocation.latitude},${userLocation.longitude}`;
           const dest = `${r.coordinates.latitude},${r.coordinates.longitude}`;
           fetch(`/api/distance?origin=${origin}&destination=${dest}`)
@@ -102,7 +104,7 @@ export default function RestaurantList({ city }: RestaurantListProps) {
         }
       });
     }
-  }, [userLocation, restaurants, driveTimes]);
+  }, [userLocation, restaurants]);
 
   // Ordena restaurantes com base na opção selecionada
   const sortedRestaurants = useMemo(() => {
@@ -151,7 +153,7 @@ export default function RestaurantList({ city }: RestaurantListProps) {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {sortedRestaurants.map((restaurant) => (
-              <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+              <RestaurantCard key={restaurant.id} restaurant={restaurant} driveTime={driveTimes[restaurant.id]?.text} />
             ))}
           </div>
         )}

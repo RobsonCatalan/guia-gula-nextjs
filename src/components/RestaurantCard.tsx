@@ -21,6 +21,7 @@ const createSlug = (text: string): string => {
 
 interface RestaurantCardProps {
   restaurant: Restaurant;
+  driveTime?: string;
 }
 
 // Map English category codes to Portuguese labels
@@ -78,7 +79,7 @@ const renderStars = (ratingValue: number) => {
   return stars;
 };
 
-export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
+export default function RestaurantCard({ restaurant, driveTime }: RestaurantCardProps) {
   const {
     id,
     name,
@@ -95,35 +96,11 @@ export default function RestaurantCard({ restaurant }: RestaurantCardProps) {
   // Estado para controlar erros de carregamento de imagem
   const [mainPhotoError, setMainPhotoError] = useState(false);
   const [logoError, setLogoError] = useState(false);
-  const [driveTime, setDriveTime] = useState<string>('');
-  const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
 
   // URL para página do restaurante seguindo o formato /restaurante/[cidade]/restaurante/[nome-restaurante]
   const restaurantUrl = city
     ? `/restaurante/${createSlug(city)}/restaurante/${createSlug(name)}`
     : `/restaurante/${createSlug(name)}`;
-
-  useEffect(() => {
-    if (coordinates && !userLocation) {
-      navigator.geolocation.getCurrentPosition(
-        pos => setUserLocation({ latitude: pos.coords.latitude, longitude: pos.coords.longitude }),
-        err => console.error('Erro ao obter geolocalização:', err)
-      );
-    }
-  }, [coordinates, userLocation]);
-
-  useEffect(() => {
-    if (userLocation && coordinates) {
-      const origin = `${userLocation.latitude},${userLocation.longitude}`;
-      const dest = `${coordinates.latitude},${coordinates.longitude}`;
-      fetch(`/api/distance?origin=${origin}&destination=${dest}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.duration) setDriveTime(data.duration);
-        })
-        .catch(err => console.error('Erro Distance API:', err));
-    }
-  }, [userLocation, coordinates]);
 
   // Determine open state based on workingHours and deliveryConfig
   const now = new Date();

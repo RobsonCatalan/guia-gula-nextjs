@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useContext, useMemo } from 'react';
+import { useEffect, useState, useContext, useMemo, useRef } from 'react';
 import { useAppCheckContext } from '@/components/FirebaseAppCheckProvider';
 import { Restaurant, getRestaurantsByCity } from '@/lib/restaurantService';
 import RestaurantCard from '@/components/RestaurantCard';
@@ -25,6 +25,8 @@ export default function ClientComponent({
   const [sortOption, setSortOption] = useState<'time' | 'rating'>('time');
   const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [driveTimes, setDriveTimes] = useState<Record<string, { duration: number; text: string }>>({});
+  // Ref para controlar IDs já buscados e evitar fetchs repetidos
+  const fetchedDistancesRef = useRef<Set<string>>(new Set());
 
   // Preparar JSON-LD para SEO após carregamento de restaurantes
   const jsonLd = {
@@ -111,22 +113,23 @@ export default function ClientComponent({
   useEffect(() => {
     if (userLocation) {
       restaurants.forEach(r => {
-        if (r.coordinates && !driveTimes[r.id]) {
+        // se tiver coordenadas, ainda não foi buscado e sem driveTime, faz fetch
+        if (r.coordinates && !driveTimes[r.id] && !fetchedDistancesRef.current.has(r.id)) {
+          fetchedDistancesRef.current.add(r.id);
           const origin = `${userLocation.latitude},${userLocation.longitude}`;
           const dest = `${r.coordinates.latitude},${r.coordinates.longitude}`;
           fetch(`/api/distance?origin=${origin}&destination=${dest}`)
             .then(res => res.json())
             .then(data => {
               if (data.duration) {
-                const duration = parseDuration(data.duration);
-                setDriveTimes(prev => ({ ...prev, [r.id]: { duration, text: data.duration } }));
+                setDriveTimes(prev => ({ ...prev, [r.id]: { duration: parseDuration(data.duration), text: data.duration } }));
               }
             })
             .catch(err => console.error('Erro Distance API:', err));
         }
       });
     }
-  }, [userLocation, restaurants, driveTimes]);
+  }, [userLocation, restaurants]);
 
   const loadMoreRestaurants = async () => {
     if (loading || !hasMore || !isAppCheckReady) return;
@@ -222,7 +225,7 @@ export default function ClientComponent({
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {sortedRestaurants.map(restaurant => (
-                <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+                <RestaurantCard key={restaurant.id} restaurant={restaurant} driveTime={driveTimes[restaurant.id]?.text} />
               ))}
             </div>
           </>

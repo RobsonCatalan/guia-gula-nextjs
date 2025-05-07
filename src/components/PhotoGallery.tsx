@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Image from 'next/image';
 
 interface PhotoGalleryProps {
@@ -22,6 +22,19 @@ export default function PhotoGallery({ images }: PhotoGalleryProps) {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Swipe support for mobile and modal
+  const touchStartXRef = useRef<number>(0);
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    touchStartXRef.current = e.touches[0].clientX;
+  };
+  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    const touchEndX = e.changedTouches[0].clientX;
+    const deltaX = touchEndX - touchStartXRef.current;
+    const threshold = 50;
+    if (deltaX > threshold) prev(e);
+    else if (deltaX < -threshold) next(e);
+  };
 
   const openModal = (index: number) => {
     setCurrentIndex(index);
@@ -79,7 +92,12 @@ export default function PhotoGallery({ images }: PhotoGalleryProps) {
       </div>
       {/* Mobile view */}
       <div className="md:hidden relative">
-        <div className="relative w-full h-64 overflow-hidden cursor-pointer" onClick={() => openModal(currentIndex)}>
+        <div
+          className="relative w-full h-64 overflow-hidden cursor-pointer"
+          onClick={() => openModal(currentIndex)}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           <Image
             unoptimized={isGif(validImages[currentIndex])}
             src={validImages[currentIndex]}
@@ -121,6 +139,8 @@ export default function PhotoGallery({ images }: PhotoGalleryProps) {
           aria-label="Galeria de fotos"
           className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50"
           onClick={closeModal}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
         >
           <button
             className="absolute top-4 right-4 text-white text-2xl"

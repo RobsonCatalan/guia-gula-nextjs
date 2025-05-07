@@ -5,6 +5,7 @@ import { Restaurant, getRestaurantsByCity, getRestaurantReviews, Review } from '
 import Image from 'next/image';
 import Link from 'next/link';
 import ReviewsDrawer from '@/components/ReviewsDrawer';
+import PhotoGallery from '@/components/PhotoGallery';
 import { categoryMap } from '@/components/RestaurantCard';
 import { slugify } from '@/lib/utils';
 
@@ -218,14 +219,11 @@ export default function RestaurantDetailClient() {
         <div className="max-w-7xl mx-auto text-center px-6">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 font-['Roboto'] text-[#4A4A4A]">Restaurante {restaurant.name}</h1>
           {restaurant.mainPhoto && (
-            <Image
-              src={restaurant.mainPhoto}
-              alt={restaurant.name}
-              width={800}
-              height={400}
-              className="object-cover w-full h-64 rounded-lg"
-              priority
-            />
+            <PhotoGallery images={[
+              restaurant.mainPhoto,
+              ...restaurant.mainMenuShowcaseImages || [],
+              ...restaurant.welcomeScreenImages || []
+            ]} />
           )}
           {/* Culinária section moved below photo */}
           {restaurant.categories && restaurant.categories.length > 0 && (

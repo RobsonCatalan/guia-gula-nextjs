@@ -28,6 +28,8 @@ export interface Restaurant {
   website?: string;
   logo?: string;
   mainPhoto?: string;
+  mainMenuShowcaseImages?: string[];
+  welcomeScreenImages?: string[];
   instagramLink?: string;
   // Map guideConfig categories (English codes) to array
   categories?: string[];
@@ -86,6 +88,8 @@ const sanitizeRestaurant = (data: DocumentData): Restaurant => ({
   instagramLink: data.instagramLink || '',
   logo: data.logo || null,
   mainPhoto: data.mainPhoto || null,
+  mainMenuShowcaseImages: Array.isArray(data.mainMenuShowcaseImages) ? data.mainMenuShowcaseImages : [],
+  welcomeScreenImages: Array.isArray(data.welcomeScreenImages) ? data.welcomeScreenImages : [],
   // Map guideConfig categories (English codes) to array
   categories: Array.isArray(data.guideConfig?.categories) ? data.guideConfig.categories : [],
   // Endereço detalhado do guideConfig

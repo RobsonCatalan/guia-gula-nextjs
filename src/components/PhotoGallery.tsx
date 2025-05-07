@@ -74,8 +74,8 @@ export default function PhotoGallery({ images }: PhotoGalleryProps) {
       </div>
       {/* Mobile view */}
       <div className="md:hidden relative">
-        <div className="relative w-full h-64 cursor-pointer" onClick={() => openModal(currentIndex)}>
-          <Image src={validImages[currentIndex]} alt={`Foto ${currentIndex + 1}`} width={800} height={400} className="rounded-lg object-cover" priority />
+        <div className="relative w-full h-64 overflow-hidden cursor-pointer" onClick={() => openModal(currentIndex)}>
+          <Image src={validImages[currentIndex]} alt={`Foto ${currentIndex + 1}`} fill className="rounded-lg object-contain" priority />
           {validImages.length > 1 && (
             <>
               <button

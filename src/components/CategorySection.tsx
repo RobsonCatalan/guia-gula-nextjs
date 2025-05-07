@@ -184,8 +184,8 @@ export default function CategorySection({ city, title, currentCategory }: Catego
                 <div
                   ref={containerRef}
                   className="flex flex-nowrap space-x-4 overflow-x-auto pb-0 hide-scrollbar"
-                  style={{ 
-                    touchAction: 'pan-x',
+                  style={{
+                    touchAction: 'pan-x pan-y',
                     WebkitOverflowScrolling: 'touch'
                   }}
                 >

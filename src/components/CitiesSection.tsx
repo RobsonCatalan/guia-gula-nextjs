@@ -81,7 +81,7 @@ export default function CitiesSection({ currentCity }: CitiesSectionProps) {
           </svg>
         </button>}
         {isMobile ? (
-          <div ref={containerRef} className="flex flex-nowrap space-x-4 overflow-x-auto pb-4 hide-scrollbar" style={{ touchAction: 'pan-x', WebkitOverflowScrolling: 'touch' }}>
+          <div ref={containerRef} className="flex flex-nowrap space-x-4 overflow-x-auto pb-4 hide-scrollbar" style={{ touchAction: 'pan-x pan-y', WebkitOverflowScrolling: 'touch' }}>
             {cities.filter(slug => slug !== currentCity).map(slug => {
               const label = normalizeLabel(slug);
               return (

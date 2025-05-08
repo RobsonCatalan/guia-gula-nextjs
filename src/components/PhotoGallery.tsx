@@ -124,7 +124,7 @@ export default function PhotoGallery({ images }: PhotoGalleryProps) {
                 {validImages.map((_, idx) => (
                   <span
                     key={idx}
-                    className={`w-2 h-2 rounded-full ${idx === currentIndex ? 'bg-[#FF5842]' : 'bg-white bg-opacity-50'}`}
+                    className={`w-2 h-2 rounded-full ${idx === currentIndex ? 'bg-[#FF5842]' : 'bg-gray-300'}`}
                   />
                 ))}
               </div>

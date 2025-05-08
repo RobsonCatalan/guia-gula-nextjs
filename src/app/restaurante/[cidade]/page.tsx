@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ cidade: s
   
   return {
     title: `Restaurantes em ${cidadeFormatada} | Gula.menu`,
-    description: `Descubra os melhores restaurantes em ${cidadeFormatada}. Encontre avaliações, menus e faça reservas.`,
+    description: `Descubra os melhores restaurantes em ${cidadeFormatada}. Encontre avaliações, menus e horários.`,
     metadataBase: new URL('http://localhost:3001'),
   };
 }

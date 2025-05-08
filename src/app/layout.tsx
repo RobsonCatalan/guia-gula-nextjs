@@ -19,7 +19,7 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "Gula.menu | Guia Gastronômico",
+  title: "Guia de Restaurantes | Gula.menu",
   description: "O seu guia gastronômico para descobrir os melhores restaurantes",
 };
 

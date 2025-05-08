@@ -68,8 +68,8 @@ export async function generateMetadata(props: { params: any }): Promise<Metadata
   const cidadeFormatada = formatSlug(cidade);
   const categoriaLabel = getLabelFromSlug(categoria);
   return {
-    title: `${categoriaLabel} em ${cidadeFormatada} | Gula.menu`,
-    description: `Descubra ${categoriaLabel} em ${cidadeFormatada}. Avaliações, menus e reservas.`,
+    title: `Restaurantes da Categoria ${categoriaLabel} em ${cidadeFormatada} | Gula.menu`,
+    description: `Descubra restaurantes em ${cidadeFormatada} da categoria ${categoriaLabel}. Veja avaliações, menus e horários.`,
     metadataBase: new URL('http://localhost:3001')
   };
 }

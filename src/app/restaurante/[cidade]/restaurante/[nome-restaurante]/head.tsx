@@ -11,10 +11,12 @@ export default async function Head({ params }: Props) {
     .map(w => w.charAt(0).toUpperCase() + w.slice(1))
     .join(' ')
     .replace(/\bSao\b/g, 'São');
+  let categories: string[] = [];
   try {
     const { restaurants } = await getRestaurantsByCity(cidade);
     const found = restaurants.find(r => slugify(r.name) === slug);
     if (found) restaurantName = found.name;
+    if (found) categories = found.categories || [];
   } catch (error) {
     console.error('Erro ao buscar restaurante no Head:', error);
   }
@@ -24,7 +26,7 @@ export default async function Head({ params }: Props) {
     .join(' ')
     .replace(/\bSao\b/g, 'São');
   const title = `Restaurante ${restaurantName} | Gula.menu`;
-  const desc = `Conheça o Restaurante ${restaurantName} em ${cityName}`;
+  const desc = `${restaurantName}: Restaurante de ${categories.join(', ')} em ${cityName}`;
   const pageUrl = `https://www.gulamenu.com.br/restaurante/${cidade}/${slug}`;
 
   return (

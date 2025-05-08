@@ -245,11 +245,13 @@ export default function RestaurantDetailClient() {
         </div>
       </section>
       <div className="max-w-7xl mx-auto px-6 pb-4">
-        <div className="flex items-center space-x-2 mb-4">
-          <span className="text-xl font-bold text-[#4A4A4A]">{restaurant?.rating?.toFixed(1)}</span>
-          <div className="flex">{renderStars(restaurant?.rating || 0)}</div>
-          <a href="#" onClick={(e) => { e.preventDefault(); openReviewsDrawer(); }} className="text-[#FF5842] hover:underline ml-2">{restaurant?.reviewCount} avaliações no gula.menu</a>
-        </div>
+        {(restaurant.reviewCount ?? 0) > 0 && (
+          <div className="flex items-center space-x-2 mb-4">
+            <span className="text-xl font-bold text-[#4A4A4A]">{(restaurant.rating ?? 0).toFixed(1)}</span>
+            <div className="flex">{renderStars(restaurant.rating ?? 0)}</div>
+            <a href="#" onClick={(e) => { e.preventDefault(); openReviewsDrawer(); }} className="text-[#FF5842] hover:underline ml-2">{restaurant.reviewCount ?? 0} avaliações no gula.menu</a>
+          </div>
+        )}
         {restaurant.instagramLink && (
           <div className="flex items-center mb-4">
             <a href={`https://app.gula.menu/mainMenu?pPlace=${restaurant.id}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#FF5842] hover:underline">

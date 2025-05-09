@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useContext, useMemo, useRef } from 'react';
 import { useAppCheckContext } from '@/components/FirebaseAppCheckProvider';
-import { Restaurant, getRestaurantsByCity } from '@/lib/restaurantService';
+import { Restaurant, getRestaurantsByCity, getAverageRatings } from '@/lib/restaurantService';
 import RestaurantCard from '@/components/RestaurantCard';
 import Head from 'next/head';
 import type { QueryDocumentSnapshot, DocumentData } from 'firebase/firestore';
@@ -25,8 +25,11 @@ export default function ClientComponent({
   const [sortOption, setSortOption] = useState<'time' | 'rating'>('time');
   const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [driveTimes, setDriveTimes] = useState<Record<string, { duration: number; text: string }>>({});
-  // Ref para controlar IDs já buscados e evitar fetchs repetidos
+  // Estado para armazenar avaliações carregadas assincronamente
+  const [ratings, setRatings] = useState<Record<string, { avg: number; count: number }>>({});
+  // Refs para controlar IDs já buscados e evitar fetchs repetidos
   const fetchedDistancesRef = useRef<Set<string>>(new Set());
+  const fetchedRatingsRef = useRef<boolean>(false);
 
   // Preparar JSON-LD para SEO após carregamento de restaurantes
   const jsonLd = {
@@ -98,6 +101,33 @@ export default function ClientComponent({
 
     loadInitialRestaurants();
   }, [cidade, isAppCheckReady]);
+
+  // Carregamento assíncrono das avaliações
+  useEffect(() => {
+    async function loadRatings() {
+      // Evita carregar avaliações se já foram carregadas ou não há restaurantes
+      if (fetchedRatingsRef.current || restaurants.length === 0 || !isAppCheckReady) {
+        return;
+      }
+
+      try {
+        // Marca como já buscado para evitar múltiplas chamadas
+        fetchedRatingsRef.current = true;
+        
+        // Busca avaliações para todos os restaurantes
+        const restaurantIds = restaurants.map(r => r.id);
+        const ratingsData = await getAverageRatings(restaurantIds);
+        
+        // Atualiza o estado com as avaliações
+        setRatings(ratingsData);
+        console.log('Avaliações carregadas com sucesso:', Object.keys(ratingsData).length);
+      } catch (err) {
+        console.error('Erro ao carregar avaliações:', err);
+      }
+    }
+
+    loadRatings();
+  }, [restaurants, isAppCheckReady]);
 
   // Geolocalização do usuário
   useEffect(() => {
@@ -178,10 +208,15 @@ export default function ClientComponent({
     if (sortOption === 'time') {
       arr.sort((a, b) => (driveTimes[a.id]?.duration ?? Infinity) - (driveTimes[b.id]?.duration ?? Infinity));
     } else {
-      arr.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+      // Usa as avaliações carregadas assincronamente se disponíveis, senão usa as do restaurante
+      arr.sort((a, b) => {
+        const ratingA = ratings[a.id]?.avg !== undefined ? ratings[a.id]?.avg : (a.rating || 0);
+        const ratingB = ratings[b.id]?.avg !== undefined ? ratings[b.id]?.avg : (b.rating || 0);
+        return ratingB - ratingA;
+      });
     }
     return arr;
-  }, [restaurants, driveTimes, sortOption]);
+  }, [restaurants, driveTimes, sortOption, ratings]);
 
   // Garantir que renderizamos apenas quando temos um array válido
   const restaurantsArray = Array.isArray(restaurants) ? restaurants : [];
@@ -225,7 +260,13 @@ export default function ClientComponent({
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {sortedRestaurants.map(restaurant => (
-                <RestaurantCard key={restaurant.id} restaurant={restaurant} driveTime={driveTimes[restaurant.id]?.text} />
+                <RestaurantCard 
+                  key={restaurant.id} 
+                  restaurant={restaurant} 
+                  driveTime={driveTimes[restaurant.id]?.text}
+                  rating={ratings[restaurant.id]?.avg}
+                  reviewCount={ratings[restaurant.id]?.count}
+                />
               ))}
             </div>
           </>

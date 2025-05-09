@@ -2,9 +2,9 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
-import CategoryClientComponent from './client-component';
 import CategorySection from '@/components/CategorySection';
 import { Suspense } from 'react';
+import CategoryClientComponent from './client-component';
 
 // Mapeamento de códigos de categoria para labels
 const categoryMap: Record<string, string> = {
@@ -85,6 +85,8 @@ export async function generateStaticParams() {
   });
   return params;
 }
+
+export const revalidate = 3600; // 1h cache no servidor
 
 export default async function CategoryPage(props: { params: any }) {
   const { params } = props;

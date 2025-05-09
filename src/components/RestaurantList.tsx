@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { Restaurant, getRestaurants, getRestaurantsByCity } from '@/lib/restaurantService';
+import { Restaurant, getRestaurants, getRestaurantsByCity, getAverageRatings } from '@/lib/restaurantService';
 import RestaurantCard from './RestaurantCard';
 import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
 import Head from 'next/head';
@@ -22,7 +22,11 @@ export default function RestaurantList({ city }: RestaurantListProps) {
   const [sortOption, setSortOption] = useState<'time' | 'rating'>('time');
   const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [driveTimes, setDriveTimes] = useState<Record<string, { duration: number; text: string }>>({});
+  // Estado para armazenar avaliações carregadas assincronamente
+  const [ratings, setRatings] = useState<Record<string, { avg: number; count: number }>>({});
+  // Refs para controlar IDs já buscados e evitar fetchs repetidos
   const fetchedDistancesRef = useRef<Set<string>>(new Set());
+  const fetchedRatingsRef = useRef<boolean>(false);
 
   const loadRestaurants = async () => {
     if (typeof window === 'undefined') return;
@@ -44,6 +48,33 @@ export default function RestaurantList({ city }: RestaurantListProps) {
   useEffect(() => {
     loadRestaurants();
   }, [city]);
+
+  // Carregamento assíncrono das avaliações
+  useEffect(() => {
+    async function loadRatings() {
+      // Evita carregar avaliações se já foram carregadas ou não há restaurantes
+      if (fetchedRatingsRef.current || restaurants.length === 0) {
+        return;
+      }
+
+      try {
+        // Marca como já buscado para evitar múltiplas chamadas
+        fetchedRatingsRef.current = true;
+        
+        // Busca avaliações para todos os restaurantes
+        const restaurantIds = restaurants.map(r => r.id);
+        const ratingsData = await getAverageRatings(restaurantIds);
+        
+        // Atualiza o estado com as avaliações
+        setRatings(ratingsData);
+        console.log('Avaliações carregadas com sucesso na Home:', Object.keys(ratingsData).length);
+      } catch (err) {
+        console.error('Erro ao carregar avaliações na Home:', err);
+      }
+    }
+
+    loadRatings();
+  }, [restaurants]);
 
   // Preparar JSON-LD para SEO
   const jsonLd = {
@@ -112,10 +143,15 @@ export default function RestaurantList({ city }: RestaurantListProps) {
     if (sortOption === 'time') {
       arr.sort((a, b) => (driveTimes[a.id]?.duration ?? Infinity) - (driveTimes[b.id]?.duration ?? Infinity));
     } else {
-      arr.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+      // Usa as avaliações carregadas assincronamente se disponíveis, senão usa as do restaurante
+      arr.sort((a, b) => {
+        const ratingA = ratings[a.id]?.avg !== undefined ? ratings[a.id]?.avg : (a.rating || 0);
+        const ratingB = ratings[b.id]?.avg !== undefined ? ratings[b.id]?.avg : (b.rating || 0);
+        return ratingB - ratingA;
+      });
     }
     return arr;
-  }, [restaurants, driveTimes, sortOption]);
+  }, [restaurants, driveTimes, sortOption, ratings]);
 
   return (
     <>
@@ -153,7 +189,13 @@ export default function RestaurantList({ city }: RestaurantListProps) {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {sortedRestaurants.map((restaurant) => (
-              <RestaurantCard key={restaurant.id} restaurant={restaurant} driveTime={driveTimes[restaurant.id]?.text} />
+              <RestaurantCard 
+                key={restaurant.id} 
+                restaurant={restaurant} 
+                driveTime={driveTimes[restaurant.id]?.text}
+                rating={ratings[restaurant.id]?.avg}
+                reviewCount={ratings[restaurant.id]?.count}
+              />
             ))}
           </div>
         )}

@@ -1,11 +1,22 @@
 import { Metadata } from 'next';
-import ClientComponent from './client-component';
 import Image from 'next/image';
 import CategorySection from '@/components/CategorySection';
 import Link from 'next/link';
-import fs from 'fs';
 import path from 'path';
+import fs from 'fs';
+import { Suspense } from 'react';
+import CityClientComponent from './client-component';
 import CitiesSection from '@/components/CitiesSection';
+
+const normalize = (str: string) =>
+  str.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: Promise<{ cidade: string }> }): Promise<Metadata> {
   const { cidade } = await params;
@@ -24,12 +35,7 @@ export async function generateMetadata({ params }: { params: Promise<{ cidade: s
   };
 }
 
-export async function generateStaticParams() {
-  return [
-    { cidade: 'belo-horizonte' },
-    { cidade: 'sao-paulo' }
-  ];
-}
+export const revalidate = 3600; // 1h cache no servidor
 
 export default async function Page({ params }: { params: Promise<{ cidade: string }> }) {
   const { cidade } = await params;
@@ -72,7 +78,9 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
         <h1 className="text-2xl font-bold text-[#4A4A4A] mb-6">
           Todos os Restaurantes em {cidadeFormatada}
         </h1>
-        <ClientComponent cidade={cidadeFormatada} />
+        <Suspense fallback={<div>Carregando restaurantes...</div>}>
+          <CityClientComponent cidade={cidade} />
+        </Suspense>
       </main>
       <section className="py-6 mt-0 px-6 bg-[#ECE2D9]">
         <div className="max-w-7xl mx-auto">

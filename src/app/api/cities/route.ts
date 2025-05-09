@@ -2,19 +2,35 @@
 import fs from 'fs';
 import path from 'path';
 import { NextResponse } from 'next/server';
-import { getAllCities } from '@/lib/restaurantService';
 
 export async function GET() {
   try {
-    const cities = await getAllCities();
-    const data = cities.map((slug) => {
-      const imgPath = path.join(process.cwd(), 'public', 'images', 'cities', `${slug}.webp`);
-      const hasImage = fs.existsSync(imgPath);
-      return { slug, hasImage };
-    });
-    return NextResponse.json(data);
+    const imagesDir = path.join(process.cwd(), 'public', 'images', 'cities');
+    const files = fs.existsSync(imagesDir) ? fs.readdirSync(imagesDir) : [];
+    const data = files
+      .filter(f => /\.(webp|jpg|png)$/.test(f))
+      .map(file => {
+        const slug = path.basename(file, path.extname(file));
+        return { slug, hasImage: true };
+      });
+
+    return NextResponse.json(
+      data,
+      {
+        status: 200,
+        headers: {
+          'Cache-Control': 'public, max-age=3600',
+        },
+      }
+    );
   } catch (error) {
     console.error('Error fetching cities:', error);
-    return NextResponse.json([]);
+    return NextResponse.json(
+      [],
+      {
+        status: 200,
+        headers: { 'Cache-Control': 'public, max-age=3600' },
+      }
+    );
   }
 }

@@ -22,6 +22,8 @@ const createSlug = (text: string): string => {
 interface RestaurantCardProps {
   restaurant: Restaurant;
   driveTime?: string;
+  rating?: number;
+  reviewCount?: number;
 }
 
 // Map English category codes to Portuguese labels
@@ -79,7 +81,7 @@ const renderStars = (ratingValue: number) => {
   return stars;
 };
 
-export default function RestaurantCard({ restaurant, driveTime }: RestaurantCardProps) {
+export default function RestaurantCard({ restaurant, driveTime, rating: propRating, reviewCount: propReviewCount }: RestaurantCardProps) {
   const {
     id,
     name,
@@ -169,13 +171,19 @@ export default function RestaurantCard({ restaurant, driveTime }: RestaurantCard
           </div>
         )}
         
-        {rating && rating > 0 ? (
+        {/* Avaliações - Usa props se fornecidas, senão usa dados do restaurante */}
+        {(propRating !== undefined || (rating && rating > 0)) ? (
           <div className="flex items-center mb-2">
-            {renderStars(rating)}
-            <span className="ml-1 text-xs text-[#4A4A4A]">{rating.toFixed(1)} ({reviewCount})</span>
+            {renderStars(propRating !== undefined ? propRating : rating || 0)}
+            <span className="ml-1 text-xs text-[#4A4A4A]">
+              {(propRating !== undefined ? propRating : rating || 0).toFixed(1)} 
+              ({propReviewCount !== undefined ? propReviewCount : reviewCount || 0})
+            </span>
           </div>
         ) : (
-          <p className="text-xs text-[#4A4A4A] mb-1">Sem avaliações</p>
+          <div className="flex items-center mb-2 h-4">
+            <span className="text-xs text-[#4A4A4A] opacity-50">Carregando avaliações...</span>
+          </div>
         )}
         
         {city && (

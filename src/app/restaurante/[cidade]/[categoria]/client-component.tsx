@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect, useState, useMemo } from 'react';
-import { Restaurant, getRestaurantsByCity } from '@/lib/restaurantService';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
+import { Restaurant, getRestaurantsByCity, getAverageRatings } from '@/lib/restaurantService';
 import RestaurantCard from '@/components/RestaurantCard';
 
 interface CategoryClientComponentProps {
@@ -63,6 +63,10 @@ export default function CategoryClientComponent({ cidade, categoria }: CategoryC
   const [sortOption, setSortOption] = useState<'time' | 'rating'>('time');
   const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [driveTimes, setDriveTimes] = useState<Record<string, { duration: number; text: string }>>({});
+  // Estado para armazenar avaliações carregadas assincronamente
+  const [ratings, setRatings] = useState<Record<string, { avg: number; count: number }>>({});
+  // Ref para controlar se as avaliações já foram buscadas
+  const fetchedRatingsRef = useRef<boolean>(false);
 
   // Converte duração textual em minutos
   const parseDuration = (text: string): number => {
@@ -91,6 +95,33 @@ export default function CategoryClientComponent({ cidade, categoria }: CategoryC
     }
     load();
   }, [cidade, categoria]);
+
+  // Carregamento assíncrono das avaliações
+  useEffect(() => {
+    async function loadRatings() {
+      // Evita carregar avaliações se já foram carregadas ou não há restaurantes
+      if (fetchedRatingsRef.current || restaurants.length === 0) {
+        return;
+      }
+
+      try {
+        // Marca como já buscado para evitar múltiplas chamadas
+        fetchedRatingsRef.current = true;
+        
+        // Busca avaliações para todos os restaurantes
+        const restaurantIds = restaurants.map(r => r.id);
+        const ratingsData = await getAverageRatings(restaurantIds);
+        
+        // Atualiza o estado com as avaliações
+        setRatings(ratingsData);
+        console.log('Avaliações carregadas com sucesso:', Object.keys(ratingsData).length);
+      } catch (err) {
+        console.error('Erro ao carregar avaliações:', err);
+      }
+    }
+
+    loadRatings();
+  }, [restaurants]);
 
   // Geolocalização do usuário
   useEffect(() => {
@@ -129,10 +160,15 @@ export default function CategoryClientComponent({ cidade, categoria }: CategoryC
     if (sortOption === 'time') {
       arr.sort((a, b) => (driveTimes[a.id]?.duration ?? Infinity) - (driveTimes[b.id]?.duration ?? Infinity));
     } else {
-      arr.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+      // Usa as avaliações carregadas assincronamente se disponíveis, senão usa as do restaurante
+      arr.sort((a, b) => {
+        const ratingA = ratings[a.id]?.avg !== undefined ? ratings[a.id]?.avg : (a.rating || 0);
+        const ratingB = ratings[b.id]?.avg !== undefined ? ratings[b.id]?.avg : (b.rating || 0);
+        return ratingB - ratingA;
+      });
     }
     return arr;
-  }, [restaurants, driveTimes, sortOption]);
+  }, [restaurants, driveTimes, sortOption, ratings]);
 
   if (error) {
     return (
@@ -163,7 +199,13 @@ export default function CategoryClientComponent({ cidade, categoria }: CategoryC
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {sortedRestaurants.map(r => (
-              <RestaurantCard key={r.id} restaurant={r} />
+              <RestaurantCard 
+                key={r.id} 
+                restaurant={r} 
+                driveTime={driveTimes[r.id]?.text}
+                rating={ratings[r.id]?.avg}
+                reviewCount={ratings[r.id]?.count}
+              />
             ))}
           </div>
         </>

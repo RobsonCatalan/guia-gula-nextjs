@@ -182,7 +182,12 @@ export const getRestaurantById = async (id: string): Promise<Restaurant | null> 
     const docSnap = await getDoc(docRef);
     
     if (docSnap.exists()) {
-      return sanitizeRestaurant({ id: docSnap.id, ...docSnap.data() });
+      // Verificar se o restaurante é visível antes de retornar
+      const data = docSnap.data();
+      if (data.guideConfig?.isVisible === true) {
+        return sanitizeRestaurant({ id: docSnap.id, ...data });
+      }
+      return null; // Retorna null se o restaurante não for visível
     }
     
     return null;
@@ -199,46 +204,31 @@ export const getRestaurantsByCity = async (
   itemsPerPage: number = 10
 ): Promise<{ restaurants: Restaurant[], lastVisible: QueryDocumentSnapshot<DocumentData> | null }> => {
   try {
-    // Fetch all restaurants and filter manually by city slug (handles accents)
+    // Convert slug to displayable city name
+    const displayCity = city
+      .split('-')
+      .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(' ')
+      .replace(/\bSao\b/g, 'São');
+
+    // Query only restaurants in this city
     const q = query(
       collection(db, 'places'),
-      orderBy('name')
+      where('guideConfig.address.city', '==', displayCity)
     );
-    const querySnapshot = await getDocs(q);
-    const allRestaurants: Restaurant[] = [];
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      if (data.guideConfig?.isVisible) {
-        allRestaurants.push(sanitizeRestaurant({ id: doc.id, ...data }));
-      }
-    });
-    // Normalize string to slug
-    const normalize = (str: string) =>
-      str.toLowerCase()
-        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-        .replace(/[^\w\s-]/g, '')
-        .replace(/\s+/g, '-')
-        .replace(/-+/g, '-')
-        .replace(/^-+|-+$/g, '');
-    const targetSlug = normalize(city);
-    const filtered = allRestaurants.filter(r => normalize(r.city || '') === targetSlug);
-    // Calcular média de avaliações e contagem de reviews
-    const ratingStats = await getAverageRatings(filtered.map(r => r.id));
-    const restaurantsWithStats = filtered.map(r => ({
-      ...r,
-      rating: ratingStats[r.id]?.avg ?? 0,
-      reviewCount: ratingStats[r.id]?.count ?? 0,
-    }));
-    return { restaurants: restaurantsWithStats, lastVisible: null };
+    const snapshot = await getDocs(q);
+    
+    // Filtrar apenas restaurantes visíveis
+    const restaurants: Restaurant[] = snapshot.docs
+      .filter(doc => doc.data().guideConfig?.isVisible === true)
+      .map(doc => sanitizeRestaurant({ id: doc.id, ...(doc.data() as any) }));
+
+    // Sort by name
+    restaurants.sort((a, b) => a.name.localeCompare(b.name));
+    return { restaurants, lastVisible: null };
   } catch (error) {
-    // Only log on server-side to avoid client-side permission errors
-    if (typeof window === 'undefined') {
-      console.error('Erro ao buscar restaurantes por cidade:', error);
-    }
-    return { 
-      restaurants: [], 
-      lastVisible: null 
-    };
+    // Suppress error logging to avoid permission errors in console
+    return { restaurants: [], lastVisible: null };
   }
 };
 
@@ -317,29 +307,48 @@ export const getAverageRatings = async (restaurantIds: string[]): Promise<Record
   if (!isClient) {
     return {};
   }
-  const ratingsMap: Record<string, { sum: number; count: number }> = {};
-  for (let i = 0; i < restaurantIds.length; i += 10) {
-    const chunk = restaurantIds.slice(i, i + 10);
-    const refs = chunk.map(id => doc(db, 'places', id));
-    const reviewsQuery = query(collection(db, 'placeReviews'), where('placeReference', 'in', refs));
-    const snapshot = await getDocs(reviewsQuery);
-    snapshot.forEach(reviewDoc => {
-      const data = reviewDoc.data();
-      const ratingValue = data.rating;
-      const ref: any = data.placeReference;
-      const refId = ref.id;
-      if (!ratingsMap[refId]) {
-        ratingsMap[refId] = { sum: 0, count: 0 };
-      }
-      ratingsMap[refId].sum += ratingValue;
-      ratingsMap[refId].count += 1;
-    });
+  
+  // Se não houver IDs, retorna objeto vazio
+  if (!restaurantIds || restaurantIds.length === 0) {
+    return {};
   }
-  const statsMap: Record<string, { avg: number; count: number }> = {};
-  Object.entries(ratingsMap).forEach(([id, { sum, count }]) => {
-    statsMap[id] = { avg: parseFloat((sum / count).toFixed(1)), count };
-  });
-  return statsMap;
+  
+  try {
+    const ratingsMap: Record<string, { sum: number; count: number }> = {};
+    
+    // Processa em chunks de 10 para evitar limitações do Firestore
+    for (let i = 0; i < restaurantIds.length; i += 10) {
+      const chunk = restaurantIds.slice(i, i + 10);
+      const refs = chunk.map(id => doc(db, 'places', id));
+      const reviewsQuery = query(collection(db, 'placeReviews'), where('placeReference', 'in', refs));
+      const snapshot = await getDocs(reviewsQuery);
+      
+      snapshot.forEach(reviewDoc => {
+        const data = reviewDoc.data();
+        const ratingValue = data.rating;
+        const ref: any = data.placeReference;
+        const refId = ref.id;
+        
+        if (!ratingsMap[refId]) {
+          ratingsMap[refId] = { sum: 0, count: 0 };
+        }
+        
+        ratingsMap[refId].sum += ratingValue;
+        ratingsMap[refId].count += 1;
+      });
+    }
+    
+    const statsMap: Record<string, { avg: number; count: number }> = {};
+    
+    Object.entries(ratingsMap).forEach(([id, { sum, count }]) => {
+      statsMap[id] = { avg: parseFloat((sum / count).toFixed(1)), count };
+    });
+    
+    return statsMap;
+  } catch (error) {
+    console.error('Erro ao buscar avaliações:', error);
+    return {};
+  }
 };
 
 // Obter reviews de um restaurante específico

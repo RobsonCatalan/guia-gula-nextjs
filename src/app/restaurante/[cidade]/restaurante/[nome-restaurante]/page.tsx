@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import RestaurantDetailClient from './client-component';
 
+// ISR: regenerate page every 1 hour
+export const revalidate = 3600; // 1h cache no servidor
+
 export async function generateMetadata({ params }: { params: { cidade: string; ['nome-restaurante']: string } }): Promise<Metadata> {
   // Format slugs for display
   const formatSlug = (slugVal: string): string =>

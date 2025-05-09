@@ -28,6 +28,8 @@ export const viewport: Viewport = {
   initialScale: 1.0,
 };
 
+export const revalidate = 3600; // 1h cache for all routes
+
 export default function RootLayout({
   children,
 }: Readonly<{

@@ -1,13 +1,15 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams, usePathname } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { Restaurant, getRestaurantsByCity, getRestaurantReviews, Review } from '@/lib/restaurantService';
 import Image from 'next/image';
 import Link from 'next/link';
-import ReviewsDrawer from '@/components/ReviewsDrawer';
-import PhotoGallery from '@/components/PhotoGallery';
 import { categoryMap } from '@/components/RestaurantCard';
 import { slugify } from '@/lib/utils';
+
+const ReviewsDrawer = dynamic(() => import('@/components/ReviewsDrawer'), { ssr: false, loading: () => null });
+const PhotoGallery = dynamic(() => import('@/components/PhotoGallery'), { ssr: false, loading: () => null });
 
 // Formata slug de cidade para exibição
 const formatSlug = (slug: string): string =>
@@ -69,6 +71,13 @@ export default function RestaurantDetailClient() {
   const [isOnlineOpen, setIsOnlineOpen] = useState(false);
   const openReviewsDrawer = () => { setIsReviewsDrawerOpen(true); document.body.style.overflow = 'hidden'; };
   const closeReviewsDrawer = () => { setIsReviewsDrawerOpen(false); document.body.style.overflow = 'auto'; };
+  
+  // Calcula a média das avaliações a partir dos reviews carregados
+  const calculateAverageRating = () => {
+    if (!reviews || reviews.length === 0) return 0;
+    const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
+    return sum / reviews.length;
+  };
   // Accordion state for working hours
   const [showPresentialHours, setShowPresentialHours] = useState(false);
   const [showOnlineHours, setShowOnlineHours] = useState(false);
@@ -169,21 +178,21 @@ export default function RestaurantDetailClient() {
   }
 
   const renderStars = (ratingValue: number) => {
-    const stars: React.ReactNode[] = [];
+    const stars = [];
     for (let i = 0; i < 5; i++) {
       const fill = Math.max(0, Math.min(1, ratingValue - i));
       stars.push(
-        <span key={i} className="relative inline-block w-4 h-4 mr-1">
-          {/* Base empty star */}
+        <span key={i} className="relative inline-block w-6 h-6 mr-1">
           <svg xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-gray-300" fill="currentColor" viewBox="0 0 20 20">
             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.165 3.584a1 1 0 00.95.69h3.768c.969 0 1.371 1.24.588 1.81l-3.047 2.213a1 1 0 00-.364 1.118l1.165 3.584c.3.921-.755 1.688-1.538 1.118l-3.047-2.213a1 1 0 00-1.176 0l-3.047 2.213c-.783.57-1.838-.197-1.538-1.118l1.165-3.584a1 1 0 00-.364-1.118L2.575 9.011c-.783-.57-.38-1.81.588-1.81h3.768a1 1 0 00.95-.69l1.165-3.584z" />
           </svg>
-          {/* Colored overlay clipped by width */}
-          <span className="absolute top-0 left-0 h-full overflow-hidden" style={{ width: `${fill * 100}%` }}>
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-[#FF5842]" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.165 3.584a1 1 0 00.95.69h3.768c.969 0 1.371 1.24.588 1.81l-3.047 2.213a1 1 0 00-.364 1.118l1.165 3.584c.3.921-.755 1.688-1.538 1.118l-3.047-2.213a1 1 0 00-1.176 0l-3.047 2.213c-.783.57-1.838-.197-1.538-1.118l1.165-3.584a1 1 0 00-.364-1.118L2.575 9.011c-.783-.57-.38-1.81.588-1.81h3.768a1 1 0 00.95-.69l1.165-3.584z" />
-            </svg>
-          </span>
+          {fill > 0 && (
+            <span className="absolute top-0 left-0 h-full overflow-hidden" style={{ width: `${fill * 100}%` }}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-[#ff4500]" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.165 3.584a1 1 0 00.95.69h3.768c.969 0 1.371 1.24.588 1.81l-3.047 2.213a1 1 0 00-.364 1.118l1.165 3.584c.3.921-.755 1.688-1.538 1.118l-3.047-2.213a1 1 0 00-1.176 0l-3.047 2.213c-.783.57-1.838-.197-1.538-1.118l1.165-3.584a1 1 0 00-.364-1.118L2.575 9.011c-.783-.57-.38-1.81.588-1.81h3.768a1 1 0 00.95-.69l1.165-3.584z" />
+              </svg>
+            </span>
+          )}
         </span>
       );
     }
@@ -245,13 +254,27 @@ export default function RestaurantDetailClient() {
         </div>
       </section>
       <div className="max-w-7xl mx-auto px-6 pb-4">
-        {(restaurant.reviewCount ?? 0) > 0 && (
-          <div className="flex items-center space-x-2 mb-4">
-            <span className="text-xl font-bold text-[#4A4A4A]">{(restaurant.rating ?? 0).toFixed(1)}</span>
-            <div className="flex">{renderStars(restaurant.rating ?? 0)}</div>
-            <a href="#" onClick={(e) => { e.preventDefault(); openReviewsDrawer(); }} className="text-[#FF5842] hover:underline ml-2">{restaurant.reviewCount ?? 0} avaliações no gula.menu</a>
+        {(restaurant.reviewCount ?? 0) > 0 ? (
+          <div className="flex items-center mb-4 bg-[#FFF8F0] p-2 rounded">
+            <span className="text-4xl font-bold text-[#4A4A4A] mr-3">{(restaurant?.rating ?? 0).toFixed(1)}</span>
+            <div className="flex flex-col">
+              <div className="flex mb-1">{renderStars(restaurant?.rating ?? 0)}</div>
+              <a href="#" onClick={(e) => { e.preventDefault(); openReviewsDrawer(); }} className="text-[#FF5842] hover:underline text-sm">
+                {restaurant?.reviewCount ?? 0} avaliações no gula.menu
+              </a>
+            </div>
           </div>
-        )}
+        ) : reviews.length > 0 ? (
+          <div className="flex items-center mb-4 bg-[#FFF8F0] p-2 rounded">
+            <span className="text-4xl font-bold text-[#4A4A4A] mr-3">{calculateAverageRating().toFixed(1)}</span>
+            <div className="flex flex-col">
+              <div className="flex mb-1">{renderStars(calculateAverageRating())}</div>
+              <a href="#" onClick={(e) => { e.preventDefault(); openReviewsDrawer(); }} className="text-[#FF5842] hover:underline text-sm">
+                {reviews.length} avaliações no gula.menu
+              </a>
+            </div>
+          </div>
+        ) : null}
         {restaurant.instagramLink && (
           <div className="flex items-center mb-4">
             <a href={`https://app.gula.menu/mainMenu?pPlace=${restaurant.id}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#FF5842] hover:underline">
@@ -268,8 +291,8 @@ export default function RestaurantDetailClient() {
           reviews={reviews}
           isOpen={isReviewsDrawerOpen}
           onClose={closeReviewsDrawer}
-          rating={restaurant?.rating || 0}
-          reviewCount={restaurant?.reviewCount || 0}
+          rating={(restaurant?.rating && restaurant?.rating > 0) ? restaurant.rating : calculateAverageRating()}
+          reviewCount={(restaurant?.reviewCount && restaurant?.reviewCount > 0) ? restaurant.reviewCount : reviews.length}
           restaurantName={restaurant?.name || ''}
         />
       </div>

@@ -21,13 +21,22 @@ export async function GET(request: NextRequest) {
     const res = await fetch(url);
     if (!res.ok) {
       console.error('Google Maps API responded with status', res.status);
-      return NextResponse.json({ error: 'Google Maps API error' }, { status: res.status });
+      return NextResponse.json(
+        { error: 'Google Maps API error' },
+        { status: res.status, headers: { 'Cache-Control': 'no-store, no-cache' } }
+      );
     }
     const data = await res.json();
     const duration = data.rows?.[0]?.elements?.[0]?.duration?.text || '';
-    return NextResponse.json({ duration });
+    return NextResponse.json(
+      { duration },
+      { status: 200, headers: { 'Cache-Control': 'no-store, no-cache' } }
+    );
   } catch (error) {
     console.error('Error fetching Distance Matrix API:', error);
-    return NextResponse.json({ error: 'Failed to fetch duration' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to fetch duration' },
+      { status: 500, headers: { 'Cache-Control': 'no-store, no-cache' } }
+    );
   }
 }

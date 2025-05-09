@@ -130,6 +130,24 @@ const sanitizeRestaurant = (data: DocumentData): Restaurant => ({
 // Verifica se estamos no ambiente de cliente e tem acesso ao Firestore
 const isClient = typeof window !== 'undefined';
 
+// Adiciona tratamento de erro para conexões do Firestore
+const handleFirestoreError = (error: any) => {
+  console.error('Erro na conexão com o Firestore:', error);
+  
+  // Verifica se é um erro de conexão ou autenticação
+  if (error?.code === 'permission-denied' || 
+      error?.code === 'unauthenticated' || 
+      error?.message?.includes('404') ||
+      error?.message?.includes('PERMISSION_DENIED')) {
+    console.warn('Problema de permissão ou configuração do Firestore. Usando dados em cache se disponíveis.');
+    
+    // Aqui poderia implementar uma lógica de fallback para dados em cache
+    return true;
+  }
+  
+  return false;
+};
+
 // Obter todos os restaurantes com paginação
 export const getRestaurants = async (
   lastVisible?: QueryDocumentSnapshot<DocumentData>,
@@ -156,46 +174,72 @@ export const getRestaurants = async (
       }
     }
     
-    // Buscar todos os restaurantes localmente
-    const snapshot = await getDocs(query(collection(db, 'places'), orderBy('name')));
-    // Filtrar somente visíveis
-    const visibleDocs = snapshot.docs.filter(doc => doc.data().guideConfig?.isVisible);
-    // Ordenar por nome
-    visibleDocs.sort((a, b) => (a.data().name || '').localeCompare(b.data().name || ''));
-    // Paginação: determinar índice de início
-    const startIndex = lastVisible
-      ? visibleDocs.findIndex(d => d.id === lastVisible.id) + 1
-      : 0;
-    // Extrair documentos da página atual
-    const pageDocs = visibleDocs.slice(startIndex, startIndex + itemsPerPage);
-    // Sanitizar restaurantes
-    const restaurants = pageDocs.map(d => sanitizeRestaurant({ id: d.id, ...d.data() }));
-    // Novo cursor para paginação
-    const newLastVisible = pageDocs.length ? pageDocs[pageDocs.length - 1] : null;
-    // Calcular média de avaliações e contagem de reviews
-    const ratingStats = await getAverageRatings(restaurants.map(r => r.id));
-    const restaurantsWithStats = restaurants.map(r => ({
-      ...r,
-      rating: ratingStats[r.id]?.avg ?? 0,
-      reviewCount: ratingStats[r.id]?.count ?? 0,
-    }));
-    
-    const result = { 
-      restaurants: restaurantsWithStats, 
-      lastVisible: newLastVisible 
-    };
-    
-    // Armazenar em cache por 1 hora
     try {
-      sessionStorage.setItem(cacheKey, JSON.stringify({
-        data: result,
-        timestamp: Date.now()
+      // Buscar todos os restaurantes localmente
+      const snapshot = await getDocs(query(collection(db, 'places'), orderBy('name')));
+      // Filtrar somente visíveis
+      const visibleDocs = snapshot.docs.filter(doc => doc.data().guideConfig?.isVisible);
+      // Ordenar por nome
+      visibleDocs.sort((a, b) => (a.data().name || '').localeCompare(b.data().name || ''));
+      // Paginação: determinar índice de início
+      const startIndex = lastVisible
+        ? visibleDocs.findIndex(d => d.id === lastVisible.id) + 1
+        : 0;
+      // Extrair documentos da página atual
+      const pageDocs = visibleDocs.slice(startIndex, startIndex + itemsPerPage);
+      // Sanitizar restaurantes
+      const restaurants = pageDocs.map(d => sanitizeRestaurant({ id: d.id, ...d.data() }));
+      // Novo cursor para paginação
+      const newLastVisible = pageDocs.length ? pageDocs[pageDocs.length - 1] : null;
+      
+      // Calcular média de avaliações e contagem de reviews
+      let ratingStats: Record<string, { avg: number; count: number }> = {};
+      try {
+        ratingStats = await getAverageRatings(restaurants.map(r => r.id));
+      } catch (ratingError) {
+        console.warn('Erro ao buscar avaliações, usando valores padrão:', ratingError);
+        // Continua com ratingStats vazio
+      }
+      
+      const restaurantsWithStats = restaurants.map(r => ({
+        ...r,
+        rating: ratingStats[r.id]?.avg ?? r.rating ?? 0,
+        reviewCount: ratingStats[r.id]?.count ?? 0,
       }));
-    } catch (e) {
-      console.warn('Erro ao armazenar em cache:', e);
+      
+      const result = { 
+        restaurants: restaurantsWithStats, 
+        lastVisible: newLastVisible 
+      };
+      
+      // Armazenar em cache por 1 hora
+      try {
+        sessionStorage.setItem(cacheKey, JSON.stringify({
+          data: result,
+          timestamp: Date.now()
+        }));
+      } catch (e) {
+        console.warn('Erro ao armazenar em cache:', e);
+      }
+      
+      return result;
+    } catch (firestoreError) {
+      // Tratar erro do Firestore
+      if (handleFirestoreError(firestoreError)) {
+        // Se tiver dados em cache antigos, usar como fallback
+        const oldCachedData = localStorage.getItem(cacheKey);
+        if (oldCachedData) {
+          console.log('Usando dados em cache antigos como fallback');
+          try {
+            const { data } = JSON.parse(oldCachedData);
+            return data;
+          } catch (e) {
+            console.error('Erro ao processar cache antigo:', e);
+          }
+        }
+      }
+      throw firestoreError; // Re-lançar para ser capturado pelo catch externo
     }
-    
-    return result;
   } catch (error) {
     console.error('Erro ao buscar restaurantes:', error);
     return { restaurants: [], lastVisible: null };

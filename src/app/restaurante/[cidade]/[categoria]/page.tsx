@@ -86,7 +86,8 @@ export async function generateStaticParams() {
   return params;
 }
 
-export const revalidate = 3600; // 1h cache no servidor
+// Configuração de cache no servidor - 1 hora (3600 segundos)
+export const revalidate = 3600; // 1 hora de cache
 
 export default async function CategoryPage(props: { params: any }) {
   const { params } = props;

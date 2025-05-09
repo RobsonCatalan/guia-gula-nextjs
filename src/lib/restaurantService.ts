@@ -140,6 +140,22 @@ export const getRestaurants = async (
     return { restaurants: [], lastVisible: null };
   }
   try {
+    // Verificar cache (expira em 1 hora)
+    const cacheKey = `restaurants-${itemsPerPage}-${lastVisible?.id || 'initial'}`;
+    const cachedData = sessionStorage.getItem(cacheKey);
+    
+    if (cachedData) {
+      const { data, timestamp } = JSON.parse(cachedData);
+      // Verificar se o cache ainda é válido (1 hora = 3600000 ms)
+      if (Date.now() - timestamp < 3600000) {
+        console.log('Usando dados em cache para restaurantes');
+        return data;
+      } else {
+        // Cache expirado, remover
+        sessionStorage.removeItem(cacheKey);
+      }
+    }
+    
     // Buscar todos os restaurantes localmente
     const snapshot = await getDocs(query(collection(db, 'places'), orderBy('name')));
     // Filtrar somente visíveis
@@ -163,7 +179,23 @@ export const getRestaurants = async (
       rating: ratingStats[r.id]?.avg ?? 0,
       reviewCount: ratingStats[r.id]?.count ?? 0,
     }));
-    return { restaurants: restaurantsWithStats, lastVisible: newLastVisible };
+    
+    const result = { 
+      restaurants: restaurantsWithStats, 
+      lastVisible: newLastVisible 
+    };
+    
+    // Armazenar em cache por 1 hora
+    try {
+      sessionStorage.setItem(cacheKey, JSON.stringify({
+        data: result,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      console.warn('Erro ao armazenar em cache:', e);
+    }
+    
+    return result;
   } catch (error) {
     console.error('Erro ao buscar restaurantes:', error);
     return { restaurants: [], lastVisible: null };
@@ -211,6 +243,24 @@ export const getRestaurantsByCity = async (
       .join(' ')
       .replace(/\bSao\b/g, 'São');
 
+    // Verificar se temos dados em cache (apenas no cliente)
+    if (typeof window !== 'undefined') {
+      const cacheKey = `restaurants-city-${city}-${itemsPerPage}-${lastVisibleParam || 'initial'}`;
+      const cachedData = sessionStorage.getItem(cacheKey);
+      
+      if (cachedData) {
+        const { data, timestamp } = JSON.parse(cachedData);
+        // Verificar se o cache ainda é válido (1 hora = 3600000 ms)
+        if (Date.now() - timestamp < 3600000) {
+          console.log(`Usando dados em cache para cidade: ${city}`);
+          return data;
+        } else {
+          // Cache expirado, remover
+          sessionStorage.removeItem(cacheKey);
+        }
+      }
+    }
+
     // Query only restaurants in this city
     const q = query(
       collection(db, 'places'),
@@ -225,7 +275,23 @@ export const getRestaurantsByCity = async (
 
     // Sort by name
     restaurants.sort((a, b) => a.name.localeCompare(b.name));
-    return { restaurants, lastVisible: null };
+    
+    const result = { restaurants, lastVisible: null };
+    
+    // Armazenar em cache (apenas no cliente)
+    if (typeof window !== 'undefined') {
+      try {
+        const cacheKey = `restaurants-city-${city}-${itemsPerPage}-${lastVisibleParam || 'initial'}`;
+        sessionStorage.setItem(cacheKey, JSON.stringify({
+          data: result,
+          timestamp: Date.now()
+        }));
+      } catch (e) {
+        console.warn('Erro ao armazenar em cache:', e);
+      }
+    }
+    
+    return result;
   } catch (error) {
     // Suppress error logging to avoid permission errors in console
     return { restaurants: [], lastVisible: null };
@@ -314,6 +380,22 @@ export const getAverageRatings = async (restaurantIds: string[]): Promise<Record
   }
   
   try {
+    // Verificar cache
+    const cacheKey = `ratings-${restaurantIds.sort().join('-')}`;
+    const cachedData = sessionStorage.getItem(cacheKey);
+    
+    if (cachedData) {
+      const { data, timestamp } = JSON.parse(cachedData);
+      // Verificar se o cache ainda é válido (1 hora = 3600000 ms)
+      if (Date.now() - timestamp < 3600000) {
+        console.log('Usando dados em cache para avaliações');
+        return data;
+      } else {
+        // Cache expirado, remover
+        sessionStorage.removeItem(cacheKey);
+      }
+    }
+    
     const ratingsMap: Record<string, { sum: number; count: number }> = {};
     
     // Processa em chunks de 10 para evitar limitações do Firestore
@@ -344,6 +426,16 @@ export const getAverageRatings = async (restaurantIds: string[]): Promise<Record
       statsMap[id] = { avg: parseFloat((sum / count).toFixed(1)), count };
     });
     
+    // Armazenar em cache por 1 hora
+    try {
+      sessionStorage.setItem(cacheKey, JSON.stringify({
+        data: statsMap,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      console.warn('Erro ao armazenar avaliações em cache:', e);
+    }
+    
     return statsMap;
   } catch (error) {
     console.error('Erro ao buscar avaliações:', error);
@@ -358,6 +450,22 @@ export const getRestaurantReviews = async (restaurantId: string): Promise<Review
   }
   
   try {
+    // Verificar cache
+    const cacheKey = `reviews-${restaurantId}`;
+    const cachedData = sessionStorage.getItem(cacheKey);
+    
+    if (cachedData) {
+      const { data, timestamp } = JSON.parse(cachedData);
+      // Verificar se o cache ainda é válido (1 hora = 3600000 ms)
+      if (Date.now() - timestamp < 3600000) {
+        console.log(`Usando dados em cache para reviews do restaurante ${restaurantId}`);
+        return data;
+      } else {
+        // Cache expirado, remover
+        sessionStorage.removeItem(cacheKey);
+      }
+    }
+    
     const placeRef = doc(db, 'places', restaurantId);
     const reviewsQuery = query(
       collection(db, 'placeReviews'), 
@@ -381,9 +489,19 @@ export const getRestaurantReviews = async (restaurantId: string): Promise<Review
       });
     });
     
+    // Armazenar em cache por 1 hora
+    try {
+      sessionStorage.setItem(cacheKey, JSON.stringify({
+        data: reviews,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      console.warn('Erro ao armazenar reviews em cache:', e);
+    }
+    
     return reviews;
   } catch (error) {
-    console.error('Erro ao buscar reviews do restaurante:', error);
+    console.error('Erro ao buscar reviews:', error);
     return [];
   }
 };

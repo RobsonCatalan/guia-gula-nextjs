@@ -35,7 +35,8 @@ export async function generateMetadata({ params }: { params: Promise<{ cidade: s
   };
 }
 
-export const revalidate = 3600; // 1h cache no servidor
+// Configuração de cache no servidor - 1 hora (3600 segundos)
+export const revalidate = 3600; // 1 hora de cache
 
 export default async function Page({ params }: { params: Promise<{ cidade: string }> }) {
   const { cidade } = await params;

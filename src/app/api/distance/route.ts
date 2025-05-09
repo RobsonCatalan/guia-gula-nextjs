@@ -30,7 +30,14 @@ export async function GET(request: NextRequest) {
     const duration = data.rows?.[0]?.elements?.[0]?.duration?.text || '';
     return NextResponse.json(
       { duration },
-      { status: 200, headers: { 'Cache-Control': 'no-store, no-cache' } }
+      { 
+        status: 200, 
+        headers: { 
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        } 
+      }
     );
   } catch (error) {
     console.error('Error fetching Distance Matrix API:', error);

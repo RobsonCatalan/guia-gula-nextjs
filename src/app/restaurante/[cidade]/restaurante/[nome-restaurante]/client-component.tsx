@@ -455,13 +455,14 @@ export default function RestaurantDetailClient() {
         {sections.map(section => (
           <div key={section.name}>
             <div className="flex items-center mt-6 mb-2 space-x-2">
-              <button
-                onClick={() => setVisibleSections(prev => ({ ...prev, [section.name]: !prev[section.name] }))}
-                className="p-0 bg-transparent border-none text-xl text-[#FF5842] hover:text-[#D32F2F] focus:outline-none"
+              <h3 className="text-xl font-semibold text-[#4A4A4A]">{section.name}</h3>
+              <a
+                href="#"
+                onClick={(e) => { e.preventDefault(); setVisibleSections(prev => ({ ...prev, [section.name]: !prev[section.name] })); }}
+                className="text-xl text-[#D32F2F] focus:outline-none"
               >
                 {visibleSections[section.name] ? '▲' : '▼'}
-              </button>
-              <h3 className="text-xl font-semibold text-[#4A4A4A]">{section.name}</h3>
+              </a>
             </div>
             {visibleSections[section.name] && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">

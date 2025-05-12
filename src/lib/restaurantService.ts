@@ -55,6 +55,8 @@ export interface Menu {
   category: string;
   image?: string;
   appearanceOrder?: number;
+  sectionName: string;
+  sectionAppearanceOrder: number;
 }
 
 // Interface para avaliações
@@ -572,6 +574,8 @@ export const getMenuItems = async (placeId: string): Promise<Menu[]> => {
       category: data.category || '',
       image: data.shortImage || '',
       appearanceOrder: data.appearanceOrder || 0,
+      sectionName: data.sectionName || '',
+      sectionAppearanceOrder: data.sectionAppearanceOrder || 0,
     };
   });
   items.sort((a, b) => (a.appearanceOrder! - b.appearanceOrder!));

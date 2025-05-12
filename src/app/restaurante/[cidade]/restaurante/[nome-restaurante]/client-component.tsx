@@ -357,7 +357,15 @@ export default function RestaurantDetailClient() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Ir ao Restaurante Card */}
           <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-xl font-bold mb-4 text-[#4A4A4A]">Ir ao Restaurante</h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-bold text-[#4A4A4A]">Ir ao Restaurante</h3>
+              {driveTime && (
+                <div className="flex items-center text-sm text-[#4A4A4A]">
+                  <Image src="/images/icons/car.png" alt="Car icon" width={16} height={16} className="h-4 w-auto mr-1" />
+                  <span>~ {driveTime}</span>
+                </div>
+              )}
+            </div>
             <div className="flex items-center mb-4">
               <span className={isPresentialOpen ? 'text-green-600' : 'text-red-600'}>{isPresentialOpen ? 'Aberto agora' : 'Fechado agora'}</span>
               <span className="mx-2 text-[#4A4A4A]">|</span>
@@ -378,18 +386,6 @@ export default function RestaurantDetailClient() {
             <p className="text-[#4A4A4A] mb-4">
               {restaurant.addressStreet}, {restaurant.addressNumber}{restaurant.addressComplement && `, ${restaurant.addressComplement}`}, {restaurant.addressDistrict}, {restaurant.addressCity} - {restaurant.addressState}
             </p>
-            {driveTime && (
-              <div className="flex items-center text-sm text-[#4A4A4A] mb-2">
-                <Image
-                  src="/images/icons/car.png"
-                  alt="Car icon"
-                  width={16}
-                  height={16}
-                  className="h-4 w-auto mr-1"
-                />
-                <span>~ {driveTime}</span>
-              </div>
-            )}
             {restaurant.coordinates && (
               <div className="flex items-center mb-4">
                 <a href={`https://www.google.com/maps/dir/?api=1&destination=${restaurant.coordinates.latitude},${restaurant.coordinates.longitude}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#FF5842] hover:underline">

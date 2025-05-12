@@ -367,6 +367,9 @@ export default function RestaurantDetailClient() {
                 ))}
               </ul>
             )}
+            <p className="text-[#4A4A4A] mb-4">
+              {restaurant.addressStreet}, {restaurant.addressNumber}{restaurant.addressComplement && `, ${restaurant.addressComplement}`}, {restaurant.addressDistrict}, {restaurant.addressCity} - {restaurant.addressState}
+            </p>
             {driveTime && (
               <div className="flex items-center text-sm text-[#4A4A4A] mb-2">
                 <Image
@@ -390,9 +393,6 @@ export default function RestaurantDetailClient() {
                 </a>
               </div>
             )}
-            <p className="text-[#4A4A4A] mb-4">
-              {restaurant.addressStreet}, {restaurant.addressNumber}{restaurant.addressComplement && `, ${restaurant.addressComplement}`}, {restaurant.addressDistrict}, {restaurant.addressCity} - {restaurant.addressState}
-            </p>
           </div>
           {/* Peça Online Card (se delivery habilitado) */}
           {restaurant.deliveryConfig?.enabled && (

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams, usePathname } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import { Restaurant, getRestaurantsByCity, getRestaurantReviews, Review } from '@/lib/restaurantService';
+import { Restaurant, getRestaurantsByCity, getRestaurantReviews, Review, getMenuItems, Menu } from '@/lib/restaurantService';
 import Image from 'next/image';
 import Link from 'next/link';
 import { categoryMap } from '@/components/RestaurantCard';
@@ -69,6 +69,9 @@ export default function RestaurantDetailClient() {
   const [isReviewsDrawerOpen, setIsReviewsDrawerOpen] = useState(false);
   const [isPresentialOpen, setIsPresentialOpen] = useState(false);
   const [isOnlineOpen, setIsOnlineOpen] = useState(false);
+  const [menuItems, setMenuItems] = useState<Menu[]>([]);
+  const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [driveTime, setDriveTime] = useState<string>('');
   const openReviewsDrawer = () => { setIsReviewsDrawerOpen(true); document.body.style.overflow = 'hidden'; };
   const closeReviewsDrawer = () => { setIsReviewsDrawerOpen(false); document.body.style.overflow = 'auto'; };
   
@@ -81,8 +84,6 @@ export default function RestaurantDetailClient() {
   // Accordion state for working hours
   const [showPresentialHours, setShowPresentialHours] = useState(false);
   const [showOnlineHours, setShowOnlineHours] = useState(false);
-  const [driveTime, setDriveTime] = useState<string>('');
-  const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
 
   // Hide layout if version=restaurant param
   const searchParams = useSearchParams();
@@ -101,6 +102,9 @@ export default function RestaurantDetailClient() {
           setError('Restaurante não encontrado');
         } else {
           setRestaurant(found);
+          // Carregar itens do cardápio para este restaurante
+          const items = await getMenuItems(found.id);
+          setMenuItems(items);
         }
       } catch (err) {
         console.error('Erro ao carregar restaurante:', err);
@@ -392,6 +396,34 @@ export default function RestaurantDetailClient() {
               )}
             </div>
           )}
+        </div>
+      </main>
+      <main className="max-w-7xl mx-auto px-6 pt-0 pb-12 bg-[#FFF8F0]">
+        <h2 className="text-2xl font-bold font-['Roboto'] text-[#4A4A4A] mb-4">Cardápio:</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          {menuItems.map(item => (
+            <div key={item.id} className="bg-white p-4 rounded-lg shadow flex items-center">
+              {item.image && (
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  width={120}
+                  height={120}
+                  className="w-[120px] h-[120px] object-cover rounded"
+                  unoptimized
+                />
+              )}
+              <div className="ml-4 flex-1">
+                <h3 className="text-base font-bold text-[#4A4A4A]">{item.name}</h3>
+                {item.description && (
+                  <p className="text-sm text-[#4A4A4A]">{item.description}</p>
+                )}
+                <p className="text-sm font-semibold text-[#4A4A4A] mt-1">
+                  R$ {(item.price / 100).toFixed(2).replace('.', ',')}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </main>
     </div>

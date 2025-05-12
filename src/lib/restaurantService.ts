@@ -54,6 +54,7 @@ export interface Menu {
   price: number;
   category: string;
   image?: string;
+  appearanceOrder?: number;
 }
 
 // Interface para avaliações
@@ -548,6 +549,33 @@ export const getRestaurantReviews = async (restaurantId: string): Promise<Review
     console.error('Erro ao buscar reviews:', error);
     return [];
   }
+};
+
+// Busca itens do cardápio filtrando pelo placeId e condições isVisible e deleted
+export const getMenuItems = async (placeId: string): Promise<Menu[]> => {
+  const placeRef = doc(db, 'places', placeId);
+  const q = query(
+    collection(db, 'menuItems'),
+    where('place', '==', placeRef),
+    where('isVisible', '==', true),
+    where('deleted', '==', false)
+  );
+  const snapshot = await getDocs(q);
+  // Ordenação client-side por appearanceOrder
+  const items: Menu[] = snapshot.docs.map(docSnap => {
+    const data = docSnap.data();
+    return {
+      id: docSnap.id,
+      name: data.name || '',
+      description: data.description || '',
+      price: data.price || 0,
+      category: data.category || '',
+      image: data.shortImage || '',
+      appearanceOrder: data.appearanceOrder || 0,
+    };
+  });
+  items.sort((a, b) => (a.appearanceOrder! - b.appearanceOrder!));
+  return items;
 };
 
 // Função para contar reviews por rating (estrelas)

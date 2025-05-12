@@ -62,14 +62,14 @@ export default function PhotoGallery({ images }: PhotoGalleryProps) {
       {/* Desktop view */}
       <div className="hidden md:flex space-x-4">
         {/* Main image: ocupa 1/3 */}
-        <div className="relative w-1/3 cursor-pointer" onClick={() => openModal(0)}>
+        <div className="relative w-1/3 h-48 cursor-pointer" onClick={() => openModal(0)}>
           <Image
             unoptimized={isGif(validImages[0])}
             src={validImages[0]}
             alt={`Foto ${1}`}
-            width={800}
-            height={400}
-            className="rounded-lg object-cover w-full h-48"
+            fill
+            sizes="(min-width: 768px) 33vw, 100vw"
+            className="rounded-lg object-cover"
             priority
           />
         </div>
@@ -81,9 +81,9 @@ export default function PhotoGallery({ images }: PhotoGalleryProps) {
                 unoptimized={isGif(img)}
                 src={img}
                 alt={`Foto ${idx + 2}`}
-                width={400}
-                height={200}
-                className="rounded-lg object-cover w-full h-full"
+                fill
+                sizes="(min-width: 768px) 33vw, 100vw"
+                className="rounded-lg object-cover"
                 priority
               />
             </div>
@@ -165,6 +165,7 @@ export default function PhotoGallery({ images }: PhotoGalleryProps) {
               width={1200}
               height={800}
               className="rounded-lg object-contain"
+              style={{ width: 'auto', height: 'auto' }}
             />
           </div>
           {validImages.length > 1 && (

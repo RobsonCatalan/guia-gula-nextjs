@@ -298,7 +298,7 @@ export default function RestaurantDetailClient() {
                 rel="noopener noreferrer"
                 className="flex items-center text-[#FF5842] hover:underline mr-2"
               >
-                <Image src="/images/logo/instagram.jpg" alt="Instagram Logo" width={36} height={36} unoptimized />
+                <Image src="/images/logo/instagram.jpg" alt="Instagram Logo" width={36} height={36} unoptimized className="w-9 h-9" />
               </a>
             )}
             <span className="mx-2 text-[#4A4A4A]">|</span>
@@ -325,7 +325,7 @@ export default function RestaurantDetailClient() {
                 rel="noopener noreferrer"
                 className="flex items-center text-[#FF5842] hover:underline mr-2"
               >
-                <Image src="/images/logo/instagram.jpg" alt="Instagram Logo" width={36} height={36} unoptimized />
+                <Image src="/images/logo/instagram.jpg" alt="Instagram Logo" width={36} height={36} unoptimized className="w-9 h-9" />
               </a>
             )}
             <span className="mx-2 text-[#4A4A4A]">|</span>
@@ -361,7 +361,7 @@ export default function RestaurantDetailClient() {
               <h3 className="text-xl font-bold text-[#4A4A4A]">Ir ao Restaurante</h3>
               {driveTime && (
                 <div className="flex items-center text-sm text-[#4A4A4A]">
-                  <Image src="/images/icons/car.png" alt="Car icon" width={16} height={16} className="h-4 w-auto mr-1" />
+                  <Image src="/images/icons/car.png" alt="Car icon" width={16} height={16} unoptimized className="w-4 h-4 mr-1" />
                   <span>~ {driveTime}</span>
                 </div>
               )}
@@ -439,7 +439,7 @@ export default function RestaurantDetailClient() {
               )}
               {restaurant.deliveryConfig?.contactNumber && (
                 <a href={`https://wa.me/${restaurant.deliveryConfig.contactNumber}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#25D366] hover:underline mt-4">
-                  <Image src="/images/icons/Whatsapp.png" alt="WhatsApp" width={36} height={36} unoptimized className="mr-2" />
+                  <Image src="/images/icons/Whatsapp.png" alt="WhatsApp" width={36} height={36} unoptimized className="w-9 h-9 mr-2" />
                 </a>
               )}
             </div>

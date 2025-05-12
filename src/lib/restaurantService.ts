@@ -536,16 +536,6 @@ export const getRestaurantReviews = async (restaurantId: string): Promise<Review
       });
     });
     
-    // Armazenar em cache por 1 hora
-    try {
-      sessionStorage.setItem(cacheKey, JSON.stringify({
-        data: reviews,
-        timestamp: Date.now()
-      }));
-    } catch (e) {
-      console.warn('Erro ao armazenar reviews em cache:', e);
-    }
-    
     return reviews;
   } catch (error) {
     console.error('Erro ao buscar reviews:', error);

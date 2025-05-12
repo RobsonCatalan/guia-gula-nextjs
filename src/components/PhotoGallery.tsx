@@ -103,6 +103,7 @@ export default function PhotoGallery({ images }: PhotoGalleryProps) {
             src={validImages[currentIndex]}
             alt={`Foto ${currentIndex + 1}`}
             fill
+            sizes="(min-width: 768px) 33vw, 100vw"
             className="rounded-lg object-contain"
             priority
           />

@@ -282,35 +282,82 @@ export default function RestaurantDetailClient() {
       </section>
       <div className="max-w-7xl mx-auto px-6 pb-4">
         {(restaurant.reviewCount ?? 0) > 0 ? (
-          <div className="flex items-center mb-4 bg-[#FFF8F0] p-2 rounded">
-            <span className="text-4xl font-bold text-[#4A4A4A] mr-3">{(restaurant?.rating ?? 0).toFixed(1)}</span>
-            <div className="flex flex-col">
-              <div className="flex mb-1">{renderStars(restaurant?.rating ?? 0)}</div>
-              <a href="#" onClick={(e) => { e.preventDefault(); openReviewsDrawer(); }} className="text-[#FF5842] hover:underline text-sm">
-                {restaurant?.reviewCount ?? 0} avaliações no gula.menu
+          <div className="flex items-center mb-4">
+            {restaurant.instagramLink && (
+              <a
+                href={`https://www.instagram.com/${restaurant.instagramLink}/`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center text-[#FF5842] hover:underline mr-2"
+              >
+                <Image src="/images/logo/instagram.jpg" alt="Instagram Logo" width={36} height={36} unoptimized />
               </a>
+            )}
+            <span className="mx-2 text-[#4A4A4A]">|</span>
+            <div className="flex items-center bg-[#FFF8F0] p-2 rounded ml-2">
+              <span className="text-4xl font-bold text-[#4A4A4A] mr-3">{(restaurant?.rating ?? 0).toFixed(1)}</span>
+              <div className="flex flex-col">
+                <div className="flex mb-1">{renderStars(restaurant?.rating ?? 0)}</div>
+                <a
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); openReviewsDrawer(); }}
+                  className="text-[#FF5842] hover:underline text-sm"
+                >
+                  {restaurant?.reviewCount ?? 0} avaliações no gula.menu
+                </a>
+              </div>
             </div>
           </div>
         ) : reviews.length > 0 ? (
-          <div className="flex items-center mb-4 bg-[#FFF8F0] p-2 rounded">
-            <span className="text-4xl font-bold text-[#4A4A4A] mr-3">{calculateAverageRating().toFixed(1)}</span>
-            <div className="flex flex-col">
-              <div className="flex mb-1">{renderStars(calculateAverageRating())}</div>
-              <a href="#" onClick={(e) => { e.preventDefault(); openReviewsDrawer(); }} className="text-[#FF5842] hover:underline text-sm">
-                {reviews.length} avaliações no gula.menu
+          <div className="flex items-center mb-4">
+            {restaurant.instagramLink && (
+              <a
+                href={`https://www.instagram.com/${restaurant.instagramLink}/`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center text-[#FF5842] hover:underline mr-2"
+              >
+                <Image src="/images/logo/instagram.jpg" alt="Instagram Logo" width={36} height={36} unoptimized />
               </a>
+            )}
+            <span className="mx-2 text-[#4A4A4A]">|</span>
+            <div className="flex items-center bg-[#FFF8F0] p-2 rounded ml-2">
+              <span className="text-4xl font-bold text-[#4A4A4A] mr-3">{calculateAverageRating().toFixed(1)}</span>
+              <div className="flex flex-col">
+                <div className="flex mb-1">{renderStars(calculateAverageRating())}</div>
+                <a
+                  href="#"
+                  onClick={(e) => { e.preventDefault(); openReviewsDrawer(); }}
+                  className="text-[#FF5842] hover:underline text-sm"
+                >
+                  {reviews.length} avaliações no gula.menu
+                </a>
+              </div>
             </div>
           </div>
         ) : null}
         {restaurant.instagramLink && (
           <div className="flex items-center mb-4">
-            <a href={`https://app.gula.menu/mainMenu?pPlace=${restaurant.id}`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#FF5842] hover:underline">
-              <div style={{ WebkitMaskImage: `url('/images/icons/menu.png')`, maskImage: `url('/images/icons/menu.png')`, WebkitMaskRepeat: 'no-repeat', maskRepeat: 'no-repeat', WebkitMaskSize: 'contain', maskSize: 'contain', backgroundColor: '#FF5842', width: '36px', height: '36px' }} />
+            <a
+              href={`https://app.gula.menu/mainMenu?pPlace=${restaurant.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center text-[#FF5842] hover:underline"
+            >
+              <div
+                style={{
+                  WebkitMaskImage: `url('/images/icons/menu.png')`,
+                  maskImage: `url('/images/icons/menu.png')`,
+                  WebkitMaskRepeat: 'no-repeat',
+                  maskRepeat: 'no-repeat',
+                  WebkitMaskSize: 'contain',
+                  maskSize: 'contain',
+                  backgroundColor: '#FF5842',
+                  width: '36px',
+                  height: '36px',
+                }}
+              />
               <span className="ml-2">Cardápio</span>
-            </a>
-            <span className="mx-2 text-[#4A4A4A]">|</span>
-            <a href={`https://www.instagram.com/${restaurant.instagramLink}/`} target="_blank" rel="noopener noreferrer" className="flex items-center text-[#FF5842] hover:underline">
-              <Image src="/images/logo/instagram.jpg" alt="Instagram Logo" width={36} height={36} unoptimized />
             </a>
           </div>
         )}

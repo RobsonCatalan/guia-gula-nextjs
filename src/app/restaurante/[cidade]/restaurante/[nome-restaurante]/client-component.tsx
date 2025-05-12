@@ -457,7 +457,7 @@ export default function RestaurantDetailClient() {
             <div className="flex items-center mt-6 mb-2 space-x-2">
               <button
                 onClick={() => setVisibleSections(prev => ({ ...prev, [section.name]: !prev[section.name] }))}
-                className="text-[0.625rem] text-[#FF5842] hover:text-[#D32F2F] focus:outline-none"
+                className="p-0 bg-transparent border-none text-xl text-[#FF5842] hover:text-[#D32F2F] focus:outline-none"
               >
                 {visibleSections[section.name] ? '▲' : '▼'}
               </button>

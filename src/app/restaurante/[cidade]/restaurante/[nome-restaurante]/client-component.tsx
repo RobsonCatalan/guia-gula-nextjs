@@ -194,6 +194,14 @@ export default function RestaurantDetailClient() {
       .sort((a, b) => a.order - b.order);
   }, [menuItems]);
 
+  // Accordion state para visibilidade das seções do cardápio
+  const [visibleSections, setVisibleSections] = useState<Record<string, boolean>>({});
+  useEffect(() => {
+    const initial: Record<string, boolean> = {};
+    sections.forEach(sec => { initial[sec.name] = true; });
+    setVisibleSections(initial);
+  }, [sections]);
+
   if (loading) {
     return <div className="flex justify-center py-8"><div className="w-12 h-12 border-4 border-[#F4A261] border-t-[#D32F2F] rounded-full animate-spin"></div></div>;
   }
@@ -446,7 +454,16 @@ export default function RestaurantDetailClient() {
         <h2 className="text-2xl font-bold font-['Roboto'] text-[#4A4A4A] mb-4">Cardápio</h2>
         {sections.map(section => (
           <div key={section.name}>
-            <h3 className="text-xl font-semibold text-[#4A4A4A] mt-6 mb-2">{section.name}</h3>
+            <div className="flex items-center justify-between mt-6 mb-2">
+              <h3 className="text-xl font-semibold text-[#4A4A4A]">{section.name}</h3>
+              <button
+                onClick={() => setVisibleSections(prev => ({ ...prev, [section.name]: !prev[section.name] }))}
+                className="text-xl text-[#FF5842] hover:text-[#D32F2F] focus:outline-none"
+              >
+                {visibleSections[section.name] ? '▲' : '▼'}
+              </button>
+            </div>
+            {visibleSections[section.name] && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               {section.items.map(item => (
                 <div key={item.id} className="bg-white p-4 rounded-lg shadow flex items-center">
@@ -493,6 +510,7 @@ export default function RestaurantDetailClient() {
                 </div>
               ))}
             </div>
+            )}
           </div>
         ))}
       </main>

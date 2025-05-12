@@ -204,9 +204,10 @@ export default function RestaurantCard({ restaurant, driveTime, rating: propRati
             <Image
               src="/images/icons/car.png"
               alt="Car icon"
-              width={16}
-              height={16}
-              className="h-4 w-auto mr-1"
+              width={40}
+              height={40}
+              unoptimized
+              className="object-contain mr-1"
             />
             <span>~ {driveTime}</span>
           </div>

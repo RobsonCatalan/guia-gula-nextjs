@@ -361,7 +361,15 @@ export default function RestaurantDetailClient() {
               <h3 className="text-xl font-bold text-[#4A4A4A]">Ir ao Restaurante</h3>
               {driveTime && (
                 <div className="flex items-center text-sm text-[#4A4A4A]">
-                  <Image src="/images/icons/car.png" alt="Car icon" width={16} height={16} unoptimized className="w-4 h-4 mr-1" />
+                  <div className="relative w-10 h-10 mr-1">
+                    <Image
+                      src="/images/icons/car.png"
+                      alt="Car icon"
+                      fill
+                      unoptimized
+                      className="object-contain"
+                    />
+                  </div>
                   <span>~ {driveTime}</span>
                 </div>
               )}
@@ -455,7 +463,7 @@ export default function RestaurantDetailClient() {
               <a
                 href="#"
                 onClick={(e) => { e.preventDefault(); setVisibleSections(prev => ({ ...prev, [section.name]: !prev[section.name] })); }}
-                className="text-xl text-[#D32F2F] focus:outline-none"
+                className="text-sm text-[#D32F2F] focus:outline-none"
               >
                 {visibleSections[section.name] ? '▲' : '▼'}
               </a>

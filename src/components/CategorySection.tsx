@@ -198,6 +198,7 @@ export default function CategorySection({ city, title, currentCategory }: Catego
                             src={`/images/categories/${cat === 'Pastelaria' ? 'pastel' : cat === 'Outros' ? 'outros' : slugify(cat)}.webp`}
                             alt={cat}
                             fill
+                            unoptimized
                             priority
                             sizes="(max-width: 640px) 100vw, 224px"
                             style={{ objectFit: 'cover' }}
@@ -227,6 +228,7 @@ export default function CategorySection({ city, title, currentCategory }: Catego
                             src={`/images/categories/${cat === 'Pastelaria' ? 'pastel' : cat === 'Outros' ? 'outros' : slugify(cat)}.webp`}
                             alt={cat}
                             fill
+                            unoptimized
                             sizes="(min-width: 1024px) 16.66vw, (min-width: 768px) 25vw, (min-width: 640px) 33.33vw, 50vw"
                             className="object-cover"
                           />

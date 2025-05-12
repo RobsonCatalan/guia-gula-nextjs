@@ -91,6 +91,7 @@ export default function CitiesSection({ currentCity }: CitiesSectionProps) {
                       src={`/images/cities/${slug}.webp`}
                       alt={label}
                       fill
+                      unoptimized
                       sizes="(min-width: 1024px) 16.66vw, (min-width: 768px) 25vw, (min-width: 640px) 33.33vw, 50vw"
                       className="object-cover"
                       onError={() => handleImgError(slug)}
@@ -114,6 +115,7 @@ export default function CitiesSection({ currentCity }: CitiesSectionProps) {
                       src={`/images/cities/${slug}.webp`}
                       alt={label}
                       fill
+                      unoptimized
                       sizes="(min-width: 1024px) 16.66vw, (min-width: 768px) 25vw, (min-width: 640px) 33.33vw, 50vw"
                       className="object-cover"
                       onError={() => handleImgError(slug)}

@@ -295,7 +295,7 @@ export default function RestaurantDetailClient() {
             )}
             <span className="mx-2 text-[#4A4A4A]">|</span>
             <div className="flex items-center bg-[#FFF8F0] p-2 rounded ml-2">
-              <span className="text-3xl font-bold text-[#4A4A4A] mr-3">{(restaurant?.rating ?? 0).toFixed(1)}</span>
+              <span className="text-2xl font-bold text-[#4A4A4A] mr-3">{(restaurant?.rating ?? 0).toFixed(1)}</span>
               <div className="flex flex-col">
                 <div className="flex mb-1">{renderStars(restaurant?.rating ?? 0)}</div>
                 <a
@@ -322,7 +322,7 @@ export default function RestaurantDetailClient() {
             )}
             <span className="mx-2 text-[#4A4A4A]">|</span>
             <div className="flex items-center bg-[#FFF8F0] p-2 rounded ml-2">
-              <span className="text-3xl font-bold text-[#4A4A4A] mr-3">{calculateAverageRating().toFixed(1)}</span>
+              <span className="text-2xl font-bold text-[#4A4A4A] mr-3">{calculateAverageRating().toFixed(1)}</span>
               <div className="flex flex-col">
                 <div className="flex mb-1">{renderStars(calculateAverageRating())}</div>
                 <a

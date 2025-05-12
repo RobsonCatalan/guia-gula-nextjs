@@ -72,6 +72,10 @@ export default function RestaurantDetailClient() {
   const [menuItems, setMenuItems] = useState<Menu[]>([]);
   const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
   const [driveTime, setDriveTime] = useState<string>('');
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+  const expandItem = (id: string) => {
+    setExpandedItems(prev => new Set(prev).add(id));
+  };  
   const openReviewsDrawer = () => { setIsReviewsDrawerOpen(true); document.body.style.overflow = 'hidden'; };
   const closeReviewsDrawer = () => { setIsReviewsDrawerOpen(false); document.body.style.overflow = 'auto'; };
   
@@ -202,6 +206,9 @@ export default function RestaurantDetailClient() {
     }
     return stars;
   };
+
+  // Limite de caracteres para pré-visualização de descrição
+  const SNIPPET_LENGTH = 150;
 
   return (
     <div className="bg-[#FFF8F0]">
@@ -416,9 +423,28 @@ export default function RestaurantDetailClient() {
               <div className="ml-4 flex-1">
                 <h3 className="text-base font-bold text-[#4A4A4A]">{item.name}</h3>
                 {item.description && (
-                  <p className="text-sm text-[#4A4A4A]">{item.description}</p>
+                  <p className="text-sm text-[#4A4A4A]">
+                    {!expandedItems.has(item.id) ? (
+                      <>
+                        {item.description.length > SNIPPET_LENGTH
+                          ? item.description.slice(0, SNIPPET_LENGTH) + '... '
+                          : item.description}
+                        {item.description.length > SNIPPET_LENGTH && (
+                          <a
+                            href="#"
+                            onClick={(e) => { e.preventDefault(); expandItem(item.id); }}
+                            className="text-[#FF5842] hover:underline"
+                          >
+                            (ver mais)
+                          </a>
+                        )}
+                      </>
+                    ) : (
+                      item.description
+                    )}
+                  </p>
                 )}
-                <p className="text-sm font-semibold text-[#4A4A4A] mt-1">
+                <p className="text-sm font-semibold text-[#4A4A4A] mt-1 text-left">
                   R$ {(item.price / 100).toFixed(2).replace('.', ',')}
                 </p>
               </div>

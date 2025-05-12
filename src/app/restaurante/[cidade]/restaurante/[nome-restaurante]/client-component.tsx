@@ -454,14 +454,14 @@ export default function RestaurantDetailClient() {
         <h2 className="text-2xl font-bold font-['Roboto'] text-[#4A4A4A] mb-4">Cardápio</h2>
         {sections.map(section => (
           <div key={section.name}>
-            <div className="flex items-center justify-between mt-6 mb-2">
-              <h3 className="text-xl font-semibold text-[#4A4A4A]">{section.name}</h3>
+            <div className="flex items-center mt-6 mb-2 space-x-2">
               <button
                 onClick={() => setVisibleSections(prev => ({ ...prev, [section.name]: !prev[section.name] }))}
-                className="text-xl text-[#FF5842] hover:text-[#D32F2F] focus:outline-none"
+                className="text-[0.625rem] text-[#FF5842] hover:text-[#D32F2F] focus:outline-none"
               >
                 {visibleSections[section.name] ? '▲' : '▼'}
               </button>
+              <h3 className="text-xl font-semibold text-[#4A4A4A]">{section.name}</h3>
             </div>
             {visibleSections[section.name] && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">

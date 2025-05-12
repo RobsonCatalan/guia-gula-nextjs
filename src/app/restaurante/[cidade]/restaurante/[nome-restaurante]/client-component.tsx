@@ -206,7 +206,7 @@ export default function RestaurantDetailClient() {
     for (let i = 0; i < 5; i++) {
       const fill = Math.max(0, Math.min(1, ratingValue - i));
       stars.push(
-        <span key={i} className="relative inline-block w-6 h-6 mr-1">
+        <span key={i} className="relative inline-block w-5 h-5 mr-1">
           <svg xmlns="http://www.w3.org/2000/svg" className="w-full h-full text-gray-300" fill="currentColor" viewBox="0 0 20 20">
             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.165 3.584a1 1 0 00.95.69h3.768c.969 0 1.371 1.24.588 1.81l-3.047 2.213a1 1 0 00-.364 1.118l1.165 3.584c.3.921-.755 1.688-1.538 1.118l-3.047-2.213a1 1 0 00-1.176 0l-3.047 2.213c-.783.57-1.838-.197-1.538-1.118l1.165-3.584a1 1 0 00-.364-1.118L2.575 9.011c-.783-.57-.38-1.81.588-1.81h3.768a1 1 0 00.95-.69l1.165-3.584z" />
           </svg>

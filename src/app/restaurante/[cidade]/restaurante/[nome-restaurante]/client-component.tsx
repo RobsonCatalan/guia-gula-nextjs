@@ -444,7 +444,7 @@ export default function RestaurantDetailClient() {
         </div>
       </main>
       <main className="max-w-7xl mx-auto px-6 pt-0 pb-12 bg-[#FFF8F0]">
-        <h2 className="text-2xl font-bold font-['Roboto'] text-[#4A4A4A] mb-4">Cardápio:</h2>
+        <h2 className="text-2xl font-bold font-['Roboto'] text-[#4A4A4A] mb-4">Cardápio</h2>
         {sections.map(section => (
           <div key={section.name}>
             <h3 className="text-xl font-semibold text-[#4A4A4A] mt-6 mb-2">{section.name}</h3>

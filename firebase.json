@@ -1,15 +1,31 @@
 {
   "functions": {
     "source": "functions",
-    "predeploy": [
-      "node functions/predeploy.js"
-    ]
+    "predeploy": ["node functions/predeploy.js"]
   },
-  "hosting": {
-    "public": "public/",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "rewrites": [
-      { "source": "**", "function": "ssr" }
-    ]
-  }
+
+  "hosting": [
+    {
+      "target": "content",
+      "public": "public/",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "**", "function": "ssr" }
+      ]
+    },
+
+    {
+      "target": "redirect",
+      "public": "redirect",
+      "ignore": ["**/*"],
+      "redirects": [
+        {
+          "source": "/**",
+          "destination": "https://gula.menu",
+          "type": 301
+        }
+      ]
+    }
+  ]
 }
+

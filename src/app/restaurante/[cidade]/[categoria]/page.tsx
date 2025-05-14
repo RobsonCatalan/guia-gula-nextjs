@@ -5,6 +5,7 @@ import Image from 'next/image';
 import CategorySection from '@/components/CategorySection';
 import { Suspense } from 'react';
 import CategoryClientComponent from './client-component';
+import { getRestaurantsByCity } from '@/lib/restaurantService';
 
 // Mapeamento de códigos de categoria para labels
 const categoryMap: Record<string, string> = {
@@ -62,6 +63,11 @@ const getLabelFromSlug = (slug: string) => {
   return entry ? entry[1] : slug;
 };
 
+const getCodeFromSlug = (slug: string) => {
+  const entry = Object.entries(categoryMap).find(([code, label]) => slugify(label) === slug);
+  return entry ? entry[0] : slug;
+};
+
 export async function generateMetadata(props: { params: any }): Promise<Metadata> {
   const { params } = props;
   const { cidade, categoria } = await params;
@@ -92,13 +98,39 @@ export const revalidate = 3600; // 1 hora de cache
 export default async function CategoryPage(props: { params: any }) {
   const { params } = props;
   const { cidade, categoria } = await params;
+  const { restaurants: allRestaurants } = await getRestaurantsByCity(cidade);
+  const code = getCodeFromSlug(categoria);
+  const filteredRestaurants = allRestaurants.filter(r => (r.categories || []).includes(code));
   const cidadeFormatada = formatSlug(cidade);
   const categoriaLabel = getLabelFromSlug(categoria);
   // Ajuste de slug para nomes de imagem (ex: pastelaria -> pastel)
   const imageSlug = categoria === 'pastelaria' ? 'pastel' : categoria;
 
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Início", "item": "https://www.gulamenu.com.br/" },
+      { "@type": "ListItem", "position": 2, "name": cidadeFormatada, "item": `https://www.gulamenu.com.br/restaurante/${cidade}` },
+      { "@type": "ListItem", "position": 3, "name": categoriaLabel, "item": `https://www.gulamenu.com.br/restaurante/${cidade}/${categoria}` }
+    ]
+  };
+
+  const itemListLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": filteredRestaurants.map((r, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "name": r.name,
+      "item": `https://www.gulamenu.com.br/restaurante/${cidade}/restaurante/${slugify(r.name)}`
+    }))
+  };
+
   return (
     <div className="bg-[#FFF8F0]">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }} />
       {/* Header similar à home */}
       <header className="bg-[#ECE2D9] text-[#4A4A4A] p-6 shadow-sm">
         <div className="max-w-7xl mx-auto flex justify-between items-center">

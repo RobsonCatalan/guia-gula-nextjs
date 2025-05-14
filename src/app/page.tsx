@@ -185,6 +185,23 @@ export default function Home() {
       )}
       {/* Hero Section */}
       <section className="py-6 bg-[#FFF8F0]">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Início", "item": "https://www.gulamenu.com.br/" }
+          ]
+        }) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ItemList",
+          "itemListElement": cityOptions.map((opt, i) => ({
+            "@type": "ListItem",
+            "position": i + 1,
+            "name": opt.label,
+            "item": `https://www.gulamenu.com.br/restaurante/${opt.value}`
+          }))
+        }) }} />
         <div className="max-w-7xl mx-auto text-center px-6">
           <h1 className="text-[#4A4A4A]">
             Os Melhores Restaurantes para Visitar ou Pedir

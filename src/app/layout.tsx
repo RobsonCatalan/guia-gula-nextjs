@@ -39,6 +39,43 @@ export default function RootLayout({
     <html lang="pt-BR">
       <head>
         <link rel="icon" href="/favicon.ico" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                "name": "Gula.menu",
+                "url": "https://www.gulamenu.com.br",
+                "potentialAction": {
+                  "@type": "SearchAction",
+                  "target": "https://www.gulamenu.com.br/?s={search_term}",
+                  "query-input": "required name=search_term"
+                }
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                "name": "Gula.menu",
+                "url": "https://www.gulamenu.com.br",
+                "logo": "https://www.gulamenu.com.br/images/logo/logo.webp"
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                  {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "Início",
+                    "item": "https://www.gulamenu.com.br/"
+                  }
+                ]
+              }
+            ])
+          }}
+        />
       </head>
       <body
         className={`${inter.variable} ${roboto.variable} antialiased bg-[#FFF8F0] text-[#4A4A4A]`}

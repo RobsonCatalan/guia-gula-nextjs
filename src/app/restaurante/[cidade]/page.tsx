@@ -7,6 +7,8 @@ import fs from 'fs';
 import { Suspense } from 'react';
 import CityClientComponent from './client-component';
 import CitiesSection from '@/components/CitiesSection';
+import { getRestaurantsByCity } from '@/lib/restaurantService';
+import { slugify } from '@/lib/utils';
 
 const normalize = (str: string) =>
   str.toLowerCase()
@@ -40,6 +42,7 @@ export const revalidate = 3600; // 1 hora de cache
 
 export default async function Page({ params }: { params: Promise<{ cidade: string }> }) {
   const { cidade } = await params;
+  const { restaurants } = await getRestaurantsByCity(cidade);
   
   // Formata a cidade para exibição
   const cidadeFormatada = cidade
@@ -74,6 +77,24 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
           <li className="font-medium">{cidadeFormatada}</li>
         </ol>
       </nav>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Início", "item": "https://www.gulamenu.com.br/" },
+          { "@type": "ListItem", "position": 2, "name": cidadeFormatada, "item": `https://www.gulamenu.com.br/restaurante/${cidade}` }
+        ]
+      }) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "itemListElement": restaurants.map((r, i) => ({
+          "@type": "ListItem",
+          "position": i + 1,
+          "name": r.name,
+          "item": `https://www.gulamenu.com.br/restaurante/${cidade}/restaurante/${slugify(r.name)}`
+        }))
+      }) }} />
       <CategorySection city={cidade} title="" />
       <main id="restaurants" className="max-w-7xl mx-auto px-6 py-6 bg-[#FFF8F0]">
         <h1 className="text-2xl font-bold text-[#4A4A4A] mb-6">

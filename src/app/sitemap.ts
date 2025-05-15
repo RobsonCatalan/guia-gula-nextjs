@@ -35,7 +35,7 @@ const categoryMap: Record<string, string> = {
 };
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://www.gulamenu.com.br';
+  const baseUrl = 'https://gula.menu';
   const routes: MetadataRoute.Sitemap = [
     { url: baseUrl + '/', lastModified: new Date() }
   ];

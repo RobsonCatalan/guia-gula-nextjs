@@ -142,8 +142,40 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   for (const city of sitemapData.cities) {
     urls.push({ url: `${baseUrl}/restaurante/${city}`, lastModified: new Date() });
     const categories = sitemapData.cityCategories[city] || [];
+    // Mapeamento de código de categoria para slug de URL
+    const categorySlugMap: { [code: string]: string } = {
+      barPub: 'bar-pub',
+      pizza: 'pizzaria',
+      cafeBakeryDesserts: 'cafe-paes-doces',
+      snacksBurgers: 'lanches-burgers',
+      barbecueGrill: 'churrasco-grelhados',
+      pastryShop: 'pastelaria',
+      japanese: 'japones',
+      italian: 'italiana',
+      mineiro: 'mineira',
+      arabic: 'arabe',
+      selfServiceBuffet: 'self-service-buffet',
+      seafood: 'frutos-do-mar',
+      mexican: 'mexicana',
+      wineBar: 'wine-bar',
+      chinese: 'chinesa',
+      portuguese: 'portuguesa',
+      veganVegetarian: 'vegano-vegetariano',
+      brazilian: 'brasileira',
+      french: 'francesa',
+      peruvian: 'peruana',
+      spanish: 'espanhola',
+      german: 'alemã',
+      indian: 'indiana',
+      international: 'internacional',
+      healthyJuices: 'saudavel-sucos',
+      beachKiosk: 'quiosques-barracas',
+      deliGourmet: 'emporio-delicatessen',
+      other: 'outros'
+    };
     for (const cat of categories) {
-      urls.push({ url: `${baseUrl}/restaurante/${city}/${cat}`, lastModified: new Date() });
+      const slug = categorySlugMap[cat] || cat;
+      urls.push({ url: `${baseUrl}/restaurante/${city}/${slug}`, lastModified: new Date() });
     }
     // Restaurantes individuais
     const restaurants = sitemapData.restaurants[city] || [];

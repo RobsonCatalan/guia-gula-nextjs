@@ -38,8 +38,8 @@ export async function getAllCities(): Promise<string[]> {
     if (data.guideConfig?.isVisible) {
       const cityRaw = data.guideConfig.address?.city || data.city;
       if (cityRaw) {
-        const slug = formatCitySlug(cityRaw);
-        slugs.add(slug.toLowerCase().normalize('NFD').replace(/[^\w-]/g, '-'));
+        const slug = slugify(cityRaw);
+        slugs.add(slug);
       }
     }
   });

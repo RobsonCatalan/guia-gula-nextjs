@@ -1,6 +1,7 @@
 // src/lib/restaurantService.ts
 import { collection, getDocs, getDoc, doc, query, where, limit, orderBy, startAfter, DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
 import { db } from './firebase';
+import { slugify } from '@/lib/utils';
 
 // Interface que define a estrutura de um restaurante
 export interface Restaurant {
@@ -398,13 +399,7 @@ export const getAllCities = async (): Promise<string[]> => {
       const data = doc.data();
       const cityRaw = data.guideConfig?.address?.city || data.city || '';
       if (cityRaw) {
-        const slug = cityRaw
-          .toLowerCase()
-          .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-          .replace(/[^\w\s-]/g, '')
-          .replace(/\s+/g, '-')
-          .replace(/-+/g, '-')
-          .replace(/^-+|-+$/g, '');
+        const slug = slugify(cityRaw);
         slugsSet.add(slug);
       }
     });

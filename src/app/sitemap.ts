@@ -1,8 +1,9 @@
 import type { MetadataRoute } from 'next'
-import { db } from '@/lib/firebaseAdmin'
+import { getAllCities, getRestaurantsByCity } from '@/lib/restaurantService.server'
 import { slugify } from '@/lib/utils'
 
-export const dynamic = 'force-dynamic'
+export const dynamic = 'force-static'
+export const revalidate = 3600
 const baseUrl = 'https://gula.menu'
 
 const categoryMap: Record<string, string> = {
@@ -37,49 +38,31 @@ const categoryMap: Record<string, string> = {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const urls: MetadataRoute.Sitemap = [{ url: `${baseUrl}/`, lastModified: new Date() }]
+  let cities: string[] = []
   try {
-    // Fetch all visible places once
-    const snapshot = await db.collection('places').get()
-    const docs = snapshot.docs.filter(d => d.data().guideConfig?.isVisible)
-
-    // Group restaurants by city slug
-    const cityMap: Record<string, { slug: string; categories: string[] }[]> = {}
-    docs.forEach(d => {
-      const data = d.data() as any
-      const cityRaw = data.guideConfig?.address?.city || data.city || ''
-      const citySlug = slugify(cityRaw)
-      if (!cityMap[citySlug]) cityMap[citySlug] = []
-      cityMap[citySlug].push({
-        slug: slugify(data.name || ''),
-        categories: Array.isArray(data.guideConfig?.categories)
-          ? data.guideConfig.categories
-          : [],
-      })
-    })
-
-    // Start building URLs
-    const urls: MetadataRoute.Sitemap = [{ url: `${baseUrl}/`, lastModified: new Date() }]
-
-    for (const city of Object.keys(cityMap)) {
-      urls.push({ url: `${baseUrl}/restaurante/${city}`, lastModified: new Date() })
-
-      // Category pages for this city
-      const codes = cityMap[city].flatMap(r => r.categories)
-      const unique = Array.from(new Set(codes))
-      unique.forEach(code => {
-        const label = categoryMap[code] || code
-        urls.push({ url: `${baseUrl}/restaurante/${city}/${slugify(label)}`, lastModified: new Date() })
-      })
-
-      // Individual restaurant pages
-      cityMap[city].forEach(r => {
-        urls.push({ url: `${baseUrl}/restaurante/${city}/restaurante/${r.slug}`, lastModified: new Date() })
-      })
-    }
-
-    return urls
+    cities = await getAllCities()
   } catch (error) {
-    console.error('Failed to generate sitemap', error)
-    return [{ url: `${baseUrl}/`, lastModified: new Date() }]
+    console.error('Error fetching cities for sitemap', error)
   }
+  for (const city of cities) {
+    urls.push({ url: `${baseUrl}/restaurante/${city}`, lastModified: new Date() })
+    let restaurantsList: any[] = []
+    try {
+      const result = await getRestaurantsByCity(city)
+      restaurantsList = result.restaurants
+    } catch (error) {
+      console.error('Error fetching restaurants for sitemap for city', city, error)
+    }
+    const codes = restaurantsList.flatMap(r => r.categories || [])
+    const uniqueCodes = Array.from(new Set(codes))
+    for (const code of uniqueCodes) {
+      const label = categoryMap[code] || code
+      urls.push({ url: `${baseUrl}/restaurante/${city}/${slugify(label)}`, lastModified: new Date() })
+    }
+    for (const rest of restaurantsList) {
+      urls.push({ url: `${baseUrl}/restaurante/${city}/restaurante/${rest.slug}`, lastModified: new Date() })
+    }
+  }
+  return urls
 }

@@ -9,9 +9,20 @@ import { getAllCities, getRestaurantsByCity } from '@/lib/restaurantService.serv
 import { slugify } from '@/lib/utils';
 import Link from 'next/link';
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-static';
 // ISR: regenerate page every 1 hour
 export const revalidate = 3600;
+
+// Pre-generate pages only for valid city slugs
+export async function generateStaticParams(): Promise<{ cidade: string }[]> {
+  let cities: string[] = []
+  try {
+    cities = await getAllCities()
+  } catch (e) {
+    console.error('Error generating static params for cities', e)
+  }
+  return cities.map(cidade => ({ cidade }))
+}
 
 export async function generateMetadata({ params }: { params: { cidade: string } }): Promise<NextMetadata> {
   const { cidade } = params;
@@ -28,11 +39,6 @@ export async function generateMetadata({ params }: { params: { cidade: string } 
     description: `Descubra os melhores restaurantes em ${cidadeFormatada}. Encontre avaliações, menus e horários.`,
     metadataBase: new URL('http://localhost:3001'),
   };
-}
-
-export async function generateStaticParams() {
-  const cities = await getAllCities();
-  return cities.map((cidade) => ({ cidade }));
 }
 
 export default async function Page({ params }: { params: { cidade: string } }) {

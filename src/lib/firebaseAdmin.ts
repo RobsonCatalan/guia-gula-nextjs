@@ -15,6 +15,7 @@ try {
   appConfig = {
     credential: cert(serviceAccount),
     storageBucket: bucketName,
+    projectId: serviceAccount.project_id,
   }
 } catch {
   // Fallback: parse FIREBASE_CONFIG or use GOOGLE_CLOUD_PROJECT
@@ -22,14 +23,20 @@ try {
     try {
       const config = JSON.parse(process.env.FIREBASE_CONFIG)
       bucketName = config.storageBucket
+      appConfig = {
+        credential: applicationDefault(),
+        storageBucket: bucketName,
+        projectId: config.projectId,
+      }
     } catch {}
   }
   if (!bucketName && process.env.GOOGLE_CLOUD_PROJECT) {
     bucketName = `${process.env.GOOGLE_CLOUD_PROJECT}.appspot.com`
-  }
-  appConfig = {
-    credential: applicationDefault(),
-    ...(bucketName ? { storageBucket: bucketName } : {}),
+    appConfig = {
+      credential: applicationDefault(),
+      storageBucket: bucketName,
+      projectId: process.env.GOOGLE_CLOUD_PROJECT,
+    }
   }
 }
 

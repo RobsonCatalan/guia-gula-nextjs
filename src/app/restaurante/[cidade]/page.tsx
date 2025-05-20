@@ -37,7 +37,13 @@ export async function generateStaticParams() {
 
 export default async function Page({ params }: { params: { cidade: string } }) {
   const { cidade } = params;
-  const { restaurants } = await getRestaurantsByCity(cidade);
+  let restaurants: any[] = [];
+  try {
+    const result = await getRestaurantsByCity(cidade);
+    restaurants = result.restaurants;
+  } catch (error) {
+    console.error('Error fetching restaurants for city', cidade, error);
+  }
   const cidadeFormatada = cidade
     .split('-')
     .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))

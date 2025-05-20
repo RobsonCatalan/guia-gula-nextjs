@@ -49,7 +49,7 @@ export async function getAllCities(): Promise<string[]> {
 export async function getRestaurantsByCity(citySlug: string): Promise<{ restaurants: Restaurant[] }> {
   const snap = await db.collection('places').get();
   const restaurants: Restaurant[] = [];
-  snap.docs.forEach(doc => {
+  snap.docs.forEach((doc) => {
     const data = doc.data() as any;
     if (!data.guideConfig?.isVisible) return;
     const address = data.guideConfig.address || {};
@@ -61,7 +61,7 @@ export async function getRestaurantsByCity(citySlug: string): Promise<{ restaura
       ? data.categories
       : [];
     const coords = address.coordinates
-      ? { latitude: data.guideConfig.address.coordinates.latitude, longitude: data.guideConfig.address.coordinates.longitude }
+      ? { latitude: address.coordinates.latitude, longitude: address.coordinates.longitude }
       : null;
     restaurants.push({
       id: doc.id,

@@ -86,9 +86,16 @@ export default async function CategoryPage({ params }: { params: { cidade: strin
   const { cidade, categoria } = params;
   const cidadeFormatada = formatSlug(cidade);
   const categoriaLabel = getLabelFromSlug(categoria);
-  // URL de imagem da categoria no Cloud Storage
-  const file = bucket.file(`categories/${categoria === 'pastelaria' ? 'pastel' : categoria}.webp`);
-  const [categoriaImageUrl] = await file.getSignedUrl({ action: 'read', expires: Date.now() + 3600 * 1000 });
+  let categoriaImageUrl = '';
+  if (bucket) {
+    try {
+      const file = bucket.file(`categories/${categoria === 'pastelaria' ? 'pastel' : categoria}.webp`);
+      const [url] = await file.getSignedUrl({ action: 'read', expires: Date.now() + 3600 * 1000 });
+      categoriaImageUrl = url;
+    } catch (err) {
+      console.error('Failed to get signed URL for category image', err);
+    }
+  }
 
   const breadcrumbLd = {
     "@context": "https://schema.org",

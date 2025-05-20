@@ -1,32 +1,32 @@
-[debug] [2025-05-20T03:10:50.702Z] ----------------------------------------------------------------------
-[debug] [2025-05-20T03:10:50.706Z] Command:       C:\nvm4w\nodejs\node.exe C:\Users\robso\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
-[debug] [2025-05-20T03:10:50.706Z] CLI Version:   14.2.1
-[debug] [2025-05-20T03:10:50.706Z] Platform:      win32
-[debug] [2025-05-20T03:10:50.706Z] Node Version:  v20.11.0
-[debug] [2025-05-20T03:10:50.706Z] Time:          Tue May 20 2025 00:10:50 GMT-0300 (Horário Padrão de Brasília)
-[debug] [2025-05-20T03:10:50.706Z] ----------------------------------------------------------------------
+[debug] [2025-05-20T12:18:43.464Z] ----------------------------------------------------------------------
+[debug] [2025-05-20T12:18:43.467Z] Command:       C:\nvm4w\nodejs\node.exe C:\Users\robso\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2025-05-20T12:18:43.467Z] CLI Version:   14.2.1
+[debug] [2025-05-20T12:18:43.467Z] Platform:      win32
+[debug] [2025-05-20T12:18:43.467Z] Node Version:  v20.11.0
+[debug] [2025-05-20T12:18:43.467Z] Time:          Tue May 20 2025 09:18:43 GMT-0300 (Horário Padrão de Brasília)
+[debug] [2025-05-20T12:18:43.467Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2025-05-20T03:10:50.994Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2025-05-20T03:10:50.994Z] > authorizing via signed-in user (robson.catalan@gmail.com)
-[debug] [2025-05-20T03:10:50.994Z] [iam] checking project gula-guia for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasehosting.sites.update"]
-[debug] [2025-05-20T03:10:50.996Z] Checked if tokens are valid: true, expires at: 1747712588126
-[debug] [2025-05-20T03:10:50.996Z] Checked if tokens are valid: true, expires at: 1747712588126
-[debug] [2025-05-20T03:10:50.997Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/gula-guia:testIamPermissions [none]
-[debug] [2025-05-20T03:10:50.997Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/gula-guia:testIamPermissions x-goog-quota-user=projects/gula-guia
-[debug] [2025-05-20T03:10:50.997Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/gula-guia:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasehosting.sites.update"]}
-[debug] [2025-05-20T03:10:52.019Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/gula-guia:testIamPermissions 200
-[debug] [2025-05-20T03:10:52.019Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/gula-guia:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasehosting.sites.update"]}
-[debug] [2025-05-20T03:10:52.019Z] Checked if tokens are valid: true, expires at: 1747712588126
-[debug] [2025-05-20T03:10:52.020Z] Checked if tokens are valid: true, expires at: 1747712588126
-[debug] [2025-05-20T03:10:52.020Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/gula-guia/serviceAccounts/gula-guia@appspot.gserviceaccount.com:testIamPermissions [none]
-[debug] [2025-05-20T03:10:52.020Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/gula-guia/serviceAccounts/gula-guia@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
-[debug] [2025-05-20T03:10:53.025Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/gula-guia/serviceAccounts/gula-guia@appspot.gserviceaccount.com:testIamPermissions 200
-[debug] [2025-05-20T03:10:53.025Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/gula-guia/serviceAccounts/gula-guia@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
-[debug] [2025-05-20T03:10:53.026Z] Checked if tokens are valid: true, expires at: 1747712588126
-[debug] [2025-05-20T03:10:53.026Z] Checked if tokens are valid: true, expires at: 1747712588126
-[debug] [2025-05-20T03:10:53.026Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/gula-guia [none]
-[debug] [2025-05-20T03:10:53.548Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/gula-guia 200
-[debug] [2025-05-20T03:10:53.548Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/gula-guia {"projectId":"gula-guia","projectNumber":"534774249311","displayName":"Gula Guia","name":"projects/gula-guia","resources":{"hostingSite":"gula-guia"},"state":"ACTIVE","etag":"1_376298f6-142d-4f03-8dff-c0c2813a953f"}
+[debug] [2025-05-20T12:18:43.649Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-05-20T12:18:43.649Z] > authorizing via signed-in user (robson.catalan@gmail.com)
+[debug] [2025-05-20T12:18:43.649Z] [iam] checking project gula-guia for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2025-05-20T12:18:43.650Z] Checked if tokens are valid: true, expires at: 1747744678839
+[debug] [2025-05-20T12:18:43.651Z] Checked if tokens are valid: true, expires at: 1747744678839
+[debug] [2025-05-20T12:18:43.651Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/gula-guia:testIamPermissions [none]
+[debug] [2025-05-20T12:18:43.652Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/gula-guia:testIamPermissions x-goog-quota-user=projects/gula-guia
+[debug] [2025-05-20T12:18:43.652Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/gula-guia:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-05-20T12:18:44.662Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/gula-guia:testIamPermissions 200
+[debug] [2025-05-20T12:18:44.662Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/gula-guia:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-05-20T12:18:44.662Z] Checked if tokens are valid: true, expires at: 1747744678839
+[debug] [2025-05-20T12:18:44.663Z] Checked if tokens are valid: true, expires at: 1747744678839
+[debug] [2025-05-20T12:18:44.663Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/gula-guia/serviceAccounts/gula-guia@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2025-05-20T12:18:44.663Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/gula-guia/serviceAccounts/gula-guia@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2025-05-20T12:18:45.671Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/gula-guia/serviceAccounts/gula-guia@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2025-05-20T12:18:45.671Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/gula-guia/serviceAccounts/gula-guia@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2025-05-20T12:18:45.672Z] Checked if tokens are valid: true, expires at: 1747744678839
+[debug] [2025-05-20T12:18:45.672Z] Checked if tokens are valid: true, expires at: 1747744678839
+[debug] [2025-05-20T12:18:45.672Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/gula-guia [none]
+[debug] [2025-05-20T12:18:46.184Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/gula-guia 200
+[debug] [2025-05-20T12:18:46.184Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/gula-guia {"projectId":"gula-guia","projectNumber":"534774249311","displayName":"Gula Guia","name":"projects/gula-guia","resources":{"hostingSite":"gula-guia"},"state":"ACTIVE","etag":"1_376298f6-142d-4f03-8dff-c0c2813a953f"}
 [info] 
 [info] === Deploying to 'gula-guia'...
 [info] 

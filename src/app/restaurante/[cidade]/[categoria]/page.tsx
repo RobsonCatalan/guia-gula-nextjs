@@ -1,11 +1,12 @@
 // src/app/restaurante/[cidade]/[categoria]/page.tsx
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import CategorySection from '@/components/CategorySection';
-import { Suspense } from 'react';
+import { bucket } from '@/lib/firebaseAdmin';
+import { getAllCities } from '@/lib/restaurantService.server';
 import CategoryClientComponent from './client-component';
-import { getRestaurantsByCity } from '@/lib/restaurantService';
+import { slugify } from '@/lib/utils';
 
 // Mapeamento de códigos de categoria para labels
 const categoryMap: Record<string, string> = {
@@ -39,16 +40,6 @@ const categoryMap: Record<string, string> = {
   other: 'Outros'
 };
 
-// Gera slug a partir do label
-const slugify = (str: string) =>
-  str.toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-+|-+$/g, '');
-
 // Formata slug para exibição (Capitalização)
 const formatSlug = (slug: string) =>
   slug
@@ -63,14 +54,14 @@ const getLabelFromSlug = (slug: string) => {
   return entry ? entry[1] : slug;
 };
 
+// Gera slug a partir do label
 const getCodeFromSlug = (slug: string) => {
   const entry = Object.entries(categoryMap).find(([code, label]) => slugify(label) === slug);
   return entry ? entry[0] : slug;
 };
 
-export async function generateMetadata(props: { params: any }): Promise<Metadata> {
-  const { params } = props;
-  const { cidade, categoria } = await params;
+export async function generateMetadata({ params }: { params: { cidade: string; categoria: string } }): Promise<Metadata> {
+  const { cidade, categoria } = params;
   const cidadeFormatada = formatSlug(cidade);
   const categoriaLabel = getLabelFromSlug(categoria);
   return {
@@ -81,30 +72,23 @@ export async function generateMetadata(props: { params: any }): Promise<Metadata
 }
 
 export async function generateStaticParams() {
-  const cities = ['belo-horizonte', 'sao-paulo'];
+  const cities = await getAllCities();
   const categories = Object.values(categoryMap).map(label => slugify(label));
-  const params: Array<{ cidade: string; categoria: string }> = [];
-  cities.forEach(city => {
-    categories.forEach(cat => {
-      params.push({ cidade: city, categoria: cat });
-    });
-  });
-  return params;
+  return cities.flatMap((cidade) =>
+    categories.map((categoria) => ({ cidade, categoria }))
+  );
 }
 
 // Configuração de cache no servidor - 1 hora (3600 segundos)
 export const revalidate = 3600; // 1 hora de cache
 
-export default async function CategoryPage(props: { params: any }) {
-  const { params } = props;
-  const { cidade, categoria } = await params;
-  const { restaurants: allRestaurants } = await getRestaurantsByCity(cidade);
-  const code = getCodeFromSlug(categoria);
-  const filteredRestaurants = allRestaurants.filter(r => (r.categories || []).includes(code));
+export default async function CategoryPage({ params }: { params: { cidade: string; categoria: string } }) {
+  const { cidade, categoria } = params;
   const cidadeFormatada = formatSlug(cidade);
   const categoriaLabel = getLabelFromSlug(categoria);
-  // Ajuste de slug para nomes de imagem (ex: pastelaria -> pastel)
-  const imageSlug = categoria === 'pastelaria' ? 'pastel' : categoria;
+  // URL de imagem da categoria no Cloud Storage
+  const file = bucket.file(`categories/${categoria === 'pastelaria' ? 'pastel' : categoria}.webp`);
+  const [categoriaImageUrl] = await file.getSignedUrl({ action: 'read', expires: Date.now() + 3600 * 1000 });
 
   const breadcrumbLd = {
     "@context": "https://schema.org",
@@ -116,21 +100,9 @@ export default async function CategoryPage(props: { params: any }) {
     ]
   };
 
-  const itemListLd = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    "itemListElement": filteredRestaurants.map((r, i) => ({
-      "@type": "ListItem",
-      "position": i + 1,
-      "name": r.name,
-      "item": `https://www.gulamenu.com.br/restaurante/${cidade}/restaurante/${slugify(r.name)}`
-    }))
-  };
-
   return (
     <div className="bg-[#FFF8F0]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }} />
       {/* Header similar à home */}
       <header className="bg-[#ECE2D9] text-[#4A4A4A] p-6 shadow-sm">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
@@ -160,9 +132,8 @@ export default async function CategoryPage(props: { params: any }) {
         <h1 className="text-2xl font-bold text-[#4A4A4A] mb-6">
           Restaurantes da Categoria {categoriaLabel} em {cidadeFormatada}
         </h1>
-        <Suspense fallback={<div>Carregando restaurantes...</div>}>
-          <CategoryClientComponent cidade={cidade} categoria={categoria} />
-        </Suspense>
+        {/* Client component handles fetching of restaurants, ratings and distances */}
+        <CategoryClientComponent cidade={cidade} categoria={categoria} />
       </main>
       <CategorySection city={cidade} title={`Explore outras Categorias de Restaurantes em ${cidadeFormatada}`} currentCategory={categoria} />
       <div className="mt-0 py-6 text-center">

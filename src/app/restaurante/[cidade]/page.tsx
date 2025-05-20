@@ -1,27 +1,20 @@
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
+import type { Metadata as NextMetadata } from 'next';
 import Image from 'next/image';
-import CategorySection from '@/components/CategorySection';
-import Link from 'next/link';
-import path from 'path';
-import fs from 'fs';
 import { Suspense } from 'react';
-import CityClientComponent from './client-component';
+import CategorySection from '@/components/CategorySection';
 import CitiesSection from '@/components/CitiesSection';
-import { getRestaurantsByCity } from '@/lib/restaurantService';
+import CityPageClient from './page.client';
+import { getAllCities, getRestaurantsByCity } from '@/lib/restaurantService.server';
 import { slugify } from '@/lib/utils';
-
-const normalize = (str: string) =>
-  str.toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-+|-+$/g, '');
+import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
+// ISR: regenerate page every 1 hour
+export const revalidate = 3600;
 
-export async function generateMetadata({ params }: { params: Promise<{ cidade: string }> }): Promise<Metadata> {
-  const { cidade } = await params;
+export async function generateMetadata({ params }: { params: { cidade: string } }): Promise<NextMetadata> {
+  const { cidade } = params;
   
   // Formata a cidade para exibição
   const cidadeFormatada = cidade
@@ -37,27 +30,22 @@ export async function generateMetadata({ params }: { params: Promise<{ cidade: s
   };
 }
 
-// Configuração de cache no servidor - 1 hora (3600 segundos)
-export const revalidate = 3600; // 1 hora de cache
+export async function generateStaticParams() {
+  const cities = await getAllCities();
+  return cities.map((cidade) => ({ cidade }));
+}
 
-export default async function Page({ params }: { params: Promise<{ cidade: string }> }) {
-  const { cidade } = await params;
+export default async function Page({ params }: { params: { cidade: string } }) {
+  const { cidade } = params;
   const { restaurants } = await getRestaurantsByCity(cidade);
-  
-  // Formata a cidade para exibição
   const cidadeFormatada = cidade
     .split('-')
     .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ')
     .replace(/\bSao\b/g, 'São');
-  
-  console.log(`Cidade: ${cidadeFormatada}`);
-  
-  const imgPath = path.join(process.cwd(), 'public', 'images', 'cities', `${cidade}.webp`);
-  const hasImage = fs.existsSync(imgPath);
-  
+
   return (
-    <div className="bg-[#FFF8F0]">
+    <>
       <header className="bg-[#ECE2D9] text-[#4A4A4A] p-6 shadow-sm">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <Link href="/">
@@ -68,7 +56,7 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
           </nav>
         </div>
       </header>
-      <nav className="max-w-7xl mx-auto px-6 py-2 text-sm text-[#4A4A4A]" aria-label="breadcrumb">
+      <nav className="bg-[#FFF8F0] max-w-7xl mx-auto px-6 py-2 text-sm text-[#4A4A4A]" aria-label="breadcrumb">
         <ol className="list-none flex">
           <li>
             <Link href="/" className="hover:underline">Início</Link>
@@ -77,47 +65,34 @@ export default async function Page({ params }: { params: Promise<{ cidade: strin
           <li className="font-medium">{cidadeFormatada}</li>
         </ol>
       </nav>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Início", "item": "https://www.gulamenu.com.br/" },
-          { "@type": "ListItem", "position": 2, "name": cidadeFormatada, "item": `https://www.gulamenu.com.br/restaurante/${cidade}` }
-        ]
-      }) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "ItemList",
-        "itemListElement": restaurants.map((r, i) => ({
-          "@type": "ListItem",
-          "position": i + 1,
-          "name": r.name,
-          "item": `https://www.gulamenu.com.br/restaurante/${cidade}/restaurante/${slugify(r.name)}`
-        }))
-      }) }} />
+
       <CategorySection city={cidade} title="" />
-      <main id="restaurants" className="max-w-7xl mx-auto px-6 py-6 bg-[#FFF8F0]">
-        <h1 className="text-2xl font-bold text-[#4A4A4A] mb-6">
+
+      <main className="max-w-7xl mx-auto px-6 py-6 bg-[#FFF8F0]">
+        <h1 className="text-3xl font-bold font-['Roboto'] text-[#4A4A4A] mb-6">
           Todos os Restaurantes em {cidadeFormatada}
         </h1>
-        <Suspense fallback={<div>Carregando restaurantes...</div>}>
-          <CityClientComponent cidade={cidade} />
+        <Suspense fallback={<p className="text-center py-8">Carregando restaurantes...</p>}>
+          <CityPageClient />
         </Suspense>
       </main>
+
+      {/* Explore outras Cidades */}
       <section className="py-6 mt-0 px-6 bg-[#ECE2D9]">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-[#4A4A4A] mb-6">Explore outras Cidades</h2>
           <CitiesSection currentCity={cidade} />
         </div>
       </section>
-      <div className="mt-0 py-6 text-center">
+
+      <div className="mt-0 py-6 text-center bg-[#FFF8F0]">
         <h2 className="text-2xl font-bold text-[#4A4A4A] mb-4 font-['Roboto']">
           Conheça o Gula.menu
         </h2>
         <p className="text-[#4A4A4A] max-w-3xl mx-auto">
-          Descubra restaurantes de diversas culinárias na sua cidade, veja os cardápios, avaliações, horários de funcionamento e disponibilidade de delivery. Se você for proprietário de um restaurante <a href="https://www.gulamenu.com.br/" target="_blank" rel="noopener noreferrer" className="font-medium text-[#FF5842] underline">clique aqui</a>
+          Descubra restaurantes de diversas culinárias na sua cidade, veja os cardápios, avaliações, horários de funcionamento e disponibilidade de delivery. Se você for proprietário de um restaurante acesse <a href="https://www.gulamenu.com.br/" target="_blank" rel="noopener noreferrer" className="font-medium text-[#FF5842] underline">gulamenu.com.br</a>
         </p>
       </div>
-    </div>
+    </>
   );
 }

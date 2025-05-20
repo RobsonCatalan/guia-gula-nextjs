@@ -1,8 +1,8 @@
 'use client';
 import React, { useEffect, useState, useMemo } from 'react';
-import { useParams, useSearchParams, usePathname } from 'next/navigation';
+import { useSearchParams, usePathname } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import { Restaurant, getRestaurantsByCity, getRestaurantReviews, Review, getMenuItems, Menu } from '@/lib/restaurantService';
+import { Restaurant, getRestaurantReviews, Review, getMenuItems, Menu } from '@/lib/restaurantService';
 import Image from 'next/image';
 import Link from 'next/link';
 import { categoryMap } from '@/components/RestaurantCard';
@@ -58,13 +58,12 @@ const groupWorkingHours = (hours: { weekday: number; startTime: number; endTime:
   return Object.values(map);
 };
 
-export default function RestaurantDetailClient() {
-  const params = useParams();
-  const cidade = params.cidade as string;
-  const slug = params['nome-restaurante'] as string;
-  const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+// Component props
+interface RestaurantDetailClientProps {
+  restaurant: Restaurant;
+}
+
+export default function RestaurantDetailClient({ restaurant }: RestaurantDetailClientProps) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isReviewsDrawerOpen, setIsReviewsDrawerOpen] = useState(false);
   const [isPresentialOpen, setIsPresentialOpen] = useState(false);
@@ -97,33 +96,14 @@ export default function RestaurantDetailClient() {
   const pageUrl = `${origin}${pathname}`;
 
   useEffect(() => {
-    async function load() {
-      setLoading(true);
-      try {
-        const { restaurants } = await getRestaurantsByCity(cidade);
-        const found = restaurants.find(r => slugify(r.name) === slug);
-        if (!found) {
-          setError('Restaurante não encontrado');
-        } else {
-          setRestaurant(found);
-          // Carregar itens do cardápio para este restaurante
-          const items = await getMenuItems(found.id);
-          setMenuItems(items);
-        }
-      } catch (err) {
-        console.error('Erro ao carregar restaurante:', err);
-        setError('Erro ao carregar restaurante');
-      } finally {
-        setLoading(false);
-      }
-    }
-    load();
-  }, [cidade, slug]);
-
-  useEffect(() => {
-    if (!restaurant) return;
     getRestaurantReviews(restaurant.id)
       .then(setReviews)
+      .catch(console.error);
+  }, [restaurant]);
+
+  useEffect(() => {
+    getMenuItems(restaurant.id)
+      .then(setMenuItems)
       .catch(console.error);
   }, [restaurant]);
 
@@ -201,13 +181,6 @@ export default function RestaurantDetailClient() {
     sections.forEach(sec => { initial[sec.name] = true; });
     setVisibleSections(initial);
   }, [sections]);
-
-  if (loading) {
-    return <div className="flex justify-center py-8"><div className="w-12 h-12 border-4 border-[#F4A261] border-t-[#D32F2F] rounded-full animate-spin"></div></div>;
-  }
-  if (error || !restaurant) {
-    return <div className="text-center py-8 text-red-500">{error}</div>;
-  }
 
   const renderStars = (ratingValue: number) => {
     const stars = [];
@@ -359,20 +332,18 @@ export default function RestaurantDetailClient() {
           <div className="bg-white p-6 rounded-lg shadow">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-bold text-[#4A4A4A]">Ir ao Restaurante</h3>
-              {driveTime && (
-                <div className="flex items-center text-sm text-[#4A4A4A]">
-                  <div className="relative w-10 h-10 mr-1">
-                    <Image
-                      src="/images/icons/car.png"
-                      alt="Car icon"
-                      fill
-                      unoptimized
-                      className="object-contain"
-                    />
-                  </div>
-                  <span>~ {driveTime}</span>
+              <div className="flex items-center text-sm text-[#4A4A4A]">
+                <div className="relative w-10 h-10 mr-1">
+                  <Image
+                    src="/images/icons/car.png"
+                    alt="Car icon"
+                    fill
+                    unoptimized
+                    className="object-contain"
+                  />
                 </div>
-              )}
+                <span>~ {driveTime}</span>
+              </div>
             </div>
             <div className="flex items-center mb-4">
               <span className={isPresentialOpen ? 'text-green-600' : 'text-red-600'}>{isPresentialOpen ? 'Aberto agora' : 'Fechado agora'}</span>

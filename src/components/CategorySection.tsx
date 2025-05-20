@@ -134,8 +134,8 @@ export default function CategorySection({ city, title, currentCategory }: Catego
     return () => window.removeEventListener('resize', updateScroll);
   }, [cityCategories, isMobile]);
 
-  // Determina título completo da seção
-  const heading = title ?? `Categorias de Restaurantes em ${cityFormatted}`;
+  // Exibe título apenas se for passado como prop
+  const heading = title;
   // Filtra para não mostrar a categoria atual
   const displayCategories = currentCategory
     ? cityCategories.filter(cat => slugify(cat) !== currentCategory)

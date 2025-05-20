@@ -74,11 +74,11 @@ export interface Review {
 }
 
 // Função para sanitizar e validar dados de restaurante
-const sanitizeRestaurant = (data: DocumentData): Restaurant => ({
+export const sanitizeRestaurant = (data: DocumentData): Restaurant => ({
   id: data.id || '',
   name: data.name || '',
   shortDescription: data.shortDescription || '',
-  address: data.fiscalInformation?.fiscalAddress?.formattedAddress || data.address || '',
+  address: data.fiscalInformation?.fiscalAddress?.formattedAddress || '',
   city: data.guideConfig?.address?.city || data.city || '',
   description: data.description || '',
   cuisine: data.cuisineType || data.cuisine || '',

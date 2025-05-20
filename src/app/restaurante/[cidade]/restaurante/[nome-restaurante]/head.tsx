@@ -1,5 +1,5 @@
 import React from 'react';
-import { getRestaurantsByCity } from '@/lib/restaurantService';
+import { getRestaurantsByCity } from '@/lib/restaurantService.server';
 import { slugify } from '@/lib/utils';
 
 type Props = { params: { cidade: string; 'nome-restaurante': string } };

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import RestaurantDetailClient from './client-component';
+import { Suspense } from 'react';
 import { getAllCities, getRestaurantsByCity, getRestaurantBySlug } from '@/lib/restaurantService.server';
 
 // ISR: regenerate page every 1 hour
@@ -110,5 +111,9 @@ export default async function Page({ params }: { params: any }) {
     workingHours,
     deliveryConfig,
   };
-  return <RestaurantDetailClient restaurant={restaurantData} />;
+  return (
+    <Suspense fallback={<p className="text-center py-8">Carregando detalhes...</p>}>
+      <RestaurantDetailClient restaurant={restaurantData} />
+    </Suspense>
+  );
 }

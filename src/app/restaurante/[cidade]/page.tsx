@@ -46,7 +46,7 @@ export default async function Page({ params }: { params: { cidade: string } }) {
 
   return (
     <>
-      <header className="bg-[#ECE2D9] text-[#4A4A4A] p-6 shadow-sm">
+      <header className="bg-[#FFF8F0] text-[#4A4A4A] p-6 shadow-sm">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <Link href="/">
             <div role="img" aria-label="Gula.menu" className="logo-mask w-[150px] h-[50px]"></div>
@@ -56,29 +56,33 @@ export default async function Page({ params }: { params: { cidade: string } }) {
           </nav>
         </div>
       </header>
-      <nav className="bg-[#FFF8F0] max-w-7xl mx-auto px-6 py-2 text-sm text-[#4A4A4A]" aria-label="breadcrumb">
-        <ol className="list-none flex">
-          <li>
-            <Link href="/" className="hover:underline">Início</Link>
-            <span className="mx-2">/</span>
-          </li>
-          <li className="font-medium">{cidadeFormatada}</li>
-        </ol>
-      </nav>
+      <div className="bg-[#FFF8F0]">
+        <nav className="max-w-7xl mx-auto px-6 py-2 text-sm text-[#4A4A4A]" aria-label="breadcrumb">
+          <ol className="list-none flex">
+            <li>
+              <Link href="/" className="hover:underline">Início</Link>
+              <span className="mx-2">/</span>
+            </li>
+            <li className="font-medium">{cidadeFormatada}</li>
+          </ol>
+        </nav>
+      </div>
 
       <CategorySection city={cidade} title="" />
 
-      <main className="max-w-7xl mx-auto px-6 py-6 bg-[#FFF8F0]">
-        <h1 className="text-3xl font-bold font-['Roboto'] text-[#4A4A4A] mb-6">
-          Todos os Restaurantes em {cidadeFormatada}
-        </h1>
-        <Suspense fallback={<p className="text-center py-8">Carregando restaurantes...</p>}>
-          <CityPageClient />
-        </Suspense>
-      </main>
+      <div className="bg-[#FFF8F0]">
+        <main className="max-w-7xl mx-auto px-6 py-6">
+          <h1 className="text-3xl font-bold font-['Roboto'] text-[#4A4A4A] mb-6">
+            Todos os Restaurantes em {cidadeFormatada}
+          </h1>
+          <Suspense fallback={<p className="text-center py-8">Carregando restaurantes...</p>}>
+            <CityPageClient />
+          </Suspense>
+        </main>
+      </div>
 
       {/* Explore outras Cidades */}
-      <section className="py-6 mt-0 px-6 bg-[#ECE2D9]">
+      <section className="py-6 mt-0 px-6 bg-[#FFF8F0]">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-[#4A4A4A] mb-6">Explore outras Cidades</h2>
           <CitiesSection currentCity={cidade} />

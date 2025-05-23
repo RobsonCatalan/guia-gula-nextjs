@@ -9,15 +9,17 @@ import type { QueryDocumentSnapshot, DocumentData } from 'firebase/firestore';
 
 interface RestaurantClientProps {
   cidade: string;
+  initialRestaurants?: Restaurant[];
 }
 
 export default function ClientComponent({ 
-  cidade 
+  cidade,
+  initialRestaurants = []
 }: RestaurantClientProps) {
-  const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+  const [restaurants, setRestaurants] = useState<Restaurant[]>(initialRestaurants);
   const { isAppCheckReady } = useAppCheckContext();
   const [lastDocId, setLastDocId] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(initialRestaurants.length === 0);
   const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState<boolean>(false);
 
@@ -63,6 +65,7 @@ export default function ClientComponent({
   // Função inicial para carregar os restaurantes quando o componente montar
   useEffect(() => {
     async function loadInitialRestaurants() {
+      if (initialRestaurants.length > 0) return;
       if (!isAppCheckReady) {
         console.log('[ClientComponent] App Check not ready yet, skipping initial fetch.');
         setLoading(true);
@@ -100,7 +103,7 @@ export default function ClientComponent({
     }
 
     loadInitialRestaurants();
-  }, [cidade, isAppCheckReady]);
+  }, [cidade, isAppCheckReady, initialRestaurants]);
 
   // Carregamento assíncrono das avaliações
   useEffect(() => {

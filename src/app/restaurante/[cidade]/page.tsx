@@ -8,6 +8,7 @@ import CityPageClient from './page.client';
 import { getAllCities, getRestaurantsByCity } from '@/lib/restaurantService.server';
 import { slugify } from '@/lib/utils';
 import Link from 'next/link';
+import type { Restaurant } from '@/lib/restaurantService';
 
 export const dynamic = 'force-static';
 // ISR: regenerate page every 1 hour
@@ -43,10 +44,10 @@ export async function generateMetadata({ params }: { params: { cidade: string } 
 
 export default async function Page({ params }: { params: { cidade: string } }) {
   const { cidade } = params;
-  let restaurants: any[] = [];
+  let initialRestaurants: Restaurant[] = [];
   try {
     const result = await getRestaurantsByCity(cidade);
-    restaurants = result.restaurants;
+    initialRestaurants = result.restaurants;
   } catch (error) {
     console.error('Error fetching restaurants for city', cidade, error);
   }
@@ -88,7 +89,7 @@ export default async function Page({ params }: { params: { cidade: string } }) {
             Todos os Restaurantes em {cidadeFormatada}
           </h1>
           <Suspense fallback={<p className="text-center py-8">Carregando restaurantes...</p>}>
-            <CityPageClient />
+            <CityPageClient cidade={cidade} initialRestaurants={initialRestaurants} />
           </Suspense>
         </main>
       </div>

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import CategorySection from '@/components/CategorySection';
 import { bucket } from '@/lib/firebaseAdmin';
-import { getAllCities } from '@/lib/restaurantService.server';
+import { getAllCities, getRestaurantsByCity } from '@/lib/restaurantService.server';
 import CategoryClientComponent from './client-component';
 import { slugify } from '@/lib/utils';
 
@@ -84,6 +84,9 @@ export const revalidate = 3600; // 1 hora de cache
 
 export default async function CategoryPage({ params }: { params: { cidade: string; categoria: string } }) {
   const { cidade, categoria } = params;
+  const { restaurants: allRestaurants } = await getRestaurantsByCity(cidade);
+  const code = getCodeFromSlug(categoria);
+  const restaurants = allRestaurants.filter(r => (r.categories || []).includes(code));
   const cidadeFormatada = formatSlug(cidade);
   const categoriaLabel = getLabelFromSlug(categoria);
   let categoriaImageUrl = '';
@@ -140,7 +143,7 @@ export default async function CategoryPage({ params }: { params: { cidade: strin
           Restaurantes da Categoria {categoriaLabel} em {cidadeFormatada}
         </h1>
         {/* Client component handles fetching of restaurants, ratings and distances */}
-        <CategoryClientComponent cidade={cidade} categoria={categoria} />
+        <CategoryClientComponent cidade={cidade} categoria={categoria} initialRestaurants={restaurants} />
       </main>
       <CategorySection city={cidade} title={`Explore outras Categorias de Restaurantes em ${cidadeFormatada}`} currentCategory={categoria} />
       <div className="mt-0 py-6 text-center">

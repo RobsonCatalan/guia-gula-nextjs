@@ -1,9 +1,13 @@
 'use client';
 
-import { useParams } from 'next/navigation';
 import ClientComponent from './client-component';
+import type { Restaurant } from '@/lib/restaurantService';
 
-export default function CityPageClient() {
-  const { cidade } = useParams();
-  return <ClientComponent cidade={cidade as string} />;
+interface CityPageClientProps {
+  cidade: string;
+  initialRestaurants: Restaurant[];
+}
+
+export default function CityPageClient({ cidade, initialRestaurants }: CityPageClientProps) {
+  return <ClientComponent cidade={cidade} initialRestaurants={initialRestaurants} />;
 }

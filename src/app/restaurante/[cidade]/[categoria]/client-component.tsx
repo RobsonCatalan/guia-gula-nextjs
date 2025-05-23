@@ -7,6 +7,7 @@ import RestaurantCard from '@/components/RestaurantCard';
 interface CategoryClientComponentProps {
   cidade: string;
   categoria: string;
+  initialRestaurants?: Restaurant[];
 }
 
 // Mapeamento de códigos de categoria para labels
@@ -55,9 +56,9 @@ const slugify = (str: string) =>
 const getCodeFromSlug = (slug: string) =>
   Object.entries(categoryMap).find(([, label]) => slugify(label) === slug)?.[0] || slug;
 
-export default function CategoryClientComponent({ cidade, categoria }: CategoryClientComponentProps) {
-  const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+export default function CategoryClientComponent({ cidade, categoria, initialRestaurants = [] }: CategoryClientComponentProps) {
+  const [restaurants, setRestaurants] = useState<Restaurant[]>(initialRestaurants);
+  const [loading, setLoading] = useState<boolean>(initialRestaurants.length === 0);
   const [error, setError] = useState<string | null>(null);
   // Estados para ordenação e cálculo de tempo de viagem
   const [sortOption, setSortOption] = useState<'time' | 'rating'>('time');
@@ -79,6 +80,7 @@ export default function CategoryClientComponent({ cidade, categoria }: CategoryC
 
   useEffect(() => {
     async function load() {
+      if (initialRestaurants.length > 0) return;
       setLoading(true);
       setError(null);
       try {
@@ -94,7 +96,7 @@ export default function CategoryClientComponent({ cidade, categoria }: CategoryC
       }
     }
     load();
-  }, [cidade, categoria]);
+  }, [cidade, categoria, initialRestaurants]);
 
   // Carregamento assíncrono das avaliações
   useEffect(() => {

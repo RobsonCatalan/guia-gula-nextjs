@@ -26,14 +26,15 @@ export async function generateStaticParams(): Promise<{ cidade: string }[]> {
 }
 
 export async function generateMetadata({ params }: { params: { cidade: string } }): Promise<NextMetadata> {
-  const { cidade } = params;
+  const { cidade } = await params;
   
   // Formata a cidade para exibição
   const cidadeFormatada = cidade
     .split('-')
     .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ')
-    .replace(/\bSao\b/g, 'São');
+    .replace(/\bSao\b/g, 'São')
+    .replace(/\bGoncalves\b/g, 'Gonçalves');
   
   return {
     title: `Restaurantes em ${cidadeFormatada} | Gula.menu`,
@@ -43,7 +44,7 @@ export async function generateMetadata({ params }: { params: { cidade: string } 
 }
 
 export default async function Page({ params }: { params: { cidade: string } }) {
-  const { cidade } = params;
+  const { cidade } = await params;
   let initialRestaurants: Restaurant[] = [];
   try {
     const result = await getRestaurantsByCity(cidade);
@@ -55,7 +56,8 @@ export default async function Page({ params }: { params: { cidade: string } }) {
     .split('-')
     .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ')
-    .replace(/\bSao\b/g, 'São');
+    .replace(/\bSao\b/g, 'São')
+    .replace(/\bGoncalves\b/g, 'Gonçalves');
 
   return (
     <>

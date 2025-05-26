@@ -1,6 +1,6 @@
 // src/lib/firebase.ts
 import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { initializeFirestore } from 'firebase/firestore';
 import { 
   initializeAppCheck, 
   ReCaptchaV3Provider, 
@@ -76,7 +76,7 @@ export function initializeFirebaseAppCheck(): AppCheck | null {
 }
 
 // Obtém a instância do Firestore
-const db = getFirestore(app);
+const db = initializeFirestore(app, { experimentalForceLongPolling: true });
 
 // Exportar db, app e a função de inicialização
 export { db, app };

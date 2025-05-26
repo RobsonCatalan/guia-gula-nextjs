@@ -86,7 +86,8 @@ export async function getRestaurantBySlug(cidade: string, nomeSlug: string): Pro
   for (const doc of snap.docs) {
     const data = doc.data() as any;
     if (!data.guideConfig?.isVisible) continue;
-    const cityRaw = data.guideConfig.address?.city || data.city;
+    // Ensure cityRaw is a string to avoid undefined
+    const cityRaw = data.guideConfig.address?.city || data.city || '';
     if (slugify(cityRaw) !== cidade) continue;
     const slugName = slugify(data.name || '');
     if (slugName !== nomeSlug) continue;

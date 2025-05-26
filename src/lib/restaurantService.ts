@@ -289,7 +289,8 @@ export const getRestaurantsByCity = async (
       .split('-')
       .map(w => w.charAt(0).toUpperCase() + w.slice(1))
       .join(' ')
-      .replace(/\bSao\b/g, 'São');
+      .replace(/\bSao\b/g, 'São')
+      .replace(/\bGoncalves\b/g, 'Gonçalves');
 
     // Verificar se temos dados em cache (apenas no cliente)
     if (typeof window !== 'undefined') {
@@ -309,17 +310,22 @@ export const getRestaurantsByCity = async (
       }
     }
 
-    // Query only restaurants in this city
+    // Query visible restaurants, then filter by slugified city to handle accents
     const q = query(
       collection(db, 'places'),
-      where('guideConfig.address.city', '==', displayCity)
+      where('guideConfig.isVisible', '==', true)
     );
     const snapshot = await getDocs(q);
-    
-    // Filtrar apenas restaurantes visíveis
+
+    // Filtrar restaurantes pela cidade após slugificar (tratando acentos)
     const restaurants: Restaurant[] = snapshot.docs
-      .filter(doc => doc.data().guideConfig?.isVisible === true)
-      .map(doc => sanitizeRestaurant({ id: doc.id, ...(doc.data() as any) }));
+      .map(doc => {
+        const data = doc.data() as any;
+        const cityRaw = data.guideConfig?.address?.city || data.city || '';
+        if (slugify(cityRaw) !== city) return null;
+        return sanitizeRestaurant({ id: doc.id, ...data });
+      })
+      .filter((r): r is Restaurant => r !== null);
 
     // Sort by name
     restaurants.sort((a, b) => a.name.localeCompare(b.name));

@@ -57,6 +57,11 @@ export default function CitiesSection({ currentCity }: CitiesSectionProps) {
     return () => window.removeEventListener('resize', updateScroll);
   }, [cities, isMobile]);
 
+  // Override labels for cities with special characters
+  const cityLabelMap: Record<string, string> = {
+    'goncalves': 'Gonçalves',
+  };
+
   const normalizeLabel = (slug: string) =>
     slug
       .split('-')
@@ -83,7 +88,7 @@ export default function CitiesSection({ currentCity }: CitiesSectionProps) {
         {isMobile ? (
           <div ref={containerRef} className="flex flex-nowrap space-x-4 overflow-x-auto pb-4 hide-scrollbar" style={{ touchAction: 'pan-x pan-y', WebkitOverflowScrolling: 'touch' }}>
             {cities.filter(slug => slug !== currentCity).map(slug => {
-              const label = normalizeLabel(slug);
+              const label = cityLabelMap[slug] ?? normalizeLabel(slug);
               return (
                 <Link key={slug} href={`/restaurante/${slug}`} className="flex-none w-[9.8rem] bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden">
                   <div className="relative w-full h-[5.6rem]">
@@ -107,7 +112,7 @@ export default function CitiesSection({ currentCity }: CitiesSectionProps) {
         ) : (
           <ScrollContainer innerRef={containerRef} className="flex flex-nowrap space-x-4 overflow-x-auto pb-4 hide-scrollbar cursor-grab" hideScrollbars={true} activationDistance={10}>
             {cities.filter(slug => slug !== currentCity).map(slug => {
-              const label = normalizeLabel(slug);
+              const label = cityLabelMap[slug] ?? normalizeLabel(slug);
               return (
                 <Link key={slug} href={`/restaurante/${slug}`} className="flex-none w-[9.8rem] bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden">
                   <div className="relative w-full h-[5.6rem]">

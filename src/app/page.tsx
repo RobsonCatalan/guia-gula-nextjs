@@ -62,7 +62,8 @@ export default function Home() {
             .split('-')
             .map(w => w.charAt(0).toUpperCase() + w.slice(1))
             .join(' ')
-            .replace(/\bSao\b/g, 'São'),
+            .replace(/\bSao\b/g, 'São')
+            .replace(/\bGoncalves\b/g, 'Gonçalves'),
         }));
         setCityOptions(options);
       } catch (err) {

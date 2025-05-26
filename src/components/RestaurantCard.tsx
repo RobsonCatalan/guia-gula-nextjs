@@ -201,14 +201,15 @@ export default function RestaurantCard({ restaurant, driveTime, rating: propRati
         
         {driveTime && (
           <div className="flex items-center text-xs text-[#4A4A4A] mb-2">
-            <Image
-              src="/images/icons/car.png"
-              alt="Car icon"
-              width={40}
-              height={40}
-              unoptimized
-              className="object-contain mr-1"
-            />
+            <div className="relative w-10 h-10 mr-1">
+              <Image
+                src="/images/icons/car.png"
+                alt="Car icon"
+                fill
+                unoptimized
+                style={{ objectFit: 'contain' }}
+              />
+            </div>
             <span>~ {driveTime}</span>
           </div>
         )}

@@ -46,7 +46,8 @@ const formatSlug = (slug: string) =>
     .split('-')
     .map(w => w.charAt(0).toUpperCase() + w.slice(1))
     .join(' ')
-    .replace(/\bSao\b/g, 'São');
+    .replace(/\bSao\b/g, 'São')
+    .replace(/\bGoncalves\b/g, 'Gonçalves');
 
 // Obtém label a partir do slug
 const getLabelFromSlug = (slug: string) => {
@@ -61,7 +62,7 @@ const getCodeFromSlug = (slug: string) => {
 };
 
 export async function generateMetadata({ params }: { params: { cidade: string; categoria: string } }): Promise<Metadata> {
-  const { cidade, categoria } = params;
+  const { cidade, categoria } = await params;
   const cidadeFormatada = formatSlug(cidade);
   const categoriaLabel = getLabelFromSlug(categoria);
   return {
@@ -83,7 +84,7 @@ export async function generateStaticParams() {
 export const revalidate = 3600; // 1 hora de cache
 
 export default async function CategoryPage({ params }: { params: { cidade: string; categoria: string } }) {
-  const { cidade, categoria } = params;
+  const { cidade, categoria } = await params;
   const { restaurants: allRestaurants } = await getRestaurantsByCity(cidade);
   const code = getCodeFromSlug(categoria);
   const restaurants = allRestaurants.filter(r => (r.categories || []).includes(code));

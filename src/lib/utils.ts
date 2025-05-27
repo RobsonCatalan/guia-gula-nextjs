@@ -8,3 +8,12 @@ export function slugify(str: string): string {
     .replace(/-+/g, '-')
     .replace(/^-+|-+$/g, '');
 }
+
+export function formatSlug(slug: string): string {
+  return slug
+    .split('-')
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ')
+    .replace(/\bSao\b/g, 'São')
+    .replace(/\bGoncalves\b/g, 'Gonçalves');
+}

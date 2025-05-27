@@ -29,7 +29,7 @@ interface CategorySectionProps {
   currentCategory?: string;
 }
 
-const categoryMap: Record<string, string> = {
+export const categoryMap: Record<string, string> = {
   barPub: 'Bar & Pub',
   pizza: 'Pizzaria',
   cafeBakeryDesserts: 'Café & Pães & Doces',

@@ -88,6 +88,10 @@ export default async function CategoryPage({ params }: { params: { cidade: strin
   const { restaurants: allRestaurants } = await getRestaurantsByCity(cidade);
   const code = getCodeFromSlug(categoria);
   const restaurants = allRestaurants.filter(r => (r.categories || []).includes(code));
+  // Generate static category labels for SSR fallback
+  const allCategoryCodes = allRestaurants.flatMap(r => r.categories || []);
+  const uniqueCategoryCodes = Array.from(new Set(allCategoryCodes));
+  const categoryLabels = uniqueCategoryCodes.map(code => categoryMap[code] || code);
   const cidadeFormatada = formatSlug(cidade);
   const categoriaLabel = getLabelFromSlug(categoria);
   let categoriaImageUrl = '';
@@ -146,6 +150,21 @@ export default async function CategoryPage({ params }: { params: { cidade: strin
         {/* Client component handles fetching of restaurants, ratings and distances */}
         <CategoryClientComponent cidade={cidade} categoria={categoria} initialRestaurants={restaurants} />
       </main>
+      {/* Static fallback for bots (no JS) */}
+      <noscript>
+        <section className="py-6 bg-[#FFF8F0]">
+          <div className="max-w-7xl mx-auto px-6">
+            <h2 className="text-2xl font-bold text-[#4A4A4A] mb-6">{`Explore outras Categorias de Restaurantes em ${cidadeFormatada}`}</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+              {categoryLabels.map(label => (
+                <Link key={label} href={`/restaurante/${cidade}/${slugify(label)}`} className="text-[#FF5842] font-medium block text-center">
+                  {label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      </noscript>
       <CategorySection city={cidade} title={`Explore outras Categorias de Restaurantes em ${cidadeFormatada}`} currentCategory={categoria} />
       <div className="mt-0 py-6 text-center">
         <h2 className="text-2xl font-bold text-[#4A4A4A] mb-4 font-['Roboto']">

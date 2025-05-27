@@ -2,11 +2,11 @@ import type { Metadata } from 'next';
 import type { Metadata as NextMetadata } from 'next';
 import Image from 'next/image';
 import { Suspense } from 'react';
-import CategorySection from '@/components/CategorySection';
+import CategorySection, { categoryMap } from '@/components/CategorySection';
 import CitiesSection from '@/components/CitiesSection';
 import CityPageClient from './page.client';
 import { getAllCities, getRestaurantsByCity } from '@/lib/restaurantService.server';
-import { slugify } from '@/lib/utils';
+import { slugify, formatSlug } from '@/lib/utils';
 import Link from 'next/link';
 import type { Restaurant } from '@/lib/restaurantService';
 
@@ -52,12 +52,19 @@ export default async function Page({ params }: { params: { cidade: string } }) {
   } catch (error) {
     console.error('Error fetching restaurants for city', cidade, error);
   }
+  // Generate static category labels for SSR fallback
+  const categoryCodes = initialRestaurants.flatMap(r => r.categories || []);
+  const uniqueCodes = Array.from(new Set(categoryCodes));
+  const categoryLabels = uniqueCodes.map(code => categoryMap[code] || code);
   const cidadeFormatada = cidade
     .split('-')
     .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ')
     .replace(/\bSao\b/g, 'São')
     .replace(/\bGoncalves\b/g, 'Gonçalves');
+  // Generate static list of other cities for SSR fallback
+  const allCities = await getAllCities();
+  const otherCities = allCities.filter(slug => slug !== cidade);
 
   return (
     <>
@@ -83,6 +90,22 @@ export default async function Page({ params }: { params: { cidade: string } }) {
         </nav>
       </div>
 
+      {/* Static fallback for bots (no JS) */}
+      <noscript>
+        <section className="py-6 bg-[#FFF8F0]">
+          <div className="max-w-7xl mx-auto px-6">
+            <h2 className="text-2xl font-bold text-[#4A4A4A] mb-6">Categorias</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {categoryLabels.map(label => (
+                <Link key={label} href={`/restaurante/${cidade}/${slugify(label)}`} className="text-[#FF5842] font-medium block text-center">
+                  {label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      </noscript>
+      {/* Interactive category section */}
       <CategorySection city={cidade} title="" />
 
       <div className="bg-[#FFF8F0]">
@@ -100,6 +123,15 @@ export default async function Page({ params }: { params: { cidade: string } }) {
       <section className="py-6 mt-0 px-6 bg-[#FFF8F0]">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-[#4A4A4A] mb-6">Explore outras Cidades</h2>
+          <noscript>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              {otherCities.map(slug => (
+                <Link key={slug} href={`/restaurante/${slug}`} className="text-[#FF5842] font-medium block text-center">
+                  {formatSlug(slug)}
+                </Link>
+              ))}
+            </div>
+          </noscript>
           <CitiesSection currentCity={cidade} />
         </div>
       </section>

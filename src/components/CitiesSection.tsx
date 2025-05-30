@@ -10,10 +10,12 @@ import { getAllCities } from '@/lib/restaurantService';
 
 interface CitiesSectionProps {
   currentCity?: string;
+  allowedCities?: string[];
 }
 
-export default function CitiesSection({ currentCity }: CitiesSectionProps) {
-  const [cities, setCities] = useState<string[]>([]);
+export default function CitiesSection({ currentCity, allowedCities }: CitiesSectionProps) {
+  // Inicializa com allowedCities para SSR gerar lista estática ao bot
+  const [cities, setCities] = useState<string[]>(allowedCities ?? []);
   const [failedImgs, setFailedImgs] = useState<Record<string, boolean>>({});
   const { isAppCheckReady } = useAppCheckContext();
   const router = useRouter();
@@ -24,6 +26,10 @@ export default function CitiesSection({ currentCity }: CitiesSectionProps) {
   const scrollRight = () => containerRef.current?.scrollBy({ left: scrollStep, behavior: 'smooth' });
 
   useEffect(() => {
+    if (allowedCities) {
+      setCities(allowedCities);
+      return;
+    }
     if (!isAppCheckReady) return;
     async function loadCities() {
       try {
@@ -34,7 +40,7 @@ export default function CitiesSection({ currentCity }: CitiesSectionProps) {
       }
     }
     loadCities();
-  }, [isAppCheckReady]);
+  }, [isAppCheckReady, allowedCities]);
 
   useEffect(() => {
     const checkMobile = () => {

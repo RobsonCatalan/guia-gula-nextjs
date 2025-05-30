@@ -15,11 +15,8 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  experimental: {
-    turbo: {
-      cssRefresh: false,
-    },
-  },
+  // Extend timeout for static page generation (in seconds)
+  staticPageGenerationTimeout: 300,
 };
 
 module.exports = nextConfig;

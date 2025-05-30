@@ -30,68 +30,126 @@ function slugify(str: string): string {
 }
 
 export async function getAllCities(): Promise<string[]> {
-  // Fetch all places
-  const snap = await db.collection('places').get();
-  const slugs = new Set<string>();
-  snap.docs.forEach((doc) => {
-    const data = doc.data() as any;
-    if (data.guideConfig?.isVisible) {
+  try {
+    const snap = await db.collection('places').get();
+    const slugs = new Set<string>();
+    snap.docs.forEach((doc) => {
+      const data = doc.data() as any;
+      if (data.guideConfig?.isVisible) {
+        const cityRaw = data.guideConfig.address?.city || data.city;
+        if (cityRaw) {
+          slugs.add(slugify(cityRaw));
+        }
+      }
+    });
+    return Array.from(slugs);
+  } catch (err) {
+    console.error('Error in getAllCities:', err);
+    return [];
+  }
+}
+
+export async function getAllStates(): Promise<string[]> {
+  try {
+    const snap = await db.collection('places').get();
+    const stateCityMap = new Map<string, Set<string>>();
+    snap.docs.forEach((doc) => {
+      const data = doc.data() as any;
+      // only include restaurants explicitly marked visible
+      if (data.guideConfig?.isVisible !== true) return;
+      const stateRaw = data.guideConfig?.address?.state || data.state;
+      const cityRaw = data.guideConfig?.address?.city || data.city;
+      if (!stateRaw || !cityRaw) return;
+      const stateSlug = slugify(stateRaw);
+      const citySlug = slugify(cityRaw);
+      if (!stateCityMap.has(stateSlug)) stateCityMap.set(stateSlug, new Set());
+      stateCityMap.get(stateSlug)!.add(citySlug);
+    });
+    return Array.from(stateCityMap.keys());
+  } catch (err) {
+    console.error('Error in getAllStates:', err);
+    return [];
+  }
+}
+
+export async function getCitiesByState(stateSlug: string): Promise<string[]> {
+  try {
+    const snap = await db.collection('places').get();
+    const slugs = new Set<string>();
+    snap.docs.forEach((doc) => {
+      const data = doc.data() as any;
+      // only include restaurants explicitly marked visible
+      if (data.guideConfig?.isVisible !== true) return;
+      const stateRaw = data.guideConfig?.address?.state || data.state;
+      if (!stateRaw) return;
+      if (slugify(stateRaw) !== stateSlug) return;
       const cityRaw = data.guideConfig.address?.city || data.city;
       if (cityRaw) {
-        const slug = slugify(cityRaw);
-        slugs.add(slug);
+        slugs.add(slugify(cityRaw));
       }
-    }
-  });
-  return Array.from(slugs);
+    });
+    // Return unique city slugs for this state (only from visible restaurants)
+    return Array.from(slugs).sort();
+  } catch (err) {
+    console.error('Error in getCitiesByState for', stateSlug, err);
+    return [];
+  }
 }
 
 export async function getRestaurantsByCity(citySlug: string): Promise<{ restaurants: Restaurant[] }> {
-  const snap = await db.collection('places').get();
-  const restaurants: Restaurant[] = [];
-  snap.docs.forEach((doc) => {
-    const data = doc.data() as any;
-    if (!data.guideConfig?.isVisible) return;
-    const address = data.guideConfig.address || {};
-    const cityRaw = address.city || data.city || '';
-    if (slugify(cityRaw) !== citySlug) return;
-    const categories = Array.isArray(data.guideConfig.categories)
-      ? data.guideConfig.categories
-      : Array.isArray(data.categories)
-      ? data.categories
-      : [];
-    const coords = address.coordinates
-      ? { latitude: address.coordinates.latitude, longitude: address.coordinates.longitude }
-      : null;
-    restaurants.push({
-      id: doc.id,
-      name: data.name || '',
-      slug: slugify(data.name || ''),
-      categories,
-      mainPhoto: data.mainPhoto || null,
-      logo: data.logo || null,
-      rating: data.rating || 0,
-      reviewCount: data.reviewCount || 0,
-      addressDistrict: address.district || '',
-      city: cityRaw,
-      coordinates: coords,
+  try {
+    const snap = await db.collection('places').get();
+    const restaurants: Restaurant[] = [];
+    snap.docs.forEach((doc) => {
+      const data = doc.data() as any;
+      if (!data.guideConfig?.isVisible) return;
+      const address = data.guideConfig.address || {};
+      const cityRaw = address.city || data.city || '';
+      if (slugify(cityRaw) !== citySlug) return;
+      const categories = Array.isArray(data.guideConfig.categories)
+        ? data.guideConfig.categories
+        : Array.isArray(data.categories)
+        ? data.categories
+        : [];
+      const coords = address.coordinates
+        ? { latitude: address.coordinates.latitude, longitude: address.coordinates.longitude }
+        : null;
+      restaurants.push({
+        id: doc.id,
+        name: data.name || '',
+        slug: slugify(data.name || ''),
+        categories,
+        mainPhoto: data.mainPhoto || null,
+        logo: data.logo || null,
+        rating: data.rating || 0,
+        reviewCount: data.reviewCount || 0,
+        addressDistrict: address.district || '',
+        city: cityRaw,
+        coordinates: coords,
+      });
     });
-  });
-  restaurants.sort((a, b) => a.name.localeCompare(b.name));
-  return { restaurants };
+    restaurants.sort((a, b) => a.name.localeCompare(b.name));
+    return { restaurants };
+  } catch (err) {
+    console.error('Error in getRestaurantsByCity for', citySlug, err);
+    return { restaurants: [] };
+  }
 }
 
 export async function getRestaurantBySlug(cidade: string, nomeSlug: string): Promise<Restaurant | null> {
-  const snap = await db.collection('places').get();
-  for (const doc of snap.docs) {
-    const data = doc.data() as any;
-    if (!data.guideConfig?.isVisible) continue;
-    // Ensure cityRaw is a string to avoid undefined
-    const cityRaw = data.guideConfig.address?.city || data.city || '';
-    if (slugify(cityRaw) !== cidade) continue;
-    const slugName = slugify(data.name || '');
-    if (slugName !== nomeSlug) continue;
-    return { id: doc.id, ...data };
+  try {
+    const snap = await db.collection('places').get();
+    for (const doc of snap.docs) {
+      const data = doc.data() as any;
+      if (!data.guideConfig?.isVisible) continue;
+      const cityRaw = data.guideConfig.address?.city || data.city || '';
+      if (slugify(cityRaw) !== cidade) continue;
+      if (slugify(data.name || '') !== nomeSlug) continue;
+      return { id: doc.id, ...data };
+    }
+    return null;
+  } catch (err) {
+    console.error('Error in getRestaurantBySlug for', cidade, nomeSlug, err);
+    return null;
   }
-  return null;
 }

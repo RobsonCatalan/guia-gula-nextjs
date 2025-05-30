@@ -4,6 +4,7 @@ import "./globals.css";
 import FirebaseAppCheckProvider from '@/components/FirebaseAppCheckProvider';
 import LayoutFooter from '@/components/LayoutFooter';
 import { Suspense } from 'react';
+import UnregisterSW from '@/components/UnregisterSW';
 
 const inter = Inter({
   variable: "--font-inter",
@@ -81,6 +82,7 @@ export default function RootLayout({
         className={`${inter.variable} ${roboto.variable} antialiased bg-[#FFF8F0] text-[#4A4A4A]`}
       >
         <FirebaseAppCheckProvider>
+          <UnregisterSW />
           {children}
           <Suspense fallback={null}>
             <LayoutFooter />

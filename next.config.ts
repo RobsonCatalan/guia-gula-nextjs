@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Extend timeout for static page generation (in seconds)
+  staticPageGenerationTimeout: 300,
   images: {
     // Configuração de domínios externos para imagens (adicione conforme necessário)
     loader: 'custom',

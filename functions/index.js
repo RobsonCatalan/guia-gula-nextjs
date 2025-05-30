@@ -7,6 +7,12 @@ const app = next({
 });
 const handle = app.getRequestHandler();
 
-exports.ssr = functions.https.onRequest((req, res) => {
-  return app.prepare().then(() => handle(req, res));
+exports.ssr = functions.https.onRequest(async (req, res) => {
+  try {
+    await app.prepare();
+    await handle(req, res);
+  } catch (err) {
+    console.error('Error handling SSR request:', err);
+    res.status(500).send('Internal Server Error');
+  }
 });

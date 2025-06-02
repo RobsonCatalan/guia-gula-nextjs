@@ -38,9 +38,6 @@ export default function HomePageClient({ stateOptions, initialState, initialCiti
     const stateCookie = getCookie('selectedState');
     const st = stateCookie || initialState;
     setSelectedState(st);
-    fetch(`/api/cities?state=${st}`)
-      .then(res => res.json())
-      .then(data => setCities(data.cities));
     setCookie('selectedState', st);
   }, []);
 
@@ -78,7 +75,7 @@ export default function HomePageClient({ stateOptions, initialState, initialCiti
       <section className="py-6 mt-0 px-6 bg-[#FFF8F0]">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-[#4A4A4A] mb-6">Selecione a cidade em {stateNames[selectedState] || formatSlug(selectedState)}</h2>
-          <CitiesSection allowedCities={cities} />
+          <CitiesSection allowedCities={cities} currentState={selectedState} />
         </div>
       </section>
     </div>

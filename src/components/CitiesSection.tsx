@@ -11,9 +11,10 @@ import { getAllCities } from '@/lib/restaurantService';
 interface CitiesSectionProps {
   currentCity?: string;
   allowedCities?: string[];
+  currentState: string;
 }
 
-export default function CitiesSection({ currentCity, allowedCities }: CitiesSectionProps) {
+export default function CitiesSection({ currentCity, allowedCities, currentState }: CitiesSectionProps) {
   // Inicializa com allowedCities para SSR gerar lista estática ao bot
   const [cities, setCities] = useState<string[]>(allowedCities ?? []);
   const [failedImgs, setFailedImgs] = useState<Record<string, boolean>>({});
@@ -96,7 +97,15 @@ export default function CitiesSection({ currentCity, allowedCities }: CitiesSect
             {cities.filter(slug => slug !== currentCity).map(slug => {
               const label = cityLabelMap[slug] ?? normalizeLabel(slug);
               return (
-                <Link key={slug} href={`/restaurante/${slug}`} className="flex-none w-[9.8rem] bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+                <Link
+                  key={slug}
+                  href={`/restaurante/${slug}`}
+                  onClick={() => {
+                    document.cookie = `selectedState=${currentState}; path=/; max-age=${30 * 24 * 60 * 60}`;
+                    document.cookie = `selectedCity=${slug}; path=/; max-age=${30 * 24 * 60 * 60}`;
+                  }}
+                  className="flex-none w-[9.8rem] bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+                >
                   <div className="relative w-full h-[5.6rem]">
                     <Image
                       src={`/images/cities/${slug}.webp`}
@@ -120,7 +129,15 @@ export default function CitiesSection({ currentCity, allowedCities }: CitiesSect
             {cities.filter(slug => slug !== currentCity).map(slug => {
               const label = cityLabelMap[slug] ?? normalizeLabel(slug);
               return (
-                <Link key={slug} href={`/restaurante/${slug}`} className="flex-none w-[9.8rem] bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden">
+                <Link
+                  key={slug}
+                  href={`/restaurante/${slug}`}
+                  onClick={() => {
+                    document.cookie = `selectedState=${currentState}; path=/; max-age=${30 * 24 * 60 * 60}`;
+                    document.cookie = `selectedCity=${slug}; path=/; max-age=${30 * 24 * 60 * 60}`;
+                  }}
+                  className="flex-none w-[9.8rem] bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden"
+                >
                   <div className="relative w-full h-[5.6rem]">
                     <Image
                       src={`/images/cities/${slug}.webp`}

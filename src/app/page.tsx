@@ -1,5 +1,5 @@
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
 import { slugify, formatSlug, stateNames } from '@/lib/utils';
 import { getAllStates, getCitiesByState } from '@/lib/restaurantService.server';
 import Link from 'next/link';
@@ -8,6 +8,7 @@ import HomePageClient from '@/components/HomePageClient';
 // Force dynamic SSR since we use cookies and cannot static render
 export const dynamic = 'force-dynamic';
 export const revalidate = 3600;
+export const runtime = 'nodejs';
 
 export default async function Home() {
   // SSR: estado selecionado, options e primeiras cidades
@@ -16,8 +17,13 @@ export default async function Home() {
   if (cityCookie) return redirect(`/restaurante/${cityCookie}`);
   const states = await getAllStates();
   const stateOptions = states.map(s => ({ value: s, label: stateNames[s] || formatSlug(s) }));
-  const defaultState = 'sao-paulo';
+  const defaultState = states.includes('sao-paulo') ? 'sao-paulo' : (states[0] || '');
   const initialCities = await getCitiesByState(defaultState);
+  const breadcrumbHref = cityCookie ? `/restaurante/${cityCookie}` : '/';
+
+  console.log('SSR States:', states);
+  console.log('SSR Default State:', defaultState);
+  console.log('SSR Initial Cities:', initialCities);
 
   return (
     <>
@@ -35,7 +41,7 @@ export default async function Home() {
       <div className="bg-[#FFF8F0]">
         <nav className="max-w-7xl mx-auto px-6 py-2 text-sm text-[#4A4A4A]" aria-label="breadcrumb">
           <ol className="list-none flex">
-            <li><Link href="/" className="hover:underline">Início</Link></li>
+            <li><Link href={breadcrumbHref} className="hover:underline">Início</Link></li>
           </ol>
         </nav>
       </div>

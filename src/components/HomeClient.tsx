@@ -132,7 +132,7 @@ export default function HomeClient({ initialCities }: HomeClientProps) {
       <section className="py-6 mt-0 px-6 bg-[#ECE2D9]">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-[#4A4A4A] mb-6">Selecione sua Cidade</h2>
-          <CitiesSectionClient cities={initialCities} currentCity={selectedCity} />
+          <CitiesSectionClient cities={initialCities} />
         </div>
       </section>
       <div className="mt-0 py-6 text-center">

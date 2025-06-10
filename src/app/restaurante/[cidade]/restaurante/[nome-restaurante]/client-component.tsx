@@ -426,7 +426,6 @@ export default function RestaurantDetailClient({ restaurant }: RestaurantDetailC
         </div>
       </main>
       <main className="max-w-7xl mx-auto px-6 pt-0 pb-12 bg-[#FFF8F0]">
-        <h2 className="text-2xl font-bold font-['Roboto'] text-[#4A4A4A] mb-4">Cardápio</h2>
         {sections.map(section => (
           <div key={section.name}>
             <div className="flex items-center mt-6 mb-2 space-x-2">

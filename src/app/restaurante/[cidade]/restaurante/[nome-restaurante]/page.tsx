@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import RestaurantDetailClient from './client-component';
 import { Suspense } from 'react';
 import { getRestaurantsByCity, getRestaurantBySlug } from '@/lib/restaurantService.server';
+import MenuSection from './menu-section.server'; // Import the new MenuSection component
 
 export const dynamic = 'force-dynamic';
 
@@ -100,6 +101,7 @@ export default async function Page({ params }: { params: any }) {
   return (
     <Suspense fallback={<p className="text-center py-8">Carregando detalhes...</p>}>
       <RestaurantDetailClient restaurant={restaurantData} />
+      <MenuSection placeId={restaurantData.id} />
     </Suspense>
   );
 }

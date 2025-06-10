@@ -5,25 +5,12 @@ import { Suspense } from 'react';
 import CategorySection from '@/components/CategorySection';
 import CitiesSection from '@/components/CitiesSection';
 import CityPageClient from './page.client';
-import { getAllCities, getRestaurantsByCity } from '@/lib/restaurantService.server';
+import { getRestaurantsByCity } from '@/lib/restaurantService.server';
 import { slugify } from '@/lib/utils';
 import Link from 'next/link';
 import type { Restaurant } from '@/lib/restaurantService';
 
-export const dynamic = 'force-static';
-// ISR: regenerate page every 1 hour
-export const revalidate = 3600;
-
-// Pre-generate pages only for valid city slugs
-export async function generateStaticParams(): Promise<{ cidade: string }[]> {
-  let cities: string[] = []
-  try {
-    cities = await getAllCities()
-  } catch (e) {
-    console.error('Error generating static params for cities', e)
-  }
-  return cities.map(cidade => ({ cidade }))
-}
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: { cidade: string } }): Promise<NextMetadata> {
   const { cidade } = await params;

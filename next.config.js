@@ -15,11 +15,6 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  experimental: {
-    turbo: {
-      cssRefresh: false,
-    },
-  },
 };
 
 module.exports = nextConfig;

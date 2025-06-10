@@ -1,10 +1,9 @@
 import type { Metadata } from 'next';
 import RestaurantDetailClient from './client-component';
 import { Suspense } from 'react';
-import { getAllCities, getRestaurantsByCity, getRestaurantBySlug } from '@/lib/restaurantService.server';
+import { getRestaurantsByCity, getRestaurantBySlug } from '@/lib/restaurantService.server';
 
-// ISR: regenerate page every 1 hour
-export const revalidate = 3600; // 1h cache no servidor
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: any }): Promise<Metadata> {
   // Await `params` before accessing properties
@@ -23,19 +22,6 @@ export async function generateMetadata({ params }: { params: any }): Promise<Met
     description: `${nomeFormatado}: Restaurante em ${cidadeFormatada}`,
     metadataBase: new URL('http://localhost:3001'),
   };
-}
-
-// Generate static detail page params for SSR/ISR
-export async function generateStaticParams() {
-  const cities = await getAllCities();
-  const paramsList: Array<{ cidade: string; 'nome-restaurante': string }> = [];
-  for (const cidade of cities) {
-    const { restaurants } = await getRestaurantsByCity(cidade);
-    restaurants.forEach(r =>
-      paramsList.push({ cidade, 'nome-restaurante': r.slug })
-    );
-  }
-  return paramsList;
 }
 
 export default async function Page({ params }: { params: any }) {

@@ -22,19 +22,14 @@ export default function FirebaseAppCheckProvider({ children }: FirebaseAppCheckP
   const [isAppCheckReady, setIsAppCheckReady] = useState(false);
 
   useEffect(() => {
-    console.log('[FirebaseAppCheckProvider] useEffect triggered, initializing App Check...');
+    console.log('[FirebaseAppCheckProvider] Initializing App Check if configured...');
     try {
-      const appCheckInstance = initializeFirebaseAppCheck();
-      if (appCheckInstance) {
-        // 3. Atualizar estado SÓ se a inicialização foi bem-sucedida
-        console.log('[FirebaseAppCheckProvider] App Check initialization seems successful, setting ready state.');
-        setIsAppCheckReady(true);
-      } else {
-        console.error('[FirebaseAppCheckProvider] App Check initialization failed or skipped, not setting ready state.');
-      }
+      initializeFirebaseAppCheck();
     } catch (error) {
-      console.error('[FirebaseAppCheckProvider] Error during App Check initialization in provider:', error);
-      setIsAppCheckReady(false); // Garantir que fique falso em caso de erro
+      console.error('[FirebaseAppCheckProvider] Error during App Check initialization:', error);
+    } finally {
+      // Signal ready regardless, so dependent components fetch data
+      setIsAppCheckReady(true);
     }
   }, []); // Array de dependências vazio para rodar apenas uma vez
 

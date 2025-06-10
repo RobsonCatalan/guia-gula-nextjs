@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import type { RestaurantListProps } from '@/components/RestaurantList';
 import CityDetector from '@/components/CityDetector';
-import CategorySection from '@/components/CategorySection';
-import CitiesSection from '@/components/CitiesSection';
+import CategorySectionClient from '@/components/CategorySection.client';
+import CitiesSectionClient from '@/components/CitiesSection.client';
 
 interface HomeClientProps {
   cityOptions: { value: string; label: string }[];
@@ -195,7 +195,7 @@ export default function HomeClient({ cityOptions, defaultCity }: HomeClientProps
           )}
         </div>
       </section>
-      <CategorySection city={selectedCity} title="" />
+      <CategorySectionClient city={selectedCity} title="" />
       <main className="py-6 px-6">
         <div className="max-w-7xl mx-auto">
           <RestaurantList city={selectedCity} />
@@ -204,7 +204,7 @@ export default function HomeClient({ cityOptions, defaultCity }: HomeClientProps
       <section className="py-6 mt-0 px-6 bg-[#ECE2D9]">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-[#4A4A4A] mb-6">Explore outras Cidades</h2>
-          <CitiesSection currentCity={selectedCity} />
+          <CitiesSectionClient currentCity={selectedCity} />
         </div>
       </section>
       <div className="mt-0 py-6 text-center">

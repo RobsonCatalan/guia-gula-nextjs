@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import CategorySection from '@/components/CategorySection';
 import { bucket } from '@/lib/firebaseAdmin';
-import { getAllCities, getRestaurantsByCity } from '@/lib/restaurantService.server';
+import { getRestaurantsByCity } from '@/lib/restaurantService.server';
 import CategoryClientComponent from './client-component';
 import { slugify } from '@/lib/utils';
 
@@ -72,13 +72,8 @@ export async function generateMetadata({ params }: { params: { cidade: string; c
   };
 }
 
-export async function generateStaticParams() {
-  const cities = await getAllCities();
-  const categories = Object.values(categoryMap).map(label => slugify(label));
-  return cities.flatMap((cidade) =>
-    categories.map((categoria) => ({ cidade, categoria }))
-  );
-}
+// Force server rendering to avoid static build timeouts
+export const dynamic = 'force-dynamic';
 
 // Configuração de cache no servidor - 1 hora (3600 segundos)
 export const revalidate = 3600; // 1 hora de cache

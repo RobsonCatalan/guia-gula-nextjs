@@ -1,6 +1,9 @@
 import Link from 'next/link';
 import CitiesSection from '@/components/CitiesSection';
 
+export const dynamic = 'force-dynamic';
+export const prerender = false;
+
 export default function NotFound() {
   return (
     <div className="bg-[#FFF8F0] min-h-screen flex flex-col">

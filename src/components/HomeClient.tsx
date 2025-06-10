@@ -4,29 +4,27 @@ import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import type { RestaurantListProps } from '@/components/RestaurantList';
 import CityDetector from '@/components/CityDetector';
-import CategorySection from '@/components/CategorySection';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import CitiesSection from '@/components/CitiesSection';
-import { useAppCheckContext } from '@/components/FirebaseAppCheckProvider';
-import { getAllCities } from '@/lib/restaurantService';
+import CitiesSectionClient from './CitiesSection.client';
 
-const RestaurantList = dynamic<RestaurantListProps>(
-  () => import('@/components/RestaurantList'),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="w-full max-w-7xl mx-auto">
-        <h2 className="text-2xl font-bold text-[#4A4A4A] mb-6">Restaurantes em Destaque</h2>
-        <div className="flex justify-center my-8">
-          <div className="w-10 h-10 border-4 border-[#F4A261] border-t-[#FF5842] rounded-full animate-spin"></div>
-        </div>
-      </div>
-    ),
-  }
-);
+// Normalize slug strings (remove accents, spaces → hyphens)
+function normalize(str: string) {
+  return str
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
 
-export default function HomeClient() {
+interface HomeClientProps {
+  initialCities: string[];
+}
+
+export default function HomeClient({ initialCities }: HomeClientProps) {
   // Cookie utility
   function getCookie(name: string): string | null {
     if (typeof document === 'undefined') return null;
@@ -47,39 +45,15 @@ export default function HomeClient() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [noResults, setNoResults] = useState<boolean>(false);
-  const { isAppCheckReady } = useAppCheckContext();
-  const [cityOptions, setCityOptions] = useState<{ value: string; label: string }[]>([]);
 
-  useEffect(() => {
-    if (!isAppCheckReady) return;
-    async function loadCityOptions() {
-      try {
-        const slugs = await getAllCities();
-        const options = slugs.map(slug => ({
-          value: slug,
-          label: slug
-            .split('-')
-            .map(w => w.charAt(0).toUpperCase() + w.slice(1))
-            .join(' ')
-            .replace(/\bSao\b/g, 'São'),
-        }));
-        setCityOptions(options);
-      } catch (err) {
-        console.error('Erro ao carregar opções de cidades:', err);
-      }
-    }
-    loadCityOptions();
-  }, [isAppCheckReady]);
-
-  const normalize = (str: string) =>
-    str
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^\w\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .replace(/^-+|-+$/g, '');
+  const cityOptions = initialCities.map(slug => ({
+    value: slug,
+    label: slug
+      .split('-')
+      .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(' ')
+      .replace(/\bSao\b/g, 'São'),
+  }));
 
   const handleCityDetected = (cityName: string) => {
     const slug = normalize(cityName);
@@ -117,6 +91,21 @@ export default function HomeClient() {
     }
     setInitialized(true);
   }, []);
+
+  const RestaurantList = dynamic<RestaurantListProps>(
+    () => import('@/components/RestaurantList'),
+    {
+      ssr: false,
+      loading: () => (
+        <div className="w-full max-w-7xl mx-auto">
+          <h2 className="text-2xl font-bold text-[#4A4A4A] mb-6">Restaurantes em Destaque</h2>
+          <div className="flex justify-center my-8">
+            <div className="w-10 h-10 border-4 border-[#F4A261] border-t-[#FF5842] rounded-full animate-spin"></div>
+          </div>
+        </div>
+      ),
+    }
+  );
 
   return (
     <div className="min-h-screen bg-[#FFF8F0]">
@@ -209,7 +198,6 @@ export default function HomeClient() {
           {noResults && <p className="text-center text-sm text-red-600 mt-4">Nenhum restaurante encontrado para "{searchQuery}"</p>}
         </div>
       </section>
-      <CategorySection city={selectedCity} title="" />
       <main className="py-6 px-6">
         <div className="max-w-7xl mx-auto">
           <RestaurantList city={selectedCity} />
@@ -218,7 +206,7 @@ export default function HomeClient() {
       <section className="py-6 mt-0 px-6 bg-[#ECE2D9]">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-[#4A4A4A] mb-6">Explore outras Cidades</h2>
-          <CitiesSection currentCity={selectedCity} />
+          <CitiesSectionClient cities={initialCities} currentCity={selectedCity} />
         </div>
       </section>
       <div className="mt-0 py-6 text-center">

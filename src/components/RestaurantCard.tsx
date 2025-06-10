@@ -210,7 +210,7 @@ export default function RestaurantCard({ restaurant, driveTime, rating: propRati
                 style={{ objectFit: 'contain' }}
               />
             </div>
-            <span>~ {driveTime}</span>
+            <span>{driveTime}</span>
           </div>
         )}
         

@@ -6,7 +6,7 @@ import { Restaurant, getRestaurantReviews, Review, getMenuItems, Menu } from '@/
 import Image from 'next/image';
 import Link from 'next/link';
 import { categoryMap } from '@/components/RestaurantCard';
-import { slugify } from '@/lib/utils';
+import { slugify, haversineDistance } from '@/lib/utils';
 
 const ReviewsDrawer = dynamic(() => import('@/components/ReviewsDrawer'), { ssr: false, loading: () => null });
 const PhotoGallery = dynamic(() => import('@/components/PhotoGallery'), { ssr: false, loading: () => null });
@@ -70,7 +70,7 @@ export default function RestaurantDetailClient({ restaurant }: RestaurantDetailC
   const [isOnlineOpen, setIsOnlineOpen] = useState(false);
   const [menuItems, setMenuItems] = useState<Menu[]>([]);
   const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(null);
-  const [driveTime, setDriveTime] = useState<string>('');
+  const [distanceKm, setDistanceKm] = useState<number | null>(null);
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
   const expandItem = (id: string) => {
     setExpandedItems(prev => new Set(prev).add(id));
@@ -140,12 +140,13 @@ export default function RestaurantDetailClient({ restaurant }: RestaurantDetailC
 
   useEffect(() => {
     if (userLocation && restaurant?.coordinates) {
-      const origin = `${userLocation.latitude},${userLocation.longitude}`;
-      const dest = `${restaurant.coordinates.latitude},${restaurant.coordinates.longitude}`;
-      fetch(`/api/distance?origin=${origin}&destination=${dest}`)
-        .then(res => res.json())
-        .then(data => { if (data.duration) setDriveTime(data.duration); })
-        .catch(err => console.error('Erro Distance API:', err));
+      const d = haversineDistance(
+        userLocation.latitude,
+        userLocation.longitude,
+        restaurant.coordinates.latitude,
+        restaurant.coordinates.longitude
+      );
+      setDistanceKm(d);
     }
   }, [userLocation, restaurant]);
 
@@ -342,7 +343,11 @@ export default function RestaurantDetailClient({ restaurant }: RestaurantDetailC
                     className="object-contain"
                   />
                 </div>
-                <span>~ {driveTime}</span>
+                {distanceKm !== null ? (
+                  <span>{distanceKm.toFixed(1)} km</span>
+                ) : (
+                  <span>Distância indisponível</span>
+                )}
               </div>
             </div>
             <div className="flex items-center mb-4">

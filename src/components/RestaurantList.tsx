@@ -5,6 +5,7 @@ import { Restaurant, getRestaurants, getRestaurantsByCity, getAverageRatings } f
 import RestaurantCard from './RestaurantCard';
 import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
 import Head from 'next/head';
+import { haversineDistance } from '@/lib/utils';
 
 export interface RestaurantListProps {
   city?: string;
@@ -96,15 +97,6 @@ export default function RestaurantList({ city }: RestaurantListProps) {
     }))
   };
 
-  // Converte duração textual em minutos
-  const parseDuration = (text: string): number => {
-    const matchH = text.match(/(\d+)\s*hour/);
-    const matchM = text.match(/(\d+)\s*min/);
-    const hours = matchH ? parseInt(matchH[1]) : 0;
-    const mins = matchM ? parseInt(matchM[1]) : 0;
-    return hours * 60 + mins;
-  };
-
   // Obtém localização do usuário
   useEffect(() => {
     if (!userLocation && typeof window !== 'undefined') {
@@ -115,25 +107,22 @@ export default function RestaurantList({ city }: RestaurantListProps) {
     }
   }, [userLocation]);
 
-  // Busca tempos de viagem para cada restaurante
+  // Calcula distância em linha reta para cada restaurante
   useEffect(() => {
     if (userLocation) {
+      const map: Record<string, { duration: number; text: string }> = {};
       restaurants.forEach(r => {
-        if (r.coordinates && !fetchedDistancesRef.current.has(r.id)) {
-          fetchedDistancesRef.current.add(r.id);
-          const origin = `${userLocation.latitude},${userLocation.longitude}`;
-          const dest = `${r.coordinates.latitude},${r.coordinates.longitude}`;
-          fetch(`/api/distance?origin=${origin}&destination=${dest}`)
-            .then(res => res.json())
-            .then(data => {
-              if (data.duration) {
-                const duration = parseDuration(data.duration);
-                setDriveTimes(prev => ({ ...prev, [r.id]: { duration, text: data.duration } }));
-              }
-            })
-            .catch(err => console.error('Distance API error:', err));
+        if (r.coordinates) {
+          const d = haversineDistance(
+            userLocation.latitude,
+            userLocation.longitude,
+            r.coordinates.latitude,
+            r.coordinates.longitude
+          );
+          map[r.id] = { duration: d, text: `${d.toFixed(1)} km` };
         }
       });
+      setDriveTimes(map);
     }
   }, [userLocation, restaurants]);
 

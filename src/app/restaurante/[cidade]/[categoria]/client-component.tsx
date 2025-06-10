@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { Restaurant, getRestaurantsByCity, getAverageRatings } from '@/lib/restaurantService';
 import RestaurantCard from '@/components/RestaurantCard';
+import { haversineDistance } from '@/lib/utils';
 
 interface CategoryClientComponentProps {
   cidade: string;
@@ -69,15 +70,6 @@ export default function CategoryClientComponent({ cidade, categoria, initialRest
   // Ref para controlar se as avaliações já foram buscadas
   const fetchedRatingsRef = useRef<boolean>(false);
 
-  // Converte duração textual em minutos
-  const parseDuration = (text: string): number => {
-    const matchH = text.match(/(\d+)\s*hour/);
-    const matchM = text.match(/(\d+)\s*min/);
-    const hours = matchH ? parseInt(matchH[1]) : 0;
-    const mins = matchM ? parseInt(matchM[1]) : 0;
-    return hours * 60 + mins;
-  };
-
   useEffect(() => {
     async function load() {
       if (initialRestaurants.length > 0) return;
@@ -135,26 +127,24 @@ export default function CategoryClientComponent({ cidade, categoria, initialRest
     }
   }, [userLocation]);
 
-  // Busca tempo de viagem para cada restaurante
+  // Calcula distância em linha reta para cada restaurante
   useEffect(() => {
     if (userLocation) {
+      const map: Record<string, { duration: number; text: string }> = {};
       restaurants.forEach(r => {
-        if (r.coordinates && !driveTimes[r.id]) {
-          const origin = `${userLocation.latitude},${userLocation.longitude}`;
-          const dest = `${r.coordinates.latitude},${r.coordinates.longitude}`;
-          fetch(`/api/distance?origin=${origin}&destination=${dest}`)
-            .then(res => res.json())
-            .then(data => {
-              if (data.duration) {
-                const duration = parseDuration(data.duration);
-                setDriveTimes(prev => ({ ...prev, [r.id]: { duration, text: data.duration } }));
-              }
-            })
-            .catch(err => console.error('Erro Distance API:', err));
+        if (r.coordinates) {
+          const d = haversineDistance(
+            userLocation.latitude,
+            userLocation.longitude,
+            r.coordinates.latitude,
+            r.coordinates.longitude
+          );
+          map[r.id] = { duration: d, text: `${d.toFixed(1)} km` };
         }
       });
+      setDriveTimes(map);
     }
-  }, [userLocation, restaurants, driveTimes]);
+  }, [userLocation, restaurants]);
 
   // Lista ordenada com base na opção selecionada
   const sortedRestaurants = useMemo(() => {
